@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "1032007345411",
+    "project_id": "overvoice",
+    "storage_bucket": "overvoice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032007345411:android:e7d864dbdac0f23940f536",
+        "android_client_info": {
+          "package_name": "com.example.overvoice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032007345411-fba1l4ot0ndtq3den62j4frtt9stmjmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjRYiSswgaiIy-NdY_YpadttGS_jpQl7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032007345411-fba1l4ot0ndtq3den62j4frtt9stmjmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1032007345411-3jblh9nq5l9n2d4f3odjps2ta6t4incs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.overvoice"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032007345411:android:424a0011084b6b2140f536",
+        "android_client_info": {
+          "package_name": "com.example.overvoice_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032007345411-ifkn4d38gcg5k184ipa1m5bkbmp1cjho.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.overvoice_project",
+            "certificate_hash": "2b74d8eae0fd7824aaa64e60e440fed1b6156d51"
+          }
+        },
+        {
+          "client_id": "1032007345411-fba1l4ot0ndtq3den62j4frtt9stmjmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjRYiSswgaiIy-NdY_YpadttGS_jpQl7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032007345411-fba1l4ot0ndtq3den62j4frtt9stmjmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1032007345411-3jblh9nq5l9n2d4f3odjps2ta6t4incs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.overvoice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
