@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/controller/login_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login App"),
+        title: const Text("Login App"),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
       ),
@@ -58,8 +59,8 @@ class _LoginPageState extends State<LoginPage> {
 
         //for log-out
         ActionChip(
-          avatar: Icon(Icons.logout),
-          label: Text("Logout"),
+          avatar: const Icon(Icons.logout),
+          label: const Text("Logout"),
           onPressed: ()
           {
             Provider.of<LoginController>(context, listen: false).logout();
@@ -74,8 +75,22 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(),
-          Image.asset(),
+          GestureDetector(
+            child: SignInButton(
+              Buttons.Google,
+              onPressed: () {
+                Provider.of<LoginController>(context, listen: false).googleLogin();
+              },
+            ),
+          ),
+
+        const SizedBox(height: 10,),
+
+        SignInButton(
+          Buttons.Facebook,
+          onPressed: () {},
+        ),
+
         ],
       ),
     );

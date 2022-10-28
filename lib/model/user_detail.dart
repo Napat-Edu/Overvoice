@@ -19,9 +19,9 @@ class UserDetails
   {
     //object to data
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["displayName"] = this.displayName;
-    data["email"] = this.email;
-    data["photoURL"] = this.photoURL;
+    data["displayName"] = displayName;
+    data["email"] = email;
+    data["photoURL"] = photoURL;
 
     return data;
   }

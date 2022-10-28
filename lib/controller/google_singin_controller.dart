@@ -9,7 +9,7 @@ class GoogleSigninController with ChangeNotifier
 
   //login function
   login() async {
-    this.googleSignInAccount = await _googleSignIn.signIn();
+    googleSignInAccount = await _googleSignIn.signIn();
 
     notifyListeners();
   }
@@ -17,7 +17,7 @@ class GoogleSigninController with ChangeNotifier
   //logout function
   logout() async {
     //clear value before logout
-    this.googleSignInAccount = await _googleSignIn.signOut();
+    googleSignInAccount = await _googleSignIn.signOut();
 
     notifyListeners();
   }
