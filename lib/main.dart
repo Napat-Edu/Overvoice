@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => LoginController(),
+          child: const LoginPage(),
         )
       ],
       child: MaterialApp(

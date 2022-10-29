@@ -86,10 +86,14 @@ class _LoginPageState extends State<LoginPage> {
 
         const SizedBox(height: 10,),
 
-        SignInButton(
-          Buttons.Facebook,
-          onPressed: () {},
-        ),
+        GestureDetector(
+            child: SignInButton(
+              Buttons.Facebook,
+              onPressed: () {
+                Provider.of<LoginController>(context, listen: false).facebookLogin();
+              },
+            ),
+          ),
 
         ],
       ),
