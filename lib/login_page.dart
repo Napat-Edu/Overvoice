@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/controller/login_controller.dart';
+import 'package:overvoice_project/nav.dart';
 import 'package:overvoice_project/screen/audioinfo.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -22,8 +23,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
     
       //body ui
-      body: loginUI(),
-    
+      //body: loginUI(),
+
+      bottomNavigationBar: loginUI(),
     );
   }
 
@@ -33,8 +35,8 @@ class _LoginPageState extends State<LoginPage> {
       //if already logged-in
       if(model.userDetails != null)
       {
-        return Center(
-          child: loggedInUI(model),
+        return const Center(
+          child: Navbar(),
         );
       }
       else
