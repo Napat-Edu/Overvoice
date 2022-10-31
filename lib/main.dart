@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/api/sound_recorder.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'recordButton.dart';
 
 void main() {
   runApp(const MaterialApp(
-    title: 'TestNaja',
+    title: 'Overvoice',
     home: FirstRoute(),
   ));
 }
@@ -36,17 +36,7 @@ class FirstRoute extends StatelessWidget {
               );
             },
           ),
-          ElevatedButton(
-            child: const Text('Record Voice'),
-            onPressed: () {
-              FlutterSoundRecorder? audioRecorder;
-              if (audioRecorder!.isStopped) {
-                audioRecorder.startRecorder(toFile: 'test.aac');
-              } else {
-                audioRecorder.stopRecorder();
-              }
-            },
-          ),
+          RecordButton(),
         ],
       )),
     );
