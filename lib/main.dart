@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/api/sound_recorder.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -10,6 +12,7 @@ void main() {
   ));
 }
 
+// Homepage
 class FirstRoute extends StatelessWidget {
   const FirstRoute({super.key});
 
@@ -20,17 +23,32 @@ class FirstRoute extends StatelessWidget {
         title: const Text('First Route'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Login Page'),
-          // Within the `FirstRoute` widget
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondRoute()),
-            );
-          },
-        ),
-      ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            child: const Text('Login Page'),
+            // Within the `FirstRoute` widget
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecondRoute()),
+              );
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Record Voice'),
+            onPressed: () {
+              FlutterSoundRecorder? audioRecorder;
+              if (audioRecorder!.isStopped) {
+                audioRecorder.startRecorder(toFile: 'test.aac');
+              } else {
+                audioRecorder.stopRecorder();
+              }
+            },
+          ),
+        ],
+      )),
     );
   }
 }
