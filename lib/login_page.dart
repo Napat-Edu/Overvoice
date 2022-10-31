@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-        const SizedBox(height: 10,),
+        /*const SizedBox(height: 10,),
 
         GestureDetector(
             child: SignInButton(
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                 Provider.of<LoginController>(context, listen: false).facebookLogin();
               },
             ),
-          ),
+          ),*/
 
         ],
       ),

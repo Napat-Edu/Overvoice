@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:overvoice_project/model/user_detail.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+//import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class LoginController with ChangeNotifier
 {
@@ -27,6 +27,7 @@ class LoginController with ChangeNotifier
   }
 
   //facebook log-in function
+  /*
   facebookLogin() async {
     var result = await FacebookAuth.i.login(
       permissions: ["public_profile", "email"],
@@ -47,10 +48,11 @@ class LoginController with ChangeNotifier
 
     }
   }
+  */
 
   logout() async {
     googleSignInAccount = await _googleSignIn.signOut();
-    await FacebookAuth.i.logOut();
+    //await FacebookAuth.i.logOut();
     userDetails = null;
     notifyListeners();
   }

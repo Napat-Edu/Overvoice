@@ -1,29 +1,29 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
-class FacebookSignInController with ChangeNotifier {
-  Map? userData;
+// class FacebookSignInController with ChangeNotifier {
+//   Map? userData;
 
-  login() async {
-    var result = await FacebookAuth.i.login(
-      permissions: ["public_profile", "email"],
-    );
+//   login() async {
+//     var result = await FacebookAuth.i.login(
+//       permissions: ["public_profile", "email"],
+//     );
 
-    //check status of login
-    if(result.status == LoginStatus.success) {
-      final requestData = await FacebookAuth.i.getUserData(
-        fields: "email, name, picture",
-      );
+//     //check status of login
+//     if(result.status == LoginStatus.success) {
+//       final requestData = await FacebookAuth.i.getUserData(
+//         fields: "email, name, picture",
+//       );
 
-      userData = requestData;
-      notifyListeners();
-    }
-  }
+//       userData = requestData;
+//       notifyListeners();
+//     }
+//   }
 
-  //logout function
-  logout() async {
-    await FacebookAuth.i.logOut();
-    userData = null;
-    notifyListeners();
-  }
-}
+//   //logout function
+//   logout() async {
+//     await FacebookAuth.i.logOut();
+//     userData = null;
+//     notifyListeners();
+//   }
+// }
