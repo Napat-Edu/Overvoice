@@ -10,6 +10,8 @@ class LoginPage extends StatefulWidget {
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  loginUI() {}
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -83,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           GestureDetector(
             child: SignInButton(
               Buttons.Google,
+              text: "ลงชื่อเข้าใช้ด้วยบัญชี Google",
               onPressed: () {
                 Provider.of<LoginController>(context, listen: false).googleLogin();
               },

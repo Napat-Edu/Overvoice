@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:overvoice_project/screen/audioinfo.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -12,9 +13,9 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   List<Widget> _widgetOption = <Widget>[
-    Text('Home'),
+    AudioInfo(),
     Text('Search'),
-    Text('Profile'),
+    Text("Profile"),
   ];
 
   void _onItemTap(int index) {
@@ -26,7 +27,10 @@ class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('OverVoice'), backgroundColor: Color(0xFFFF7200),),
+      appBar: AppBar(
+        title: Text('OverVoice'),
+        backgroundColor: Color(0xFFFF7200),
+      ),
       body: Center(child: _widgetOption.elementAt(_selectedIndex)),
       bottomNavigationBar: SizedBox(
         height: 65,
