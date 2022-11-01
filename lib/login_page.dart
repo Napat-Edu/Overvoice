@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/controller/login_controller.dart';
+import 'package:overvoice_project/nav.dart';
+import 'package:overvoice_project/screen/audioinfo.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -8,6 +10,8 @@ class LoginPage extends StatefulWidget {
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  loginUI() {}
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -15,14 +19,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login App"),
+        title: const Text("Overvoice"),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
       ),
     
       //body ui
-      body: loginUI(),
-    
+      //body: loginUI(),
+
+      bottomNavigationBar: loginUI(),
     );
   }
 
@@ -32,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
       //if already logged-in
       if(model.userDetails != null)
       {
-        return Center(
-          child: loggedInUI(model),
+        return const Center(
+          child: Navbar(),
         );
       }
       else
@@ -49,23 +54,25 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
 
       children: [
-        CircleAvatar(
-          backgroundImage: Image.network(model.userDetails!.photoURL ?? "").image,
-          radius: 50,
-        ),
+        AudioInfo(),
+        
+        // CircleAvatar(
+        //   backgroundImage: Image.network(model.userDetails!.photoURL ?? "").image,
+        //   radius: 50,
+        // ),
 
-        Text(model.userDetails!.displayName ?? ""),
-        Text(model.userDetails!.email ?? ""),
+        // Text(model.userDetails!.displayName ?? ""),
+        // Text(model.userDetails!.email ?? ""),
 
-        //for log-out
-        ActionChip(
-          avatar: const Icon(Icons.logout),
-          label: const Text("Logout"),
-          onPressed: ()
-          {
-            Provider.of<LoginController>(context, listen: false).logout();
-          },
-        )
+        // //for log-out
+        // ActionChip(
+        //   avatar: const Icon(Icons.logout),
+        //   label: const Text("Logout"),
+        //   onPressed: ()
+        //   {
+        //     Provider.of<LoginController>(context, listen: false).logout();
+        //   },
+        // )
       ],
     );
   }
@@ -78,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           GestureDetector(
             child: SignInButton(
               Buttons.Google,
+              text: "Log in with Google",
               onPressed: () {
                 Provider.of<LoginController>(context, listen: false).googleLogin();
               },
