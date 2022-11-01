@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           GestureDetector(
             child: SignInButton(
               Buttons.Google,
-              text: "ลงชื่อเข้าใช้ด้วยบัญชี Google",
+              text: "Log in with Google",
               onPressed: () {
                 Provider.of<LoginController>(context, listen: false).googleLogin();
               },
