@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text("Overvoice"),
         centerTitle: true,
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color(0xFFFF7200),
       ),
     
       //body ui
