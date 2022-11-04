@@ -21,13 +21,15 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text("Overvoice"),
         centerTitle: true,
-        backgroundColor: Colors.redAccent,
+        backgroundColor: const Color(0xFFFF7200),
       ),
     
       //body ui
       //body: loginUI(),
 
       bottomNavigationBar: loginUI(),
+
+      backgroundColor: const Color(0xFFFF7200),
     );
   }
 
@@ -82,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Image.asset("assets/image/Icon.png"),
           GestureDetector(
             child: SignInButton(
               Buttons.Google,
