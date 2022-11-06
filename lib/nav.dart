@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/screen/audioinfo.dart';
+import 'package:overvoice_project/views/home.dart';
 import 'package:overvoice_project/views/search.dart';
 import 'package:provider/provider.dart';
 import 'package:overvoice_project/views/search.dart';
@@ -19,7 +20,7 @@ class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   // ignore: prefer_final_fields
   List<Widget> _widgetOption = <Widget>[
-    AudioInfo(),
+    Home(),
     Search(),
     Consumer<LoginController>(builder: (context, model, child) {
       if(model.userDetails != null) {

@@ -23,6 +23,10 @@ class _SearchState extends State<Search> {
         "https://www.empowerlife.co.th/uploads/product_20220225021518_s.jpg"),
     TitleDetails("Sword Art Online", "11", "30",
         "https://www.empowerlife.co.th/uploads/product_20220225021518_s.jpg"),
+    TitleDetails("Detective Conan", "13", "29",
+        "https://www.empowerlife.co.th/uploads/product_20220225021518_s.jpg"),
+    TitleDetails("Blue Lock", "14", "36",
+        "https://www.empowerlife.co.th/uploads/product_20220225021518_s.jpg"),
   ];
 
   List<TitleDetails> display_list = List.from(main_title_list);
@@ -39,70 +43,74 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(top: 25, left: 15, right: 15),
         child: Column(children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              "Search",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
+      Container(
+        margin: EdgeInsets.only(top: 25, left: 15, right: 15),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "Search",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 4, right: 4, top: 16),
-            child: TextField(
-              onChanged: (value) => updateList(value),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              controller: null,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                iconColor: Color(0xFF4D331F),
-                border: InputBorder.none,
-                hintText: 'Search',
-                fillColor: Color(0xFFFFAA66),
-                filled: true,
-              ),
-            ),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.only(left: 16, right: 16, top: 16,bottom: 8),
+        child: TextField(
+          onChanged: (value) => updateList(value),
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+          controller: null,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            iconColor: Color(0xFF4D331F),
+            border: InputBorder.none,
+            hintText: 'Search',
+            fillColor: Color(0xFFFFAA66),
+            filled: true,
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Expanded(
-              child: display_list.length == 0
-                  ? Center(
-                      child: Text(
-                        "Your search did not match any documents.",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: display_list.length,
-                      itemBuilder: (context, index) => ListTile(
-                            leading:
-                                Image.network('${display_list[index].imgURL!}'),
-                            title: Text(
-                              display_list[index].titleName!,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                            subtitle: Text(
-                              'Episode : ${display_list[index].episode!}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 16),
-                            ),
-                            trailing: TextButton(
-                              style: TextButton.styleFrom(
-                                  fixedSize: const Size(10, 10),
-                                  backgroundColor: Color(0xFFFF7200),
-                                  foregroundColor: Colors.white,
-                                  textStyle: const TextStyle(fontSize: 16)),
-                              onPressed: () {},
-                              child: const Text('More'),
-                            ),
-                          )))
-        ]));
+        ),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Expanded(
+          child: display_list.length == 0
+              ? Center(
+                  child: Text(
+                    "Your search didn't match any documents.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                )
+              : ListView.separated(
+                  separatorBuilder: (context, index) => Divider(
+                    color: Color(0xFFFFAA66),
+                  ),
+                  itemCount: display_list.length,
+                  itemBuilder: (context, index) => ListTile(
+                    leading: Image.network('${display_list[index].imgURL!}'),
+                    title: Text(
+                      display_list[index].titleName!,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    subtitle: Text(
+                      'Episode : ${display_list[index].episode!}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    ),
+                    trailing: TextButton(
+                      style: TextButton.styleFrom(
+                          fixedSize: const Size(10, 10),
+                          backgroundColor: Color(0xFFFF7200),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 16)),
+                      onPressed: () {},
+                      child: const Text('More'),
+                    ),
+                  ),
+                ))
+    ]));
   }
 }
