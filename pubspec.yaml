@@ -29,14 +29,22 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  audio_session: ^0.1.10
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
+
   flutter_sound: ^9.2.13
+
+
   google_sign_in: ^5.4.2
   permission_handler: ^10.2.0
   provider: ^6.0.4
+
+  path_provider: ^2.0.11
+  firebase_storage: ^11.0.4
+  firebase_core: ^2.1.1
 
 dev_dependencies:
   flutter_facebook_auth: ^5.0.0+2

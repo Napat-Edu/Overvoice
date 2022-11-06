@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'recordButton.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MaterialApp(
     title: 'Overvoice',
     home: FirstRoute(),
@@ -36,7 +38,7 @@ class FirstRoute extends StatelessWidget {
               );
             },
           ),
-          RecordButton(),
+          const RecordButton(),
         ],
       )),
     );
