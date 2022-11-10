@@ -41,8 +41,6 @@ class ProfilePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => const LoginPageRoute()),
                 );
-                //Navigator.pop(context);
-                //Phoenix.rebirth(context);
               },
             )
           ],

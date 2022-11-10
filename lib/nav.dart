@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/screen/audioinfo.dart';
 import 'package:overvoice_project/screen/profile_page.dart';
+import 'package:overvoice_project/views/home.dart';
+import 'package:overvoice_project/views/search.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -13,8 +14,8 @@ class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   // ignore: prefer_final_fields
   List<Widget> _widgetOption = <Widget>[
-    AudioInfo(),
-    const Text('Search'),
+    const Home(),
+    const Search(),
     const ProfilePage(),
   ];
 
@@ -27,11 +28,6 @@ class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('OverVoice'),
-        backgroundColor: const Color(0xFFFF7200),
-        automaticallyImplyLeading: false,
-      ),
       body: Center(child: _widgetOption.elementAt(_selectedIndex)),
       bottomNavigationBar: SizedBox(
         height: 65,
