@@ -29,16 +29,18 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  firebase_core: ^2.1.1
   cloud_firestore: ^4.0.3
   cupertino_icons: ^1.0.2
+  firebase_auth: ^4.1.1
+  firebase_core: ^2.1.1
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.10.0
   flutter_signin_button: ^2.0.0
+  flutter_phoenix: ^1.1.0
   google_sign_in: ^5.4.2
   provider: ^6.0.4
-  flutter_launcher_icons: ^0.10.0
-  
+
 flutter_icons:
   android: true
   image_path: "assets/image/adaptive_logo.png"
