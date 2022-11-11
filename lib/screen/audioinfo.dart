@@ -31,38 +31,3 @@ class AudioInfo extends StatelessWidget {
     );
   }
 }
-
-// class AudioInfo extends StatefulWidget {
-//   @override
-//   _AudioInfo createState() => _AudioInfo();
-// }
-
-// class _AudioInfo extends State<AudioInfo> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("คุณกำลังฟัง"),
-//       ),
-//       body: StreamBuilder(
-//         stream: FirebaseFirestore.instance.collection("AudioInfo").snapshots(),
-//         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//           if (!snapshot.hasData) {
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           }
-//           return ListView(
-//             children: snapshot.data!.docs.map((document) {
-//               return Container(
-//                 child: ListTile(
-//                   title: Text(document["character"]),
-//                 ),
-//               );
-//             }).toList(),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
