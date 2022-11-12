@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/screen/audioinfo.dart';
+import 'package:overvoice_project/screen/listaudio.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/login_controller.dart';
@@ -17,38 +18,36 @@ class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   // ignore: prefer_final_fields
   List<Widget> _widgetOption = <Widget>[
-    AudioInfo(),
+    ListAudio(),
     Text('Search'),
     Consumer<LoginController>(builder: (context, model, child) {
-      if(model.userDetails != null) {
+      if (model.userDetails != null) {
         return Center(
           child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundImage:
+                    Image.network(model.userDetails!.photoURL ?? "").image,
+                radius: 50,
+              ),
 
-      children: [
-        CircleAvatar(
-          backgroundImage: Image.network(model.userDetails!.photoURL ?? "").image,
-          radius: 50,
-        ),
+              Text(model.userDetails!.displayName ?? ""),
+              Text(model.userDetails!.email ?? ""),
 
-        Text(model.userDetails!.displayName ?? ""),
-        Text(model.userDetails!.email ?? ""),
-
-        //for log-out
-        ActionChip(
-          avatar: const Icon(Icons.logout),
-          label: const Text("Logout"),
-          onPressed: ()
-          {
-            Provider.of<LoginController>(context, listen: false).logout();
-          },
-        )
-      ],
-    ),
+              //for log-out
+              ActionChip(
+                avatar: const Icon(Icons.logout),
+                label: const Text("Logout"),
+                onPressed: () {
+                  Provider.of<LoginController>(context, listen: false).logout();
+                },
+              )
+            ],
+          ),
         );
-      }
-      else {
+      } else {
         return Center(
           child: Text("Error"),
         );
