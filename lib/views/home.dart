@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
+import 'package:overvoice_project/views/more.dart';
 import '../model/title_detail.dart';
 
 class Home extends StatefulWidget {
@@ -134,9 +132,14 @@ class _HomeState extends State<Home> {
                   backgroundColor: Color(0xFFFF7200),
                   foregroundColor: Colors.white,
                   textStyle: const TextStyle(fontSize: 16)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => More()));
+              },
               child: const Text('More'),
             ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => More()));
+            },
           ),
         ))
       ]),

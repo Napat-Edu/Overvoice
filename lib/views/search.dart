@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 
+import 'more.dart';
+
 class Search extends StatefulWidget {
   const Search({super.key});
 
@@ -31,7 +33,9 @@ class _SearchState extends State<Search> {
 
   List<TitleDetails> display_list = List.from(main_title_list);
 
-  void updateList(String value) {
+  String? value;
+
+  void updateList(value) {
     setState(() {
       display_list = main_title_list
           .where((element) =>
@@ -55,7 +59,7 @@ class _SearchState extends State<Search> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 16,bottom: 8),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
         child: TextField(
           onChanged: (value) => updateList(value),
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
@@ -106,9 +110,16 @@ class _SearchState extends State<Search> {
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => More()));
+                      },
                       child: const Text('More'),
                     ),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => More()));
+                    },
                   ),
                 ))
     ]));
