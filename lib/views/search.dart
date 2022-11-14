@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 
+import 'more.dart';
+
 class Search extends StatefulWidget {
   const Search({super.key});
 
@@ -106,9 +108,16 @@ class _SearchState extends State<Search> {
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => More()));
+                      },
                       child: const Text('More'),
                     ),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => More()));
+                    },
                   ),
                 ))
     ]));

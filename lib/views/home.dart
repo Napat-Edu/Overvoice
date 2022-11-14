@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
           return snapshot.data!;
          }
 
-         return Text("Loading");
+         return const Text("Loading");
        }
       ),
         ),
