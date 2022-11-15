@@ -33,7 +33,7 @@ class _SearchState extends State<Search> {
     await FirebaseFirestore.instance.collection('AudioInfo').get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         list.add(TitleDetails(
-          doc["name"], doc["episode"], doc["duration"], doc["img"]
+          doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id
         ));
       });
     });
@@ -110,14 +110,10 @@ class _SearchState extends State<Search> {
                           textStyle: const TextStyle(fontSize: 16)),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => More()));
+                            MaterialPageRoute(builder: (context) => More(displayList[index].docID!)));
                       },
                       child: const Text('More'),
                     ),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => More()));
-                    },
                   ),
                 ))
     ]));

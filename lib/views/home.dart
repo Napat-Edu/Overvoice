@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/title_detail.dart';
+import 'more.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,15 +92,14 @@ class _HomeState extends State<Home> {
             )),
         Expanded(
           child: FutureBuilder<Widget>(
-       future: getData(),
-       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot){
-         if(snapshot.hasData) {
-          return snapshot.data!;
-         }
+              future: getData(),
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                }
 
-         return const Text("Loading");
-       }
-      ),
+                return const Text("Loading");
+              }),
         ),
       ]),
     );
@@ -130,7 +129,10 @@ class _HomeState extends State<Home> {
               backgroundColor: const Color(0xFFFF7200),
               foregroundColor: Colors.white,
               textStyle: const TextStyle(fontSize: 16)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => More(mainTitleList[index].docID!)));
+          },
           child: const Text('More'),
         ),
       ),
@@ -140,11 +142,14 @@ class _HomeState extends State<Home> {
   Future<List<TitleDetails>> getRecommendAudioInfo() async {
     List<TitleDetails> list = [];
 
-    await FirebaseFirestore.instance.collection('AudioInfo').limit(5).get().then((QuerySnapshot querySnapshot) {
+    await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .limit(5)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         list.add(TitleDetails(
-          doc["name"], doc["episode"], doc["duration"], doc["img"]
-        ));
+            doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id));
       });
     });
 

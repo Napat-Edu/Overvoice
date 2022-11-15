@@ -4,19 +4,23 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/views/solo.dart';
 
 class Start extends StatefulWidget {
-  const Start({super.key});
+  Map<String, dynamic> detaillMap;
+  Start(this.detaillMap, {super.key});
 
   @override
-  State<Start> createState() => _StartState();
+  State<Start> createState() => _StartState(detaillMap);
 }
 
 class _StartState extends State<Start> {
+  Map<String, dynamic> detaillMap;
+  _StartState(this.detaillMap);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sword Art Online",
+          detaillMap["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -57,7 +61,7 @@ class _StartState extends State<Start> {
                   RawMaterialButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => (Solo())));
+                          MaterialPageRoute(builder: (context) => (Solo(detaillMap))));
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
@@ -81,7 +85,7 @@ class _StartState extends State<Start> {
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => (Solo())));
+                            MaterialPageRoute(builder: (context) => (Solo(detaillMap))));
                       },
                       child: const Text('Solo'),
                     ),

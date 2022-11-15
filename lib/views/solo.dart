@@ -3,19 +3,27 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class Solo extends StatefulWidget {
-  const Solo({super.key});
+  Map<String, dynamic> detaillMap;
+  Solo(this.detaillMap, {super.key});
 
   @override
-  State<Solo> createState() => _SoloState();
+  State<Solo> createState() => _SoloState(detaillMap);
 }
 
 class _SoloState extends State<Solo> {
+  Map<String, dynamic> detaillMap;
+  _SoloState(this.detaillMap);
+
+  late final splitChar = detaillMap["character"].split(",");
+  late final characterA = splitChar[0];
+  late final characterB = splitChar[1];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sword Art Online",
+          detaillMap["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -58,8 +66,11 @@ class _SoloState extends State<Solo> {
                     backgroundColor: Color(0xFFFFAA66),
                     child: Align(
                       alignment: Alignment.center,
-                      child: CircleAvatar(radius: 46,
-                      backgroundImage: NetworkImage("https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),),
+                      child: CircleAvatar(
+                        radius: 46,
+                        backgroundImage: NetworkImage(
+                            "https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -77,7 +88,7 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {},
-                      child: const Text('Kirito'),
+                      child: Text(characterA),
                     ),
                   )
                 ]),
@@ -92,8 +103,11 @@ class _SoloState extends State<Solo> {
                     backgroundColor: Color(0xFFFFAA66),
                     child: Align(
                       alignment: Alignment.center,
-                      child: CircleAvatar(radius: 46,
-                      backgroundImage: NetworkImage("https://i.pinimg.com/736x/47/4d/7e/474d7ec9389263bee0fd2ef328717aeb.jpg"),),
+                      child: CircleAvatar(
+                        radius: 46,
+                        backgroundImage: NetworkImage(
+                            "https://i.pinimg.com/736x/47/4d/7e/474d7ec9389263bee0fd2ef328717aeb.jpg"),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -111,7 +125,7 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {},
-                      child: const Text('Asuna'),
+                      child: Text(characterB),
                     ),
                   )
                 ]),
