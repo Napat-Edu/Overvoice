@@ -137,7 +137,7 @@ class _MoreState extends State<More> {
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
+                              fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {},
                       child: const Text('Listen'),
                     ),
@@ -153,7 +153,7 @@ class _MoreState extends State<More> {
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
+                              fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,

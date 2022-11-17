@@ -35,7 +35,7 @@ class _StartState extends State<Start> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 40, left: 40, right: 40),
+        padding: EdgeInsets.only(top: 40, left: 40, right: 40),
         height: 550,
         width: double.infinity,
         child: Container(
@@ -51,7 +51,7 @@ class _StartState extends State<Start> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 45,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -65,16 +65,16 @@ class _StartState extends State<Start> {
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.person, size: 60.0, color: Colors.white),
+                    child: Icon(Icons.person, size:70.0, color: Colors.white),
                     padding: EdgeInsets.all(15.0),
                     shape: CircleBorder(),
                   ),
                   SizedBox(
-                    height: 12,
+                    height: 18,
                   ),
                   SizedBox(
-                    width: 80,
-                    height: 36,
+                    width: 104,
+                    height: 40,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -101,16 +101,16 @@ class _StartState extends State<Start> {
                     onPressed: () {},
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.people, size: 60.0, color: Colors.white),
+                    child: Icon(Icons.people, size: 70.0, color: Colors.white),
                     padding: EdgeInsets.all(15.0),
                     shape: CircleBorder(),
                   ),
                   SizedBox(
-                    height: 12,
+                    height: 18,
                   ),
                   SizedBox(
-                    width: 80,
-                    height: 36,
+                    width: 104,
+                    height: 40,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(

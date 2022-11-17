@@ -114,13 +114,16 @@ class _HomeState extends State<Home> {
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
         leading: SizedBox(
-          width: 55,
-          height: 55,
-          child: Image.network(
-            mainTitleList[index].imgURL!,
-            fit: BoxFit.cover,
-          ),
-        ),
+            width: 55,
+            height: 55,
+            child: Container(
+              decoration:
+                  BoxDecoration(boxShadow: [BoxShadow(color: Color(0xFFFFAA66),blurRadius: 5)]),
+              child: Image.network(
+                mainTitleList[index].imgURL!,
+                fit: BoxFit.cover,
+              ),
+            )),
         title: Text(
           mainTitleList[index].titleName!,
           style: const TextStyle(
