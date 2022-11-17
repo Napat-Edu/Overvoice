@@ -113,7 +113,17 @@ class _HomeState extends State<Home> {
       ),
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
-        leading: Image.network(mainTitleList[index].imgURL!),
+        leading: SizedBox(
+            width: 55,
+            height: 55,
+            child: Container(
+              decoration:
+                  BoxDecoration(boxShadow: [BoxShadow(color: Color(0xFFFFAA66),blurRadius: 5)]),
+              child: Image.network(
+                mainTitleList[index].imgURL!,
+                fit: BoxFit.cover,
+              ),
+            )),
         title: Text(
           mainTitleList[index].titleName!,
           style: const TextStyle(
@@ -131,7 +141,9 @@ class _HomeState extends State<Home> {
               textStyle: const TextStyle(fontSize: 16)),
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => More(mainTitleList[index].docID!)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => More(mainTitleList[index].docID!)));
           },
           child: const Text('More'),
         ),

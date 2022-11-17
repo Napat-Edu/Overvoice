@@ -12,7 +12,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-
   static List<TitleDetails> mainTitleList = [];
   List<TitleDetails> displayList = [];
 
@@ -30,11 +29,13 @@ class _SearchState extends State<Search> {
   Future<List<TitleDetails>> getFilterAudioInfo() async {
     List<TitleDetails> list = [];
 
-    await FirebaseFirestore.instance.collection('AudioInfo').get().then((QuerySnapshot querySnapshot) {
+    await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         list.add(TitleDetails(
-          doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id
-        ));
+            doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id));
       });
     });
 
@@ -89,7 +90,18 @@ class _SearchState extends State<Search> {
                   ),
                   itemCount: displayList.length,
                   itemBuilder: (context, index) => ListTile(
-                    leading: Image.network(displayList[index].imgURL!),
+                    leading: SizedBox(
+                        width: 55,
+                        height: 55,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                          ]),
+                          child: Image.network(
+                            mainTitleList[index].imgURL!,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
                     title: Text(
                       displayList[index].titleName!,
                       style: const TextStyle(
@@ -109,8 +121,11 @@ class _SearchState extends State<Search> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => More(displayList[index].docID!)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    More(displayList[index].docID!)));
                       },
                       child: const Text('More'),
                     ),
