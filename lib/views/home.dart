@@ -113,7 +113,14 @@ class _HomeState extends State<Home> {
       ),
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
-        leading: Image.network(mainTitleList[index].imgURL!),
+        leading: SizedBox(
+          width: 55,
+          height: 55,
+          child: Image.network(
+            mainTitleList[index].imgURL!,
+            fit: BoxFit.cover,
+          ),
+        ),
         title: Text(
           mainTitleList[index].titleName!,
           style: const TextStyle(
@@ -131,7 +138,9 @@ class _HomeState extends State<Home> {
               textStyle: const TextStyle(fontSize: 16)),
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => More(mainTitleList[index].docID!)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => More(mainTitleList[index].docID!)));
           },
           child: const Text('More'),
         ),
@@ -149,7 +158,7 @@ class _HomeState extends State<Home> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         list.add(TitleDetails(
-            doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id));
+            doc["name"], doc["enName"], doc["episode"], doc["duration"], doc["img"], doc.id));
       });
     });
 

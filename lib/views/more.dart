@@ -15,7 +15,6 @@ class More extends StatefulWidget {
 class _MoreState extends State<More> {
   String docID;
   _MoreState(this.docID);
-  //${widget.docID}
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +85,7 @@ class _MoreState extends State<More> {
               ),
               Container(
                 child: Text(
-                  "Episode : ${detailList['episode']}",
+                  detailList['episode'],
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700),
                 ),
