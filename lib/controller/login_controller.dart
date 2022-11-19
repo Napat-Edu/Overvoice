@@ -63,7 +63,7 @@ class LoginController with ChangeNotifier {
     googleSignInAccount = await _googleSignIn.signOut();
     //await FacebookAuth.i.logOut();
     userDetails = null;
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
     notifyListeners();
   }
 }

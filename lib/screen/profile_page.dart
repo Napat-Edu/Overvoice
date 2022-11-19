@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,11 +24,11 @@ class ProfilePage extends StatelessWidget {
                 child: Text("Edit"),
               ),
               PopupMenuItem<int>(
-                value: 0,
+                value: 1,
                 child: Text("Logout"),
               ),
             ],
-            onSelected: (item) => SelectedItem(context, item),
+            onSelected: (item) => selectedItem(context, item),
           ),
         ],
       ),
@@ -228,18 +226,18 @@ class ProfilePage extends StatelessWidget {
                 )),
 
             //for log-out------------------------------------------------------
-            /*ActionChip(
-              avatar: const Icon(Icons.logout),
-              label: const Text("Logout"),
-              onPressed: () {
-                Provider.of<LoginController>(context, listen: false).logout();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const LoginPageRoute()),
-                );
-              },
-            ),*/
+            // ActionChip(
+            //   avatar: const Icon(Icons.logout),
+            //   label: const Text("Logout"),
+            //   onPressed: () {
+            //     Provider.of<LoginController>(context, listen: false).logout();
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => const LoginPageRoute()),
+            //     );
+            //   },
+            // ),
           ],
         ),
       );
@@ -250,7 +248,7 @@ class ProfilePage extends StatelessWidget {
     }
   }
 
-  SelectedItem(BuildContext context, int item) {
+  selectedItem(BuildContext context, int item) async {
     switch (item) {
       case 0:
         break;
