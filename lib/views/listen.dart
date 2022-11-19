@@ -116,7 +116,8 @@ class _ListenState extends State<Listen> {
                               ),
                             ),
                           ),
-                          title: Text(' ${listenList[index].userName!}',
+                          title: Text(
+                            ' ${listenList[index].userName!}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,

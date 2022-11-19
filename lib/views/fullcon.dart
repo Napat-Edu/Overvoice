@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/views/voiceover.dart';
 
+import '../model/conver_detail.dart';
+
 class FullCon extends StatefulWidget {
   const FullCon({super.key});
 
@@ -11,6 +13,22 @@ class FullCon extends StatefulWidget {
 }
 
 class _FullConState extends State<FullCon> {
+
+  List<ConverDetails> converList = [
+    ConverDetails(
+        "Sword Art Online", "Kirito", "ไม่หรอกไม่มีทางเป็นแบบนั้นหรอก"),
+    ConverDetails("Sword Art Online", "Kirito",
+        "เดิมทีถ้าเป็นวิญญานล่ะก็ เมื่อกี้ต้องไม่ใช้ผลึกเคลื่อนย้ายสิ หือ? ผลึกเคลื่อนย้ายหรอ?"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +129,18 @@ class _FullConState extends State<FullCon> {
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(10),
                                   bottomRight: Radius.circular(10))),
-                        ))
+                        child: Expanded(
+                          child: ListView.builder(
+                              itemCount: converList.length,
+                              itemBuilder: (context, index) => ListTile(
+                                    title: Text(
+                                      converList[index].conversation!,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )),
+                        )),)
                   ],
                 ),
                 SizedBox(

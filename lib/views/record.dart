@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:overvoice_project/model/conver_detail.dart';
 
 class Record extends StatefulWidget {
   const Record({super.key});
@@ -10,6 +11,21 @@ class Record extends StatefulWidget {
 }
 
 class _RecordState extends State<Record> {
+  List<ConverDetails> converList = [
+    ConverDetails(
+        "Sword Art Online", "Kirito", "ไม่หรอกไม่มีทางเป็นแบบนั้นหรอก"),
+    ConverDetails("Sword Art Online", "Kirito",
+        "เดิมทีถ้าเป็นวิญญานล่ะก็ เมื่อกี้ต้องไม่ใช้ผลึกเคลื่อนย้ายสิ หือ? ผลึกเคลื่อนย้ายหรอ?"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,16 +110,29 @@ class _RecordState extends State<Record> {
                     height: 380,
                     width: 352,
                     child: Container(
-                      height: 360,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFFFD4B2),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                    ))
+                        height: 360,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFFFD4B2),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        child: Expanded(
+                          child: ListView.builder(
+                              itemCount: converList.length,
+                              itemBuilder: (context, index) => ListTile(
+                                    title: Text(
+                                      converList[index].conversation!,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )),
+                        )))
               ],
             ),
-            SizedBox(height: 80,),
+            SizedBox(
+              height: 80,
+            ),
             SizedBox(
               width: 300,
               height: 44,
@@ -119,7 +148,10 @@ class _RecordState extends State<Record> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Record()));
                 },
-                child: const Text('Save'),
+                child: Semantics(
+                  child: Text("Save"),
+                  label: 'Save',
+                ),
               ),
             ),
           ],
