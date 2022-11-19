@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 
+import 'more.dart';
+
 class Search extends StatefulWidget {
   const Search({super.key});
 
@@ -10,7 +12,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-
   static List<TitleDetails> mainTitleList = [];
   List<TitleDetails> displayList = [];
 
@@ -20,7 +21,8 @@ class _SearchState extends State<Search> {
     setState(() {
       displayList = mainTitleList
           .where((element) =>
-              element.titleName!.toLowerCase().contains(value.toLowerCase()))
+              element.titleName!.toLowerCase().contains(value.toLowerCase()) ||
+              element.titleNameEng!.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -28,11 +30,13 @@ class _SearchState extends State<Search> {
   Future<List<TitleDetails>> getFilterAudioInfo() async {
     List<TitleDetails> list = [];
 
-    await FirebaseFirestore.instance.collection('AudioInfo').get().then((QuerySnapshot querySnapshot) {
+    await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        list.add(TitleDetails(
-          doc["name"], doc["episode"], doc["duration"], doc["img"]
-        ));
+        list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
+            doc["duration"], doc["img"], doc.id));
       });
     });
 
@@ -77,7 +81,7 @@ class _SearchState extends State<Search> {
           child: displayList.isEmpty
               ? const Center(
                   child: Text(
-                    "Your search didn't match any documents.",
+                    "ขอโทษนะ ไม่พบเรื่องที่คุณตามหาเลย",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 )
@@ -87,7 +91,18 @@ class _SearchState extends State<Search> {
                   ),
                   itemCount: displayList.length,
                   itemBuilder: (context, index) => ListTile(
-                    leading: Image.network(displayList[index].imgURL!),
+                    leading: SizedBox(
+                        width: 55,
+                        height: 55,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                          ]),
+                          child: Image.network(
+                            displayList[index].imgURL!,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
                     title: Text(
                       displayList[index].titleName!,
                       style: const TextStyle(
@@ -96,7 +111,7 @@ class _SearchState extends State<Search> {
                           fontSize: 18),
                     ),
                     subtitle: Text(
-                      'Episode : ${displayList[index].episode!}',
+                      displayList[index].episode!,
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
@@ -106,7 +121,13 @@ class _SearchState extends State<Search> {
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    More(displayList[index].docID!)));
+                      },
                       child: const Text('More'),
                     ),
                   ),

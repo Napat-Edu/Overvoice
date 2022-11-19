@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/title_detail.dart';
+import 'more.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
         Container(
             color: const Color(0xFFFF7200),
             child: Container(
-              height: 32,
+              height: 40,
               child: Row(children: const <Widget>[
                 Expanded(
                     flex: 1,
@@ -92,15 +92,14 @@ class _HomeState extends State<Home> {
             )),
         Expanded(
           child: FutureBuilder<Widget>(
-       future: getData(),
-       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot){
-         if(snapshot.hasData) {
-          return snapshot.data!;
-         }
+              future: getData(),
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                }
 
-         return Text("Loading");
-       }
-      ),
+                return const Text("Loading");
+              }),
         ),
       ]),
     );
@@ -114,14 +113,25 @@ class _HomeState extends State<Home> {
       ),
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
-        leading: Image.network(mainTitleList[index].imgURL!),
+        leading: SizedBox(
+            width: 55,
+            height: 55,
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+              ]),
+              child: Image.network(
+                mainTitleList[index].imgURL!,
+                fit: BoxFit.cover,
+              ),
+            )),
         title: Text(
           mainTitleList[index].titleName!,
           style: const TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         subtitle: Text(
-          'Episode : ${mainTitleList[index].episode!}',
+          mainTitleList[index].episode!,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         ),
         trailing: TextButton(
@@ -130,7 +140,12 @@ class _HomeState extends State<Home> {
               backgroundColor: const Color(0xFFFF7200),
               foregroundColor: Colors.white,
               textStyle: const TextStyle(fontSize: 16)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => More(mainTitleList[index].docID!)));
+          },
           child: const Text('More'),
         ),
       ),
@@ -140,11 +155,14 @@ class _HomeState extends State<Home> {
   Future<List<TitleDetails>> getRecommendAudioInfo() async {
     List<TitleDetails> list = [];
 
-    await FirebaseFirestore.instance.collection('AudioInfo').limit(5).get().then((QuerySnapshot querySnapshot) {
+    await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .limit(5)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         list.add(TitleDetails(
-          doc["name"], doc["episode"], doc["duration"], doc["img"]
-        ));
+            doc["name"], doc["enName"], doc["episode"], doc["duration"], doc["img"], doc.id));
       });
     });
 
