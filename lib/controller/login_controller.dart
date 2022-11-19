@@ -6,7 +6,6 @@ import 'package:overvoice_project/model/user_detail.dart';
 //import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class LoginController with ChangeNotifier {
-
   //object
   var _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? googleSignInAccount;
@@ -17,14 +16,15 @@ class LoginController with ChangeNotifier {
   googleLogin() async {
     googleSignInAccount = await _googleSignIn.signIn();
 
-    final GoogleSignInAuthentication? googleAuth = await googleSignInAccount?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleSignInAccount?.authentication;
 
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
     FirebaseAuth.instance.signInWithCredential(credential);
-    
+
     //insert values to user details
     userDetails = UserDetails(
       displayName: googleSignInAccount!.displayName,
@@ -63,7 +63,7 @@ class LoginController with ChangeNotifier {
     googleSignInAccount = await _googleSignIn.signOut();
     //await FacebookAuth.i.logOut();
     userDetails = null;
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
     notifyListeners();
   }
 }
