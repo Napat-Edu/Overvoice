@@ -80,36 +80,95 @@ class _ListenPageState extends State<ListenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFF7200),
       appBar: AppBar(
-        title: Text(widget.titleName),
-        backgroundColor: const Color(0xFFFF7200),
+        title: Text(
+          "Sword Art Online",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xFFFF7200),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_rounded,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Container(
-          alignment: Alignment.center,
+          padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+          width: double.infinity,
+          height: double.infinity,
+          color: Color(0xFFFF7200),
           child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
+            children: <Widget>[
               CircleAvatar(
-                backgroundImage: Image.network(
-                        "https://static.wikia.nocookie.net/versusprofiles/images/b/bc/Jotaro_Part_3.png/revision/latest?cb=20191027201937")
-                    .image,
-                radius: 100,
+                radius: 56,
+                backgroundColor: Colors.white,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 52,
+                    backgroundImage: NetworkImage(
+                        "https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),
+                  ),
+                ),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 12,
               ),
-              const Text(
-                "โจทาโร่",
+              Text(
+                "Kirito",
                 style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white),
               ),
-              const SizedBox(
-                height: 300,
+              SizedBox(
+                height: 30,
+              ),
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 450,
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 20, left: 26, right: 26),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Conversation",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                      top: 60,
+                      left: 10,
+                      height: 380,
+                      width: 352,
+                      child: Container(
+                        height: 360,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFFFD4B2),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                      ))
+                ],
               ),
               Slider(
                 min: 0,
@@ -124,6 +183,7 @@ class _ListenPageState extends State<ListenPage> {
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,
+                label: 'Set volume value',
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
