@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
 
+import 'listen.dart';
+
 class More extends StatefulWidget {
   String docID;
   More(this.docID, {super.key});
@@ -137,7 +139,12 @@ class _MoreState extends State<More> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Listen()));
+                      },
                       child: const Text('Listen'),
                     ),
                   ),

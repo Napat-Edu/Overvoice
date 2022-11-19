@@ -7,7 +7,8 @@ class Record extends StatefulWidget {
   Record(this.detailList, this.character, this.characterimgURL, {super.key});
 
   @override
-  State<Record> createState() => _RecordState(detailList, character, characterimgURL);
+  State<Record> createState() =>
+      _RecordState(detailList, character, characterimgURL);
 }
 
 class _RecordState extends State<Record> {
@@ -15,6 +16,8 @@ class _RecordState extends State<Record> {
   String character;
   String characterimgURL;
   _RecordState(this.detailList, this.character, this.characterimgURL);
+
+  late List conversationList = detailList["conversation"].split(",");
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,7 @@ class _RecordState extends State<Record> {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: 52,
-                  backgroundImage: NetworkImage(
-                      characterimgURL),
+                  backgroundImage: NetworkImage(characterimgURL),
                 ),
               ),
             ),
@@ -106,10 +108,22 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
+                      child: ListView.builder(
+                          itemCount: conversationList.length,
+                          itemBuilder: (context, index) => ListTile(
+                                title: Text(
+                                  conversationList[index],
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )),
                     ))
               ],
             ),
-            SizedBox(height: 80,),
+            SizedBox(
+              height: 80,
+            ),
             SizedBox(
               width: 300,
               height: 44,
@@ -124,7 +138,10 @@ class _RecordState extends State<Record> {
                 onPressed: () {
                   //voiceover
                 },
-                child: const Text('Start'),
+                child: Semantics(
+                  child: Text("Start"),
+                  label: 'เริ่มพากย์',
+                ),
               ),
             ),
           ],
