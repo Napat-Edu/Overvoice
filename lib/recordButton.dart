@@ -81,7 +81,8 @@ class SoundRecorder {
     final filepath = await _audioRecorder!.stopRecorder();
     final file = File(filepath!);
     //print('Record : $file');
-    _uploadFile(file);
+    final soundInfo = await _uploadFile(file);
+    log(soundInfo.downloadTokens);
   }
 
   Future toggleRecording() async {
@@ -98,11 +99,13 @@ class SoundRecorder {
     // Create a storage reference from our app
     final storageRef = FirebaseStorage.instance.ref();
 
-    final soundRef = storageRef.child("audio.aac");
+    final soundRef = storageRef.child("helloworld4.aac");
 
     // String filePath = '${appDocDir.path}/audio.aac';
     // File file = File(filePath);
 
     await soundRef.putFile(file);
+
+    return soundRef.getMetadata();
   }
 }
