@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
         Container(
             color: const Color(0xFFFF7200),
             child: Container(
-              height: 32,
+              height: 40,
               child: Row(children: const <Widget>[
                 Expanded(
                     flex: 1,
@@ -117,8 +117,9 @@ class _HomeState extends State<Home> {
             width: 55,
             height: 55,
             child: Container(
-              decoration:
-                  BoxDecoration(boxShadow: [BoxShadow(color: Color(0xFFFFAA66),blurRadius: 5)]),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+              ]),
               child: Image.network(
                 mainTitleList[index].imgURL!,
                 fit: BoxFit.cover,

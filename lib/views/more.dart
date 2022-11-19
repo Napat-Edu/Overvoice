@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:overvoice_project/views/listen.dart';
 import 'package:overvoice_project/views/start.dart';
 
 class More extends StatefulWidget {
@@ -139,7 +140,12 @@ class _MoreState extends State<More> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Listen()));
+                      },
                       child: const Text('Listen'),
                     ),
                   ),
