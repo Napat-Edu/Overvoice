@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
+import '../screen/listen_page.dart';
 
 class Listen extends StatefulWidget {
-  const Listen({super.key});
+  Map<String, dynamic> detailList;
+  Listen(this.detailList, {super.key});
 
   @override
-  State<Listen> createState() => _ListenState();
+  State<Listen> createState() => _ListenState(detailList);
 }
 
 class _ListenState extends State<Listen> {
+  Map<String, dynamic> detailList;
+  _ListenState(this.detailList);
+
   List<ListenDetails> listenList = [
     ListenDetails("nwtkd", "2289", "87",
         "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("ksupaste", "2489", "43",
+    ListenDetails("ksupasate", "2489", "43",
         "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
     ListenDetails("napatwrd", "1289", "45",
         "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
@@ -31,7 +34,7 @@ class _ListenState extends State<Listen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sword Art Online",
+          detailList["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -56,7 +59,7 @@ class _ListenState extends State<Listen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Image border
                   child: Image.network(
-                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2021/04/Sword-Art-Online.jpg",
+                    detailList["coverimg"],
                     fit: BoxFit.cover,
                     color: Colors.black.withOpacity(0.2),
                     colorBlendMode: BlendMode.darken,
@@ -142,7 +145,13 @@ class _ListenState extends State<Listen> {
                                 backgroundColor: const Color(0xFFFF7200),
                                 foregroundColor: Colors.white,
                                 textStyle: const TextStyle(fontSize: 16)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ListenPage(detailList)));
+                            },
                             child: const Text('Play'),
                           ),
                         )))

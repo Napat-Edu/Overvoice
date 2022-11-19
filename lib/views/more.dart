@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
 
-import 'listen.dart';
+import 'listen_list_page.dart';
 
 class More extends StatefulWidget {
   String docID;
@@ -143,7 +143,7 @@ class _MoreState extends State<More> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Listen()));
+                                builder: (context) => Listen(detailList)));
                       },
                       child: const Text('Listen'),
                     ),
