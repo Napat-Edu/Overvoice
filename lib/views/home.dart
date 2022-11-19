@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         subtitle: Text(
-          'Episode : ${mainTitleList[index].episode!}',
+          mainTitleList[index].episode!,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         ),
         trailing: TextButton(

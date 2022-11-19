@@ -82,8 +82,8 @@ class _VoiceOverState extends State<VoiceOver> {
                   textStyle: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.w600)),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Record()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Record()));
               },
               child: const Text('Record Full Conversation'),
             ),

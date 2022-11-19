@@ -98,7 +98,7 @@ class _SearchState extends State<Search> {
                             BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
                           ]),
                           child: Image.network(
-                            mainTitleList[index].imgURL!,
+                            displayList[index].imgURL!,
                             fit: BoxFit.cover,
                           ),
                         )),
@@ -110,7 +110,7 @@ class _SearchState extends State<Search> {
                           fontSize: 18),
                     ),
                     subtitle: Text(
-                      'Episode : ${displayList[index].episode!}',
+                      displayList[index].episode!,
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),

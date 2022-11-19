@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Record extends StatefulWidget {
-  const Record({super.key});
+  Map<String, dynamic> detailList;
+  String character;
+  String characterimgURL;
+  Record(this.detailList, this.character, this.characterimgURL, {super.key});
 
   @override
-  State<Record> createState() => _RecordState();
+  State<Record> createState() => _RecordState(detailList, character, characterimgURL);
 }
 
 class _RecordState extends State<Record> {
+  Map<String, dynamic> detailList;
+  String character;
+  String characterimgURL;
+  _RecordState(this.detailList, this.character, this.characterimgURL);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sword Art Online",
+          detailList["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -44,7 +50,7 @@ class _RecordState extends State<Record> {
                 child: CircleAvatar(
                   radius: 52,
                   backgroundImage: NetworkImage(
-                      "https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),
+                      characterimgURL),
                 ),
               ),
             ),
@@ -52,7 +58,7 @@ class _RecordState extends State<Record> {
               height: 12,
             ),
             Text(
-              "Kirito",
+              character,
               style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
@@ -116,10 +122,9 @@ class _RecordState extends State<Record> {
                     textStyle: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w600)),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Record()));
+                  //voiceover
                 },
-                child: const Text('Save'),
+                child: const Text('Start'),
               ),
             ),
           ],
