@@ -187,7 +187,7 @@ class _MoreState extends State<More> {
   }
 
   Future<Map<String, dynamic>?> queryData() async {
-    var dataDoc = await FirebaseFirestore.instance.collection('UserInfo').doc(docID).get();
+    var dataDoc = await FirebaseFirestore.instance.collection('AudioInfo').doc(docID).get();
     Map<String,dynamic>? fieldMap = dataDoc.data();
     return fieldMap;
   }
