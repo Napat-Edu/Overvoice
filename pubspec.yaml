@@ -43,6 +43,9 @@ dependencies:
   firebase_core_platform_interface: 4.5.2
   audioplayers: ^0.20.1
   firebase_storage: ^11.0.5
+  flutter_beep: ^1.0.0
+  permission_handler: ^10.2.0
+  flutter_sound: ^9.2.13
 
 flutter_icons:
   android: true

@@ -63,8 +63,7 @@ class _MoreState extends State<More> {
             child: Container(
               width: double.infinity,
               height: 250,
-              child: Image.network(
-                  detailList!["coverimg"],
+              child: Image.network(detailList!["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
                   colorBlendMode: BlendMode.darken),
@@ -78,7 +77,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 21, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
@@ -88,7 +88,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList['episode'],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      fontSize: 19, fontWeight: FontWeight.w700),
                 ),
               ),
               const SizedBox(
@@ -98,7 +99,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(
@@ -109,7 +111,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "\n${detailList['detail']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w400),
                 ),
               ),
               const SizedBox(
@@ -126,7 +129,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               const SizedBox(
-                height: 200,
+                height: 150,
               ),
               Row(
                 children: [
@@ -149,7 +152,7 @@ class _MoreState extends State<More> {
                     ),
                   ),
                   const SizedBox(
-                    width: 55,
+                    width: 10,
                   ),
                   Expanded(
                     child: TextButton(
@@ -161,17 +164,19 @@ class _MoreState extends State<More> {
                           textStyle: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        if(detailList['voiceoverAmount'] == '1') {
+                        if (detailList['voiceoverAmount'] == '1') {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Record(detailList, detailList["character"], detailList["characterImage"])));
-                        }
-                        else {
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Record(
+                                      detailList,
+                                      detailList["character"],
+                                      detailList["characterImage"])));
+                        } else {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Start(detailList)));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Start(detailList)));
                         }
                       },
                       child: const Text('Start'),
@@ -187,8 +192,11 @@ class _MoreState extends State<More> {
   }
 
   Future<Map<String, dynamic>?> queryData() async {
-    var dataDoc = await FirebaseFirestore.instance.collection('AudioInfo').doc(docID).get();
-    Map<String,dynamic>? fieldMap = dataDoc.data();
+    var dataDoc = await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .doc(docID)
+        .get();
+    Map<String, dynamic>? fieldMap = dataDoc.data();
     return fieldMap;
   }
 }
