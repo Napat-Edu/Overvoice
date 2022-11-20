@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,28 +76,50 @@ class ProfilePage extends StatelessWidget {
         height: 100,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              /*Positioned(
-                right: 100,
-                child: Icon(Icons.edit, size: 15),
-              ),*/
-              //Icon(Icons.edit, size: 15),
-              Text(
-                'Lorem lpsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has beenthe industry has standard dummy text ever since the 1500s.',
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1.4,
-                  color: Color.fromARGB(255, 152, 137, 137),
-                ),
-              ),
-            ],
+          child: FutureBuilder<Widget>(
+            future: getCaptionData(),
+            builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
+
+              return const Center(
+                child: Text("Loading"),
+              );
+            }),
           ),
         ),
       );
+  Future<Widget> getCaptionData() async {
+    var dataDoc = await queryData();
+
+    return Future.delayed(const Duration(seconds: 0), () {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            dataDoc!["caption"],
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              fontSize: 12,
+              height: 1.4,
+              color: Color.fromARGB(255, 152, 137, 137),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Future<Map<String, dynamic>?> queryData() async {
+    var dataDoc = await FirebaseFirestore.instance
+        .collection('UserInfo')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+    Map<String, dynamic>? fieldMap = dataDoc.data();
+    return fieldMap;
+  }
 
   Widget recLike(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -205,25 +228,32 @@ class ProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundColor: Colors.grey.shade800,
-              backgroundImage: Image.network(user!.photoURL ?? "").image,
-              radius: profileHeight / 2,
+              backgroundColor: Color(0xFFFFAA66),
+              radius: 54,
+              child: Align(
+                alignment: Alignment.center,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: Image.network(user!.photoURL ?? "").image,
+                ),
+              ),
             ),
 
-            Text(user.displayName ?? "",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.4,
-                  fontWeight: FontWeight.normal,
-                )),
-            Text(user.email ?? "",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.4,
-                  fontWeight: FontWeight.normal,
-                )),
+            SizedBox(
+              height: 10,
+            ),
+
+            Text(
+              user.displayName ?? "",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              user.email ?? "",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
 
             //for log-out------------------------------------------------------
             // ActionChip(

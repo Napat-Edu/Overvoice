@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +24,9 @@ class LoginController with ChangeNotifier {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
 
-    //insert values to user details
-    userDetails = UserDetails(
-      displayName: googleSignInAccount!.displayName,
-      email: googleSignInAccount!.email,
-      photoURL: googleSignInAccount!.photoUrl,
-    );
+    await checkUserInfo();
 
     notifyListeners();
   }
@@ -65,5 +61,27 @@ class LoginController with ChangeNotifier {
     userDetails = null;
     await FirebaseAuth.instance.signOut();
     notifyListeners();
+  }
+
+  checkUserInfo() async {
+    FirebaseFirestore.instance
+    .collection('UserInfo')
+    .doc(await FirebaseAuth.instance.currentUser!.email)
+    .get()
+    .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists == false) {
+        CollectionReference users = FirebaseFirestore.instance.collection('UserInfo');
+        users
+          .add({
+            'caption': "ยังไม่มีคำอธิบายโปรไฟล์",
+            'likeAmount': "0",
+            'recordAmount': "0",
+            'photoURL': FirebaseAuth.instance.currentUser!.photoURL,
+            'username': FirebaseAuth.instance.currentUser!.displayName,
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+      }
+    });
   }
 }

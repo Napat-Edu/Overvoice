@@ -27,6 +27,13 @@ class LoginPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset("assets/image/Icon.png"),
+          Divider(
+            thickness: 3,
+            color: Color(0xFFFFAA66),
+          ),
+          SizedBox(
+            height: 25,
+          ),
           GestureDetector(
             child: SignInButton(
               Buttons.Google,
@@ -40,6 +47,13 @@ class LoginPage extends StatelessWidget {
                 );
               },
             ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Divider(
+            thickness: 3,
+            color: Color(0xFFFFAA66),
           ),
         ],
       ),

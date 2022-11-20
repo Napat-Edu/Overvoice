@@ -40,10 +40,13 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(10), // Image border
-                  child: Image.network(
-                      "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg"))
+              Semantics(
+                label: "้ค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // Image border
+                    child: Image.network(
+                        "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg")),
+              ),
             ],
           ),
         ),
@@ -161,8 +164,8 @@ class _HomeState extends State<Home> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        list.add(TitleDetails(
-            doc["name"], doc["enName"], doc["episode"], doc["duration"], doc["img"], doc.id));
+        list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
+            doc["duration"], doc["img"], doc.id));
       });
     });
 
