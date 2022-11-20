@@ -143,7 +143,7 @@ class _MoreState extends State<More> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Listen(detailList)));
+                                builder: (context) => Listen(detailList, docID)));
                       },
                       child: const Text('Listen'),
                     ),

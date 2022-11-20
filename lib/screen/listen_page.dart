@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 
+import 'package:overvoice_project/model/listen_detail.dart';
+
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
   final hours = twoDigits(duration.inHours);
@@ -20,16 +22,18 @@ class ListenPage extends StatefulWidget {
   // const ListenPage({super.key, required titleName});
 
   Map<String, dynamic> detailList;
+  ListenDetails listenList;
 
-  ListenPage(this.detailList, {super.key});
+  ListenPage(this.detailList, this.listenList, {super.key});
 
   @override
-  State<ListenPage> createState() => _ListenPageState(detailList);
+  State<ListenPage> createState() => _ListenPageState(detailList, listenList);
 }
 
 class _ListenPageState extends State<ListenPage> {
   Map<String, dynamic> detailList;
-  _ListenPageState(this.detailList);
+  ListenDetails listenList;
+  _ListenPageState(this.detailList, this.listenList);
 
   final audioPlayer = AudioPlayer();
   // log('data: $metadata');
@@ -117,7 +121,7 @@ class _ListenPageState extends State<ListenPage> {
                 height: 12,
               ),
               Text(
-                detailList["episode"],
+                "พากย์เสียงโดย ${listenList.userName!}",
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -223,7 +227,7 @@ class _ListenPageState extends State<ListenPage> {
                     } else {
                       final storageRef = await FirebaseStorage.instance.ref();
                       final soundRef = await storageRef
-                          .child("helloworld2.aac"); // <-- your file name
+                          .child(listenList.audioFileName!); // <-- your file name
                       final metaData = await soundRef.getDownloadURL();
                       log('data: ${metaData.toString()}');
                       String url = metaData.toString();

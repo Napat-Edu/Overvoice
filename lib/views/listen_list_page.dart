@@ -1,33 +1,25 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import '../screen/listen_page.dart';
 
 class Listen extends StatefulWidget {
   Map<String, dynamic> detailList;
-  Listen(this.detailList, {super.key});
+  String docID;
+  Listen(this.detailList, this.docID, {super.key});
 
   @override
-  State<Listen> createState() => _ListenState(detailList);
+  State<Listen> createState() => _ListenState(detailList, docID);
 }
 
 class _ListenState extends State<Listen> {
   Map<String, dynamic> detailList;
-  _ListenState(this.detailList);
+  String docID;
+  _ListenState(this.detailList, this.docID);
 
-  List<ListenDetails> listenList = [
-    ListenDetails("nwtkd", "2289", "87",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("ksupasate", "2489", "43",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("napatwrd", "1289", "45",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("tnzgx", "923", "75",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("atthaset", "756", "33",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-    ListenDetails("ssx7ay", "234", "63",
-        "https://i.pinimg.com/736x/46/9c/6f/469c6f7badd2745729fc122782c19ff9.jpg"),
-  ];
+  List<ListenDetails> listenList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -101,63 +93,112 @@ class _ListenState extends State<Listen> {
               height: 10,
             ),
             Expanded(
-                child: ListView.separated(
-                    separatorBuilder: (context, index) => const Divider(
-                          color: Color(0xFFFFAA66),
-                        ),
-                    itemCount: listenList.length,
-                    itemBuilder: (context, index) => ListTile(
-                          leading: CircleAvatar(
-                            radius: 28,
-                            backgroundColor: Color(0xFFFFAA66),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: CircleAvatar(
-                                radius: 26,
-                                backgroundImage:
-                                    NetworkImage(listenList[index].imgURL!),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            ' ${listenList[index].userName!}',
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(Icons.play_arrow),
-                              Text(listenList[index].viewCount!),
-                              SizedBox(width: 10),
-                              Icon(
-                                Icons.favorite,
-                                size: 18,
-                              ),
-                              Text(' ${listenList[index].likeCount!}'),
-                            ],
-                          ),
-                          trailing: TextButton(
-                            style: TextButton.styleFrom(
-                                fixedSize: const Size(10, 10),
-                                backgroundColor: const Color(0xFFFF7200),
-                                foregroundColor: Colors.white,
-                                textStyle: const TextStyle(fontSize: 16)),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ListenPage(detailList)));
-                            },
-                            child: const Text('Play'),
-                          ),
-                        )))
+              child: FutureBuilder<Widget>(
+                future: getDataUI(docID),
+                builder:
+                    ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                  if (snapshot.hasData) {
+                    return snapshot.data!;
+                  }
+
+                  return const Center(
+                    child: Text("Loading"),
+                  );
+                }),
+              ),
+            )
           ],
         ),
       ),
     );
+  }
+
+  Future<Widget> getDataUI(String docID) async {
+    listenList = await getHistoryList(docID);
+    return Future.delayed(const Duration(seconds: 0), () {
+      return listenList.isEmpty
+          ? const Center(
+              child: Text(
+                "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+            )
+          : ListView.separated(
+              separatorBuilder: (context, index) => const Divider(
+                    color: Color(0xFFFFAA66),
+                  ),
+              itemCount: listenList.length,
+              itemBuilder: (context, index) => ListTile(
+                    leading: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Color(0xFFFFAA66),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 26,
+                          backgroundImage:
+                              NetworkImage(listenList[index].imgURL!),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      ' ${listenList[index].userName!}',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite,
+                          size: 18,
+                        ),
+                        Text(' ${listenList[index].likeCount!}'),
+                      ],
+                    ),
+                    trailing: TextButton(
+                      style: TextButton.styleFrom(
+                          fixedSize: const Size(10, 10),
+                          backgroundColor: const Color(0xFFFF7200),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 16)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListenPage(detailList, listenList[index])));
+                      },
+                      child: const Text('Play'),
+                    ),
+                  ));
+    });
+  }
+
+  Future<List<ListenDetails>> getHistoryList(String docID) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('History')
+        .where('audioInfo', isEqualTo: docID)
+        .where('status', isEqualTo: true)
+        .get();
+
+    List<ListenDetails> listenList = [];
+    await Future.forEach(querySnapshot.docs, (doc) async {
+      Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+      listenList.add(
+          ListenDetails(data!["username"], doc["likeCount"], data["photoURL"], doc["sound_1"],));
+    });
+
+    //listenList.where();
+
+    return listenList;
+  }
+
+  getUserInfo(String userDocID) async {
+    var collection = FirebaseFirestore.instance.collection('UserInfo');
+    var docSnapshot = await collection.doc(userDocID).get();
+    return docSnapshot.data();
   }
 }
