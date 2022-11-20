@@ -4,19 +4,21 @@ import 'package:overvoice_project/views/recordButton.dart';
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
   String character;
+  String docID;
   String characterimgURL;
-  Record(this.detailList, this.character, this.characterimgURL, {super.key});
+  Record(this.detailList, this.character, this.characterimgURL, this.docID, {super.key});
 
   @override
   State<Record> createState() =>
-      _RecordState(detailList, character, characterimgURL);
+      _RecordState(detailList, character, characterimgURL, docID);
 }
 
 class _RecordState extends State<Record> {
   Map<String, dynamic> detailList;
   String character;
   String characterimgURL;
-  _RecordState(this.detailList, this.character, this.characterimgURL);
+  String docID;
+  _RecordState(this.detailList, this.character, this.characterimgURL, this.docID);
 
   late List conversationList = detailList["conversation"].split(",");
 
@@ -122,7 +124,7 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
-            RecordButton(conversationList),
+            RecordButton(conversationList, docID),
           ],
         ),
       ),

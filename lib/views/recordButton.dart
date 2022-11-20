@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -13,10 +14,11 @@ import 'package:flutter_beep/flutter_beep.dart';
 
 class RecordButton extends StatefulWidget {
   List conversationList;
-  RecordButton(this.conversationList, {super.key});
+  String docID;
+  RecordButton(this.conversationList, this.docID, {super.key});
 
   @override
-  State<RecordButton> createState() => _RecordButtonState(conversationList);
+  State<RecordButton> createState() => _RecordButtonState(conversationList, docID);
 }
 
 bool voiceStart = false;
@@ -26,12 +28,13 @@ class _RecordButtonState extends State<RecordButton> {
 
   int StageVoice = 0;
   bool status = false;
+  String docID;
 
-  final recorder = SoundRecorder();
+  late final recorder = SoundRecorder(docID);
 
   List conversationList;
 
-  _RecordButtonState(this.conversationList);
+  _RecordButtonState(this.conversationList, this.docID);
 
   Object? get TimeCountDown => null;
 
@@ -126,6 +129,9 @@ class _RecordButtonState extends State<RecordButton> {
 class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecordingInitialised = false;
+  String docID;
+  
+  SoundRecorder(this.docID);
   bool get isRecording => _audioRecorder!.isRecording;
   bool get isPaused => _audioRecorder!.isPaused;
   bool get isStopped => _audioRecorder!.isStopped;
@@ -198,11 +204,25 @@ class SoundRecorder {
     final storageRef = FirebaseStorage.instance.ref();
 
     final soundRef = storageRef.child(voiceName);
-
-    print(voiceName);
     // String filePath = '${appDocDir.path}/audio.aac';
     // File file = File(filePath);
 
     await soundRef.putFile(file);
+
+    CollectionReference users =
+        FirebaseFirestore.instance.collection('History');
+    users
+        .doc()
+        .set({
+          'audioInfo': docID,
+          'likeCount': "0",
+          'sound_1': voiceName,
+          'sound_2': "",
+          'status': true,
+          'user_1': FirebaseAuth.instance.currentUser!.email,
+          'user_2': "",
+        })
+        .then((value) => print("History Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 }

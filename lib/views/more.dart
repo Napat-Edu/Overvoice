@@ -171,12 +171,13 @@ class _MoreState extends State<More> {
                                   builder: (context) => Record(
                                       detailList,
                                       detailList["character"],
-                                      detailList["characterImage"])));
+                                      detailList["characterImage"],
+                                      docID)));
                         } else {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Start(detailList)));
+                                  builder: (context) => Start(detailList, docID)));
                         }
                       },
                       child: const Text('Start'),
