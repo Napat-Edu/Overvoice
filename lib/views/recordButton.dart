@@ -25,6 +25,7 @@ class _RecordButtonState extends State<RecordButton> {
   int number = 0;
 
   int StageVoice = 0;
+  bool status = false;
 
   final recorder = SoundRecorder();
 
@@ -52,14 +53,18 @@ class _RecordButtonState extends State<RecordButton> {
   Widget build(BuildContext context) {
     final isRecording = recorder.isRecording;
     final onProgress = recorder.onProgress;
+    final isPaused = recorder.isPaused;
+    final isStopped = recorder.isStopped;
 
     final text;
-    if (isRecording && voiceStart) {
-      text = 'Pause';
-    } else if (!voiceStart) {
-      text = 'START';
+    if (isPaused) {
+      text = 'Reading';
+    } else if (isRecording) {
+      text = 'Show Time';
+    } else if (isStopped && StageVoice != 0) {
+      text = 'Finished';
     } else {
-      text = 'Resume';
+      text = 'START';
     }
 
     List<String> TimeCountDown = [];
@@ -72,50 +77,49 @@ class _RecordButtonState extends State<RecordButton> {
         child: Column(
       children: <Widget>[
         ElevatedButton(
-            // Start , Pause , Resume
-            child: Text(text),
-            onPressed: () async {
-              final isRecording = await recorder.toggleRecording();
-              setState(() {});
-            }),
-        ElevatedButton(
-          // Stop
-          child: voiceStart ? Text('STOP') : Text('Waiting'),
-          onPressed: voiceStart
-              ? () async {
-                  final isRecording = await recorder._stop();
+          onPressed: status || isStopped && StageVoice != 0
+              ? null
+              : () async {
+                  if (StageVoice == TimeCountDown.length) {
+                    await recorder._stop();
+                  } else if (TimeCountDown[StageVoice].isNotEmpty) {
+                    if (StageVoice == 0) {
+                      await recorder._record();
+                    } else {
+                      await recorder._resume();
+                      await null;
+                    }
+                    countdown(int.parse(TimeCountDown[StageVoice++]),
+                        TimeCountDown.length);
+
+                    //print(TimeCountDown[StageVoice++]);
+                  }
                   setState(() {});
-                }
-              : null,
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            setState(() async {
-              if (TimeCountDown[StageVoice].isNotEmpty) {
-                await countdown(int.parse(TimeCountDown[StageVoice++]));
-                //print(TimeCountDown[StageVoice++]);
-              } else {
-                StageVoice = 0;
-              }
-            });
-          },
-          child: Text('Test'),
+                },
+          child: Text(StageVoice >= TimeCountDown.length ? 'Finish' : text),
         ),
       ],
     ));
   }
 
-  Future countdown(int n) {
-    Timer.periodic(const Duration(seconds: 2), (timer) {
+  void countdown(int n, int m) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      status = false;
       print(timer.tick);
       n--;
       if (n == 0) {
         FlutterBeep.beep(false);
         print('Cancel timer');
         timer.cancel();
+        if (n >= m) {
+          recorder._stop();
+        } else {
+          recorder._pause();
+        }
+        setState(() {});
       }
     });
-    return recorder.toggleRecording();
+    status = true;
   }
 }
 
@@ -123,10 +127,12 @@ class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecordingInitialised = false;
   bool get isRecording => _audioRecorder!.isRecording;
-  String voiceName =
-      "${DateTime.now().toString().replaceAll(' ', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
-
+  bool get isPaused => _audioRecorder!.isPaused;
+  bool get isStopped => _audioRecorder!.isStopped;
   get onProgress => _audioRecorder!.onProgress;
+
+  String voiceName =
+      "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
 
   Future init() async {
     _audioRecorder = FlutterSoundRecorder();
@@ -197,6 +203,6 @@ class SoundRecorder {
     // String filePath = '${appDocDir.path}/audio.aac';
     // File file = File(filePath);
 
-    //await soundRef.putFile(file);
+    await soundRef.putFile(file);
   }
 }
