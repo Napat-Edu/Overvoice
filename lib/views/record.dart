@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/views/recordButton.dart';
 
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -72,7 +73,7 @@ class _RecordState extends State<Record> {
             Stack(
               children: <Widget>[
                 Container(
-                  height: 450,
+                  height: 300, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20, left: 26, right: 26),
                   decoration: BoxDecoration(
@@ -99,8 +100,8 @@ class _RecordState extends State<Record> {
                 Positioned(
                     top: 60,
                     left: 10,
-                    height: 380,
-                    width: 352,
+                    height: 200,
+                    width: 330, // บท
                     child: Container(
                       height: 360,
                       decoration: BoxDecoration(
@@ -121,29 +122,7 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
-            SizedBox(
-              height: 80,
-            ),
-            SizedBox(
-              width: 300,
-              height: 44,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFFFF7200),
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
-                onPressed: () {
-                  //voiceover
-                },
-                child: Semantics(
-                  child: Text("Start"),
-                  label: 'เริ่มพากย์',
-                ),
-              ),
-            ),
+            RecordButton(conversationList),
           ],
         ),
       ),
