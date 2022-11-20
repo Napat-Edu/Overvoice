@@ -24,12 +24,15 @@ class ProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundImage: Image.network(user!.photoURL ?? "").image,
-              radius: 50,
+              backgroundColor: Color(0xFFFFAA66),
+              radius: 54,child: Align(alignment: Alignment.center,child: CircleAvatar(radius: 50,backgroundImage: Image.network(user!.photoURL ?? "").image,),),
             ),
 
-            Text(user.displayName ?? ""),
-            Text(user.email ?? ""),
+            SizedBox(height: 10,),
+
+            Text(user.displayName ?? "",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+            SizedBox(height: 5,),
+            Text(user.email ?? "",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
 
             //for log-out
             ActionChip(
