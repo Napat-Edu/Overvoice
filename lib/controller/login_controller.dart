@@ -64,23 +64,26 @@ class LoginController with ChangeNotifier {
   }
 
   checkUserInfo() async {
+    String? userEmail = await FirebaseAuth.instance.currentUser!.email;
     FirebaseFirestore.instance
-    .collection('UserInfo')
-    .doc(await FirebaseAuth.instance.currentUser!.email)
-    .get()
-    .then((DocumentSnapshot documentSnapshot) {
+        .collection('UserInfo')
+        .doc(userEmail)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists == false) {
-        CollectionReference users = FirebaseFirestore.instance.collection('UserInfo');
+        CollectionReference users =
+            FirebaseFirestore.instance.collection('UserInfo');
         users
-          .add({
-            'caption': "ยังไม่มีคำอธิบายโปรไฟล์",
-            'likeAmount': "0",
-            'recordAmount': "0",
-            'photoURL': FirebaseAuth.instance.currentUser!.photoURL,
-            'username': FirebaseAuth.instance.currentUser!.displayName,
-          })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+            .doc(userEmail)
+            .set({
+              'caption': "ยังไม่มีคำอธิบายโปรไฟล์",
+              'likeAmount': "0",
+              'recordAmount': "0",
+              'photoURL': FirebaseAuth.instance.currentUser!.photoURL,
+              'username': FirebaseAuth.instance.currentUser!.displayName,
+            })
+            .then((value) => print("User Added"))
+            .catchError((error) => print("Failed to add user: $error"));
       }
     });
   }
