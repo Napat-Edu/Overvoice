@@ -149,7 +149,8 @@ class SoundRecorder {
     final file = File(filepath!);
     voiceStart = false;
     //print('Record : $file');
-    _uploadFile(file);
+    final soundInfo = await _uploadFile(file);
+    log(soundInfo.downloadTokens);
   }
 
   Future toggleRecording() async {

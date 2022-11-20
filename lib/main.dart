@@ -15,14 +15,23 @@ Future main() async {
 }
 
 // Homepage
+
 class FirstRoute extends StatelessWidget {
   const FirstRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
+    String temp = DateTime.now().toString();
+    temp = temp.replaceAll(' ', '');
+    temp = temp.replaceAll('-', '');
+    temp = temp.replaceAll(':', '');
+    temp = temp.replaceAll('.', '');
+    String name = 'Niwatchai';
+    temp = temp + name;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('First Route'),
+        title: Text(temp),
       ),
       body: Center(
           child: Column(
