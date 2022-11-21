@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Image.asset("assets/image/Icon.png"),
             Divider(
               thickness: 3,
@@ -52,10 +52,6 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(
               height: 25,
-            ),
-            Divider(
-              thickness: 3,
-              color: Color(0xFFFFAA66),
             ),
           ],
         ),

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:overvoice_project/views/listen.dart';
+import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
+
+import 'listen_list_page.dart';
 
 class More extends StatefulWidget {
   String docID;
@@ -16,7 +16,6 @@ class More extends StatefulWidget {
 class _MoreState extends State<More> {
   String docID;
   _MoreState(this.docID);
-  //${widget.docID}
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +63,7 @@ class _MoreState extends State<More> {
             child: Container(
               width: double.infinity,
               height: 250,
-              child: Image.network(
-                  "https://static.wikia.nocookie.net/swordartonline/images/3/32/Honeymoon_BD.png/revision/latest?cb=20130202031355",
+              child: Image.network(detailList!["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
                   colorBlendMode: BlendMode.darken),
@@ -77,9 +75,10 @@ class _MoreState extends State<More> {
             child: Column(children: <Widget>[
               Container(
                 child: Text(
-                  detailList!["name"],
+                  detailList["name"],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 21, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
@@ -87,9 +86,10 @@ class _MoreState extends State<More> {
               ),
               Container(
                 child: Text(
-                  "Episode : ${detailList['episode']}",
+                  detailList['episode'],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      fontSize: 19, fontWeight: FontWeight.w700),
                 ),
               ),
               const SizedBox(
@@ -97,9 +97,10 @@ class _MoreState extends State<More> {
               ),
               Container(
                 child: Text(
-                  "Character : ${detailList['character']}",
+                  "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(
@@ -110,7 +111,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "\n${detailList['detail']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w400),
                 ),
               ),
               const SizedBox(
@@ -127,7 +129,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               const SizedBox(
-                height: 200,
+                height: 150,
               ),
               Row(
                 children: [
@@ -144,13 +146,13 @@ class _MoreState extends State<More> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Listen()));
+                                builder: (context) => Listen(detailList, docID)));
                       },
                       child: const Text('Listen'),
                     ),
                   ),
                   const SizedBox(
-                    width: 55,
+                    width: 10,
                   ),
                   Expanded(
                     child: TextButton(
@@ -162,10 +164,21 @@ class _MoreState extends State<More> {
                           textStyle: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Start(detailList)));
+                        if (detailList['voiceoverAmount'] == '1') {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Record(
+                                      detailList,
+                                      detailList["character"],
+                                      detailList["characterImage"],
+                                      docID)));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Start(detailList, docID)));
+                        }
                       },
                       child: const Text('Start'),
                     ),
@@ -180,8 +193,11 @@ class _MoreState extends State<More> {
   }
 
   Future<Map<String, dynamic>?> queryData() async {
-    var dataDoc = await FirebaseFirestore.instance.collection('AudioInfo').doc(docID).get();
-    Map<String,dynamic>? fieldMap = dataDoc.data();
+    var dataDoc = await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .doc(docID)
+        .get();
+    Map<String, dynamic>? fieldMap = dataDoc.data();
     return fieldMap;
   }
 }

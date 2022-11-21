@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:overvoice_project/model/conver_detail.dart';
+import 'package:overvoice_project/views/recordButton.dart';
 
 class Record extends StatefulWidget {
-  const Record({super.key});
+  Map<String, dynamic> detailList;
+  String character;
+  String docID;
+  String characterimgURL;
+  Record(this.detailList, this.character, this.characterimgURL, this.docID, {super.key});
 
   @override
-  State<Record> createState() => _RecordState();
+  State<Record> createState() =>
+      _RecordState(detailList, character, characterimgURL, docID);
 }
 
 class _RecordState extends State<Record> {
-  List<ConverDetails> converList = [
-    ConverDetails(
-        "Sword Art Online", "Kirito", "ไม่หรอกไม่มีทางเป็นแบบนั้นหรอก"),
-    ConverDetails("Sword Art Online", "Kirito",
-        "เดิมทีถ้าเป็นวิญญานล่ะก็ เมื่อกี้ต้องไม่ใช้ผลึกเคลื่อนย้ายสิ หือ? ผลึกเคลื่อนย้ายหรอ?"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-    ConverDetails("Sword Art Online", "Kirito", "อะ ป่าวไม่มีอะไร"),
-  ];
+  Map<String, dynamic> detailList;
+  String character;
+  String characterimgURL;
+  String docID;
+  _RecordState(this.detailList, this.character, this.characterimgURL, this.docID);
+
+  late List conversationList = detailList["conversation"].split(",");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sword Art Online",
+          detailList["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -59,8 +55,7 @@ class _RecordState extends State<Record> {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: 52,
-                  backgroundImage: NetworkImage(
-                      "https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),
+                  backgroundImage: NetworkImage(characterimgURL),
                 ),
               ),
             ),
@@ -68,7 +63,7 @@ class _RecordState extends State<Record> {
               height: 12,
             ),
             Text(
-              "Kirito",
+              character,
               style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
@@ -80,7 +75,7 @@ class _RecordState extends State<Record> {
             Stack(
               children: <Widget>[
                 Container(
-                  height: 450,
+                  height: 300, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20, left: 26, right: 26),
                   decoration: BoxDecoration(
@@ -107,53 +102,29 @@ class _RecordState extends State<Record> {
                 Positioned(
                     top: 60,
                     left: 10,
-                    height: 380,
-                    width: 352,
+                    height: 200,
+                    width: 352, // บท
                     child: Container(
-                        height: 360,
-                        decoration: BoxDecoration(
-                            color: Color(0xFFFFD4B2),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10))),
-                        child: Expanded(
-                          child: ListView.builder(
-                              itemCount: converList.length,
-                              itemBuilder: (context, index) => ListTile(
-                                    title: Text(
-                                      converList[index].conversation!,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                        )))
+                      height: 360,
+                      decoration: BoxDecoration(
+                          color: Color(0xFFFFD4B2),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: ListView.builder(
+                          itemCount: conversationList.length,
+                          itemBuilder: (context, index) => ListTile(
+                                title: Text(
+                                  conversationList[index],
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )),
+                    ))
               ],
             ),
-            SizedBox(
-              height: 80,
-            ),
-            SizedBox(
-              width: 300,
-              height: 44,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFFFF7200),
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Record()));
-                },
-                child: Semantics(
-                  child: Text("Save"),
-                  label: 'Save',
-                ),
-              ),
-            ),
+            RecordButton(conversationList, docID),
           ],
         ),
       ),
