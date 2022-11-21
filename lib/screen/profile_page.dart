@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controller/login_controller.dart';
 import '../main.dart';
+import '../model/listen_detail.dart';
+import 'listen_page.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  ProfilePage({super.key});
 
+  List<String> docID = [];
+  List<String> audioName = [];
   final double profileHeight = 144;
 
   @override
@@ -195,29 +199,139 @@ class ProfilePage extends StatelessWidget {
 
   Widget buildBelow() => Container(
         //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 250,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset("assets/image/Recordvoice.png"),
-            SizedBox(height: 12),
-            Text(
-              'Create your first performance!',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 12),
-            ElevatedButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Color(0xFFFF7200),
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {},
-              child: Text('Start Record', style: TextStyle(fontSize: 20)),
-            ),
-          ],
+        height: 260,
+        child: FutureBuilder<Widget>(
+          future: getHistoryList(),
+          builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data!;
+            }
+
+            return const Center(
+              child: Text("Loading"),
+            );
+          }),
         ),
       );
+
+  Future<Widget> getHistoryList() async {
+    List<ListenDetails> listenList = [];
+    listenList = await getHistoryData();
+    return Future.delayed(const Duration(seconds: 0), () {
+      return listenList.isEmpty
+          ? Column(
+              children: [
+                Image.asset("assets/image/Recordvoice.png"),
+                SizedBox(height: 12),
+                Text(
+                  'Create your first performance!',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 12),
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Color(0xFFFF7200),
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {},
+                  child: Text('Start Record', style: TextStyle(fontSize: 20)),
+                ),
+              ],
+            )
+          : ListView.separated(
+              separatorBuilder: (context, index) => const Divider(
+                    color: Color(0xFFFFAA66),
+                  ),
+              itemCount: listenList.length,
+              itemBuilder: (context, index) => ListTile(
+                    leading: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Color(0xFFFFAA66),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 26,
+                          backgroundImage:
+                              NetworkImage(listenList[index].imgURL!),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      ' ${audioName[index]}',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite,
+                          size: 18,
+                        ),
+                        Text(' ${listenList[index].likeCount!}'),
+                      ],
+                    ),
+                    trailing: TextButton(
+                      style: TextButton.styleFrom(
+                          fixedSize: const Size(10, 10),
+                          backgroundColor: const Color(0xFFFF7200),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 16)),
+                      onPressed: () async {
+                        var dataDoc = await FirebaseFirestore.instance
+                            .collection('AudioInfo')
+                            .doc(docID[index])
+                            .get();
+                        Map<String, dynamic>? detailList = dataDoc.data();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListenPage(
+                                    detailList!, listenList[index])));
+                      },
+                      child: const Text('Play'),
+                    ),
+                  ));
+    });
+  }
+
+  Future<List<ListenDetails>> getHistoryData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('History')
+        .where('status', isEqualTo: true)
+        .where('user_1', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    List<ListenDetails> listenList = [];
+    await Future.forEach(querySnapshot.docs, (doc) async {
+      Map<String, dynamic> audioData = await getAudioInfo(doc["audioInfo"]);
+      Map<String, dynamic> userData = await getUserInfo(doc["user_1"]);
+      docID.add(doc["audioInfo"]);
+      audioName.add(audioData["name"]);
+      listenList.add(ListenDetails(
+        userData["username"],
+        doc["likeCount"],
+        audioData["img"],
+        doc["sound_1"],
+      ));
+    });
+
+    return listenList;
+  }
+
+  getUserInfo(String userID) async {
+    var collection = FirebaseFirestore.instance.collection('UserInfo');
+    var docSnapshot = await collection.doc(userID).get();
+    return docSnapshot.data();
+  }
+
+  getAudioInfo(String audioID) async {
+    var collection = FirebaseFirestore.instance.collection('AudioInfo');
+    var docSnapshot = await collection.doc(audioID).get();
+    return docSnapshot.data();
+  }
 
   Widget loadData(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
@@ -238,11 +352,9 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(
               height: 10,
             ),
-
             Text(
               user.displayName ?? "",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -254,20 +366,6 @@ class ProfilePage extends StatelessWidget {
               user.email ?? "",
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
-
-            //for log-out------------------------------------------------------
-            // ActionChip(
-            //   avatar: const Icon(Icons.logout),
-            //   label: const Text("Logout"),
-            //   onPressed: () {
-            //     Provider.of<LoginController>(context, listen: false).logout();
-            //     Navigator.pushReplacement(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) => const LoginPageRoute()),
-            //     );
-            //   },
-            // ),
           ],
         ),
       );
