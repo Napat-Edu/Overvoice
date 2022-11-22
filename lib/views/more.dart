@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
-import 'package:sizer/sizer.dart';
 import 'listen_list_page.dart';
 
 class More extends StatefulWidget {
@@ -19,6 +18,13 @@ class _MoreState extends State<More> {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    
+    print(" Height ${screenHeight}");
+    print("Width ${screenWidth}");
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -53,16 +59,19 @@ class _MoreState extends State<More> {
   Future<Widget> getData() async {
     Map<String, dynamic>? detailList = await queryData();
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Future.delayed(const Duration(seconds: 0), () {
       return Column(
         children: <Widget>[
-          const SizedBox(
-            height: 25,
+          SizedBox(
+            height: screenHeight / 35.6,
           ),
           Container(
             child: Container(
               width: double.infinity,
-              height: 250,
+              height: screenHeight / 3.56,
               child: Image.network(detailList!["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
@@ -71,18 +80,18 @@ class _MoreState extends State<More> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 20, left: 40, right: 40),
-            height: 550,
+            height: screenHeight / 1.6,
             child: Column(children: <Widget>[
               Container(
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 21, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(
-                height: 7,
+              SizedBox(
+                height: screenHeight / 127,
               ),
               Container(
                 child: Text(
@@ -92,8 +101,8 @@ class _MoreState extends State<More> {
                       fontSize: 19, fontWeight: FontWeight.w700),
                 ),
               ),
-              const SizedBox(
-                height: 9,
+              SizedBox(
+                height: screenHeight / 99,
               ),
               Container(
                 child: Text(
@@ -103,11 +112,11 @@ class _MoreState extends State<More> {
                       fontSize: 17, fontWeight: FontWeight.w600),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: screenHeight / 89,
               ),
               Container(
-                height: 150,
+                height: screenHeight / 4.5,
                 child: Text(
                   "\n${detailList['detail']}",
                   textAlign: TextAlign.center,
@@ -115,8 +124,8 @@ class _MoreState extends State<More> {
                       fontSize: 15, fontWeight: FontWeight.w400),
                 ),
               ),
-              const SizedBox(
-                height: 12,
+              SizedBox(
+                height: screenHeight / 70,
               ),
               Container(
                 child: Text(
@@ -129,7 +138,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               SizedBox(
-                height: 20.h,
+                height: screenHeight / 6,
               ),
               Row(
                 children: [
@@ -146,13 +155,14 @@ class _MoreState extends State<More> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Listen(detailList, docID)));
+                                builder: (context) =>
+                                    Listen(detailList, docID)));
                       },
                       child: const Text('Listen'),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
+                  SizedBox(
+                    width: screenWidth / 41,
                   ),
                   Expanded(
                     child: TextButton(
@@ -177,7 +187,8 @@ class _MoreState extends State<More> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Start(detailList, docID)));
+                                  builder: (context) =>
+                                      Start(detailList, docID)));
                         }
                       },
                       child: const Text('Start'),

@@ -16,7 +16,7 @@ class _NavbarState extends State<Navbar> {
   List<Widget> _widgetOption = <Widget>[
     const Home(),
     const Search(),
-    const ProfilePage(),
+    ProfilePage(),
   ];
 
   void _onItemTap(int index) {

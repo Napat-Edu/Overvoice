@@ -18,7 +18,8 @@ class RecordButton extends StatefulWidget {
   RecordButton(this.conversationList, this.docID, {super.key});
 
   @override
-  State<RecordButton> createState() => _RecordButtonState(conversationList, docID);
+  State<RecordButton> createState() =>
+      _RecordButtonState(conversationList, docID);
 }
 
 bool voiceStart = false;
@@ -67,7 +68,7 @@ class _RecordButtonState extends State<RecordButton> {
     } else if (isStopped && StageVoice != 0) {
       text = 'Finished';
     } else {
-      text = 'START';
+      text = 'Start';
     }
 
     List<String> TimeCountDown = [];
@@ -75,32 +76,46 @@ class _RecordButtonState extends State<RecordButton> {
       TimeCountDown.add(
           conversationList[i].toString().split('(')[1].split(')')[0]);
     }
-
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
         child: Column(
       children: <Widget>[
-        ElevatedButton(
-          onPressed: status || isStopped && StageVoice != 0
-              ? null
-              : () async {
-                  if (StageVoice == TimeCountDown.length) {
-                    await recorder._stop();
-                  } else if (TimeCountDown[StageVoice].isNotEmpty) {
-                    if (StageVoice == 0) {
-                      await recorder._record();
-                    } else {
-                      await recorder._resume();
-                      await null;
-                    }
-                    countdown(int.parse(TimeCountDown[StageVoice++]),
-                        TimeCountDown.length);
+        SizedBox(
+          width: screenWidth / 1.4,
+          height: 45,
+          child: TextButton(
+            style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                backgroundColor: Colors.white,
+                foregroundColor: Color(0xFFFF7200),
+                textStyle:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            onPressed: status || isStopped && StageVoice != 0
+                ? null
+                : () async {
+                    if (StageVoice == TimeCountDown.length) {
+                      await recorder._stop();
+                    } else if (TimeCountDown[StageVoice].isNotEmpty) {
+                      if (StageVoice == 0) {
+                        await recorder._record();
+                      } else {
+                        await recorder._resume();
+                        await null;
+                      }
+                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                          TimeCountDown.length);
 
-                    //print(TimeCountDown[StageVoice++]);
-                  }
-                  setState(() {});
-                },
-          child: Text(StageVoice >= TimeCountDown.length ? 'Finish' : text),
-        ),
+                      //print(TimeCountDown[StageVoice++]);
+                    }
+                    setState(() {});
+                  },
+            child: Text(
+              StageVoice >= TimeCountDown.length ? 'Finish' : text,
+            ),
+          ),
+        )
       ],
     ));
   }
@@ -130,7 +145,7 @@ class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecordingInitialised = false;
   String docID;
-  
+
   SoundRecorder(this.docID);
   bool get isRecording => _audioRecorder!.isRecording;
   bool get isPaused => _audioRecorder!.isPaused;
