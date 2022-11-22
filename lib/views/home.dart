@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         Container(
-            color: const Color(0xFFFF7200),
+            color: Color(0xFFFF7200),
             child: Container(
               height: 40,
               child: Row(children: const <Widget>[
