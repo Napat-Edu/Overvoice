@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/recordButton.dart';
+import 'package:sizer/sizer.dart';
 
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -75,7 +76,7 @@ class _RecordState extends State<Record> {
             Stack(
               children: <Widget>[
                 Container(
-                  height: 300, // กรอบบท
+                  height: 50.h, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20, left: 26, right: 26),
                   decoration: BoxDecoration(
@@ -102,10 +103,10 @@ class _RecordState extends State<Record> {
                 Positioned(
                     top: 60,
                     left: 10,
-                    height: 200,
-                    width: 352, // บท
+                    height: 40.h,
+                    width: 85.w, // บท
                     child: Container(
-                      height: 360,
+                      height: 80.h,
                       decoration: BoxDecoration(
                           color: Color(0xFFFFD4B2),
                           borderRadius: BorderRadius.only(
@@ -124,6 +125,7 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
+            SizedBox(height: 5.h,),
             RecordButton(conversationList, docID),
           ],
         ),

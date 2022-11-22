@@ -46,7 +46,8 @@ dependencies:
   flutter_beep: ^1.0.0
   permission_handler: ^10.2.0
   flutter_sound: ^9.2.13
-
+  sizer: ^2.0.15
+  
 flutter_icons:
   android: true
   image_path: "assets/image/adaptive_logo.png"

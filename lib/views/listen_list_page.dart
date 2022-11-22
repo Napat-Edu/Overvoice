@@ -89,9 +89,6 @@ class _ListenState extends State<Listen> {
                 )
               ],
             )),
-            SizedBox(
-              height: 10,
-            ),
             Expanded(
               child: FutureBuilder<Widget>(
                 future: getDataUI(docID),

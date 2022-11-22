@@ -53,6 +53,10 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 25,
             ),
+            Divider(
+              thickness: 3,
+              color: Color(0xFFFFAA66),
+            ),
           ],
         ),
       ),

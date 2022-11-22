@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/title_detail.dart';
 import 'more.dart';
+import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         Container(
-            color: const Color(0xFFFF7200),
+            color: Color(0xFFFF7200),
             child: Container(
               height: 40,
               child: Row(children: const <Widget>[

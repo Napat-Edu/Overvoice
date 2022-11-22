@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
-
+import 'package:sizer/sizer.dart';
 import 'listen_list_page.dart';
 
 class More extends StatefulWidget {
@@ -128,8 +128,8 @@ class _MoreState extends State<More> {
                       color: Colors.grey),
                 ),
               ),
-              const SizedBox(
-                height: 150,
+              SizedBox(
+                height: 20.h,
               ),
               Row(
                 children: [
