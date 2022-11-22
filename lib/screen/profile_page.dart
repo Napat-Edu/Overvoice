@@ -47,7 +47,6 @@ class ProfilePage extends StatelessWidget {
           recLike(context),
           buildMiddler(),
           buildBelow(),
-          //LogoutAvatar(context),
         ],
       ),
     );
@@ -129,10 +128,6 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           buildRecLike(text: 'recordings', value: 0),
-          /*VerticalDivider(
-            color: Colors.black,
-            thickness: 2,
-          ),*/
           Image.asset("assets/image/LineRL.png"),
           Image.asset("assets/image/LineRL.png"),
           buildRecLike(text: 'likes', value: 0),
@@ -165,32 +160,34 @@ class ProfilePage extends StatelessWidget {
       );
 
   Widget buildMiddler() => Container(
-        //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        decoration: BoxDecoration(color: Color.fromARGB(87, 111, 255, 0)),
         height: 100,
         child: Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: EdgeInsets.all(0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 12),
               ElevatedButton(
-                style: TextButton.styleFrom(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  minimumSize: Size(195, 35),
                   backgroundColor: Color(0xFFFF4700),
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {},
-                child: Text('          Records          ',
-                    style: TextStyle(fontSize: 20)),
+                child: Text('Records', style: TextStyle(fontSize: 20)),
               ),
               SizedBox(height: 12),
               ElevatedButton(
-                style: TextButton.styleFrom(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  minimumSize: Size(195, 35),
                   backgroundColor: Color(0xFFFF7200),
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {},
-                child: Text('         Favorites         ',
-                    style: TextStyle(fontSize: 20)),
+                child: Text('Favorites', style: TextStyle(fontSize: 20)),
               ),
             ],
           ),
@@ -198,19 +195,22 @@ class ProfilePage extends StatelessWidget {
       );
 
   Widget buildBelow() => Container(
-        //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 260,
-        child: FutureBuilder<Widget>(
-          future: getHistoryList(),
-          builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data!;
-            }
+        decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 300,
+        child: Padding(
+          padding: EdgeInsets.all(0),
+          child: FutureBuilder<Widget>(
+            future: getHistoryList(),
+            builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
 
-            return const Center(
-              child: Text("Loading"),
-            );
-          }),
+              return const Center(
+                child: Text("Loading"),
+              );
+            }),
+          ),
         ),
       );
 
