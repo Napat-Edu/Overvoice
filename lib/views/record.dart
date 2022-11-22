@@ -44,7 +44,7 @@ class _RecordState extends State<Record> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+        padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
         width: double.infinity,
         height: double.infinity,
         color: Color(0xFFFF7200),
@@ -62,7 +62,7 @@ class _RecordState extends State<Record> {
               ),
             ),
             SizedBox(
-              height: screenHeight / 74,
+              height: screenHeight / 80,
             ),
             Text(
               character,
@@ -72,14 +72,14 @@ class _RecordState extends State<Record> {
                   color: Colors.white),
             ),
             SizedBox(
-              height: screenHeight / 30,
+              height: screenHeight / 40,
             ),
             Stack(
               children: <Widget>[
                 Container(
-                  height: screenHeight / 2.2, // กรอบบท
+                  height: screenHeight / 2.1, // กรอบบท
                   width: double.infinity,
-                  padding: EdgeInsets.only(top: 20, left: 26, right: 26),
+                  padding: EdgeInsets.only(top: screenHeight / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -102,9 +102,9 @@ class _RecordState extends State<Record> {
                   ),
                 ),
                 Positioned(
-                    top: screenHeight / 14.8,
+                    top: screenHeight / 15,
                     left: screenWidth / 43,
-                    height: screenHeight / 2.7,
+                    height: screenHeight / 2.52,
                     width: screenWidth / 1.17, // บท
                     child: Container(
                       decoration: BoxDecoration(
@@ -125,7 +125,7 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
-            SizedBox(height: screenHeight / 20,),
+            SizedBox(height: screenHeight / 10,),
             RecordButton(conversationList, docID),
           ],
         ),

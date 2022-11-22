@@ -77,7 +77,7 @@ class _SearchState extends State<Search> {
         ),
       ),
       SizedBox(
-        height: screenHeight / 45,
+        height: screenHeight / 200,
       ),
       Expanded(
           child: displayList.isEmpty

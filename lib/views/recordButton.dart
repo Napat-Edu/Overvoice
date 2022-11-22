@@ -83,7 +83,7 @@ class _RecordButtonState extends State<RecordButton> {
       children: <Widget>[
         SizedBox(
           width: screenWidth / 1.4,
-          height: 45,
+          height: screenHeight / 20,
           child: TextButton(
             style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(

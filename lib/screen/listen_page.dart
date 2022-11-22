@@ -101,7 +101,7 @@ class _ListenPageState extends State<ListenPage> {
         ),
       ),
       body: Container(
-          padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+          padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
           width: double.infinity,
           height: double.infinity,
           color: Color(0xFFFF7200),
@@ -119,7 +119,7 @@ class _ListenPageState extends State<ListenPage> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 74,
+                height: screenHeight / 80,
               ),
               Text(
                 "พากย์เสียงโดย ${listenList.userName!}",
@@ -129,14 +129,15 @@ class _ListenPageState extends State<ListenPage> {
                     color: Colors.white),
               ),
               SizedBox(
-                height: screenHeight / 30,
+                height: screenHeight / 40,
               ),
               Stack(
                 children: <Widget>[
                   Container(
-                    height: screenHeight / 2.2, // กรอบบท
+                    height: screenHeight / 2.4, // กรอบบท
                     width: double.infinity,
-                    padding: EdgeInsets.only(top: 20, left: 26, right: 26),
+                    padding: EdgeInsets.only(
+                        top: screenHeight / 44.5, left: 26, right: 26),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -159,9 +160,9 @@ class _ListenPageState extends State<ListenPage> {
                     ),
                   ),
                   Positioned(
-                      top: screenHeight / 14.8,
+                      top: screenHeight / 15,
                       left: screenWidth / 43,
-                      height: screenHeight / 2.7,
+                      height: screenHeight / 3,
                       width: screenWidth / 1.17, // บท
                       child: Container(
                         height: 360,
@@ -184,8 +185,8 @@ class _ListenPageState extends State<ListenPage> {
                 ],
               ),
               SizedBox(
-                          height: screenHeight / 100,
-                        ),
+                height: screenHeight / 300,
+              ),
               Slider(
                 min: 0,
                 max: duration.inSeconds.toDouble(),
@@ -219,7 +220,7 @@ class _ListenPageState extends State<ListenPage> {
               ),
               CircleAvatar(
                 backgroundColor: Colors.white,
-                radius: screenWidth / 14,
+                radius: screenWidth / 16,
                 child: IconButton(
                   icon: Icon(
                     size: screenWidth / 13,
@@ -243,6 +244,24 @@ class _ListenPageState extends State<ListenPage> {
                       isPlaying = !isPlaying;
                     });
                   },
+                ),
+              ),
+              SizedBox(
+                height: screenHeight / 30,
+              ),
+              SizedBox(
+                width: screenWidth / 1.4,
+                height: screenHeight / 20,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Color(0xFFFF7200),
+                      textStyle: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600)),
+                  onPressed: () {},
+                  child: const Text('Continue'),
                 ),
               ),
             ],
