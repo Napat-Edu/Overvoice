@@ -22,40 +22,43 @@ class LoginPage extends StatelessWidget {
   }
 
   loginPageUI(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset("assets/image/Icon.png"),
-          Divider(
-            thickness: 3,
-            color: Color(0xFFFFAA66),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          GestureDetector(
-            child: SignInButton(
-              Buttons.Google,
-              text: "Log in with Google",
-              onPressed: () {
-                Provider.of<LoginController>(context, listen: false)
-                    .googleLogin();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset("assets/image/Icon.png"),
+            Divider(
+              thickness: 3,
+              color: Color(0xFFFFAA66),
             ),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Divider(
-            thickness: 3,
-            color: Color(0xFFFFAA66),
-          ),
-        ],
+            SizedBox(
+              height: 25,
+            ),
+            GestureDetector(
+              child: SignInButton(
+                Buttons.Google,
+                text: "Log in with Google",
+                onPressed: () {
+                  Provider.of<LoginController>(context, listen: false)
+                      .googleLogin();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Divider(
+              thickness: 3,
+              color: Color(0xFFFFAA66),
+            ),
+          ],
+        ),
       ),
     );
   }

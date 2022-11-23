@@ -24,6 +24,8 @@ class _RecordState extends State<Record> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -42,25 +44,25 @@ class _RecordState extends State<Record> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+        padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
         width: double.infinity,
         height: double.infinity,
         color: Color(0xFFFF7200),
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: 56,
+              radius: screenWidth / 7.3,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: 52,
+                  radius: screenWidth / 7.9,
                   backgroundImage: NetworkImage(characterimgURL),
                 ),
               ),
             ),
             SizedBox(
-              height: 12,
+              height: screenHeight / 80,
             ),
             Text(
               character,
@@ -70,14 +72,14 @@ class _RecordState extends State<Record> {
                   color: Colors.white),
             ),
             SizedBox(
-              height: 30,
+              height: screenHeight / 40,
             ),
             Stack(
               children: <Widget>[
                 Container(
-                  height: 300, // กรอบบท
+                  height: screenHeight / 2.1, // กรอบบท
                   width: double.infinity,
-                  padding: EdgeInsets.only(top: 20, left: 26, right: 26),
+                  padding: EdgeInsets.only(top: screenHeight / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -94,18 +96,17 @@ class _RecordState extends State<Record> {
                         ),
                       ),
                       SizedBox(
-                        height: 18,
+                        height: screenHeight / 49,
                       ),
                     ],
                   ),
                 ),
                 Positioned(
-                    top: 60,
-                    left: 10,
-                    height: 200,
-                    width: 330, // บท
+                    top: screenHeight / 15,
+                    left: screenWidth / 43,
+                    height: screenHeight / 2.52,
+                    width: screenWidth / 1.17, // บท
                     child: Container(
-                      height: 360,
                       decoration: BoxDecoration(
                           color: Color(0xFFFFD4B2),
                           borderRadius: BorderRadius.only(
@@ -117,13 +118,14 @@ class _RecordState extends State<Record> {
                                 title: Text(
                                   conversationList[index],
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 19,
                                       fontWeight: FontWeight.w500),
                                 ),
                               )),
                     ))
               ],
             ),
+            SizedBox(height: screenHeight / 10,),
             RecordButton(conversationList, docID),
           ],
         ),

@@ -45,6 +45,8 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
         child: Column(children: <Widget>[
       Container(
@@ -74,8 +76,8 @@ class _SearchState extends State<Search> {
           ),
         ),
       ),
-      const SizedBox(
-        height: 10,
+      SizedBox(
+        height: screenHeight / 200,
       ),
       Expanded(
           child: displayList.isEmpty

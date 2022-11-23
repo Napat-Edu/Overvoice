@@ -23,6 +23,9 @@ class _ListenState extends State<Listen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -46,8 +49,8 @@ class _ListenState extends State<Listen> {
             Container(
               margin: EdgeInsets.all(5),
               child: SizedBox(
-                width: double.infinity,
-                height: 220,
+                width: screenWidth,
+                height: screenHeight / 4,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Image border
                   child: Image.network(
@@ -73,7 +76,7 @@ class _ListenState extends State<Listen> {
                         color: Colors.white,
                       )),
                       Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Text(
                             "Recommended for you",
                             style: TextStyle(
@@ -90,7 +93,7 @@ class _ListenState extends State<Listen> {
               ],
             )),
             SizedBox(
-              height: 10,
+              height: screenHeight / 200,
             ),
             Expanded(
               child: FutureBuilder<Widget>(
@@ -169,7 +172,8 @@ class _ListenState extends State<Listen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ListenPage(detailList, listenList[index])));
+                                builder: (context) =>
+                                    ListenPage(detailList, listenList[index])));
                       },
                       child: const Text('Play'),
                     ),
@@ -187,8 +191,12 @@ class _ListenState extends State<Listen> {
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
-      listenList.add(
-          ListenDetails(data!["username"], doc["likeCount"], data["photoURL"], doc["sound_1"],));
+      listenList.add(ListenDetails(
+        data!["username"],
+        doc["likeCount"],
+        data["photoURL"],
+        doc["sound_1"],
+      ));
     });
 
     //listenList.where();

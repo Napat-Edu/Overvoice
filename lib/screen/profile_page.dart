@@ -16,6 +16,10 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+  double screenWidth = MediaQuery.of(context).size.width;
+  double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -37,11 +41,9 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.zero,
+      body: Column(
         children: <Widget>[
-          buildCoverImage(),
-          buildCoverImage2(),
+          SizedBox(height: 120,),
           loadData(context),
           buildContent(),
           recLike(context),
@@ -52,16 +54,6 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
-  Widget buildCoverImage() => Container(
-        decoration: BoxDecoration(color: const Color(0xFFFF7200)),
-        height: 90,
-      );
-
-  Widget buildCoverImage2() => Container(
-        decoration: BoxDecoration(color: Colors.white10),
-        height: 30,
-      );
 
   Widget LogoutAvatar(BuildContext context) => ActionChip(
         avatar: const Icon(Icons.logout),
@@ -165,10 +157,9 @@ class ProfilePage extends StatelessWidget {
       );
 
   Widget buildMiddler() => Container(
-        //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.all(0.0),
+        decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 40,
+          margin: EdgeInsets.only(top: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -194,12 +185,12 @@ class ProfilePage extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        
       );
 
   Widget buildBelow() => Container(
-        //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 260,
+        // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 300,
         child: FutureBuilder<Widget>(
           future: getHistoryList(),
           builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
@@ -215,9 +206,11 @@ class ProfilePage extends StatelessWidget {
       );
 
   Future<Widget> getHistoryList() async {
+    
     List<ListenDetails> listenList = [];
     listenList = await getHistoryData();
     return Future.delayed(const Duration(seconds: 0), () {
+      
       return listenList.isEmpty
           ? Column(
               children: [
@@ -244,18 +237,18 @@ class ProfilePage extends StatelessWidget {
                   ),
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
-                    leading: CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Color(0xFFFFAA66),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 26,
-                          backgroundImage:
-                              NetworkImage(listenList[index].imgURL!),
-                        ),
-                      ),
-                    ),
+                    leading: SizedBox(
+            width: 55,
+            height: 55,
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+              ]),
+              child: Image.network(
+                listenList[index].imgURL!,
+                fit: BoxFit.cover,
+              ),
+            )),
                     title: Text(
                       ' ${audioName[index]}',
                       style: const TextStyle(
