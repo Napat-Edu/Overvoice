@@ -1,19 +1,20 @@
+// young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:overvoice_project/views/fullcon.dart';
+import 'package:overvoice_project/views/record.dart';
 
 class Solo extends StatefulWidget {
   Map<String, dynamic> detaillMap;
-  Solo(this.detaillMap, {super.key});
+  String docID;
+  Solo(this.detaillMap, this.docID, {super.key});
 
   @override
-  State<Solo> createState() => _SoloState(detaillMap);
+  State<Solo> createState() => _SoloState(detaillMap, docID);
 }
 
 class _SoloState extends State<Solo> {
   Map<String, dynamic> detaillMap;
-  _SoloState(this.detaillMap);
+  String docID;
+  _SoloState(this.detaillMap, this.docID);
 
   late final splitChar = detaillMap["character"].split(",");
   late final characterA = splitChar[0];
@@ -65,7 +66,7 @@ class _SoloState extends State<Solo> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FullCon()));
+                          MaterialPageRoute(builder: (context) => Record(detaillMap, characterA, detaillMap["characterImageA"], docID)));
                     },
                     child: CircleAvatar(
                       radius: 56,
@@ -75,7 +76,7 @@ class _SoloState extends State<Solo> {
                         child: CircleAvatar(
                           radius: 52,
                           backgroundImage: NetworkImage(
-                              "https://i.pinimg.com/736x/c7/d9/b7/c7d9b73d08e64c9068262a665bd20f55.jpg"),
+                              detaillMap["characterImageA"]),
                         ),
                       ),
                     ),
@@ -96,7 +97,7 @@ class _SoloState extends State<Solo> {
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => FullCon()));
+                            MaterialPageRoute(builder: (context) => Record(detaillMap, characterA, detaillMap["characterImageA"], docID)));
                       },
                       child: Text(characterA),
                     ),
@@ -111,7 +112,7 @@ class _SoloState extends State<Solo> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FullCon()));
+                          MaterialPageRoute(builder: (context) => Record(detaillMap, characterB, detaillMap["characterImageB"], docID)));
                     },
                     child: CircleAvatar(
                       radius: 56,
@@ -121,7 +122,7 @@ class _SoloState extends State<Solo> {
                         child: CircleAvatar(
                           radius: 52,
                           backgroundImage: NetworkImage(
-                              "https://i.pinimg.com/736x/47/4d/7e/474d7ec9389263bee0fd2ef328717aeb.jpg"),
+                              detaillMap["characterImageB"]),
                         ),
                       ),
                     ),
@@ -142,7 +143,7 @@ class _SoloState extends State<Solo> {
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => FullCon()));
+                            MaterialPageRoute(builder: (context) => Record(detaillMap, characterB, detaillMap["characterImageB"], docID)));
                       },
                       child: Text(characterB),
                     ),

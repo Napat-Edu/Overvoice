@@ -1,19 +1,20 @@
+// young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:overvoice_project/views/solo.dart';
 
 class Start extends StatefulWidget {
   Map<String, dynamic> detaillMap;
-  Start(this.detaillMap, {super.key});
+  String docID;
+  Start(this.detaillMap, this.docID, {super.key});
 
   @override
-  State<Start> createState() => _StartState(detaillMap);
+  State<Start> createState() => _StartState(detaillMap, docID);
 }
 
 class _StartState extends State<Start> {
   Map<String, dynamic> detaillMap;
-  _StartState(this.detaillMap);
+  String docID;
+  _StartState(this.detaillMap, this.docID);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class _StartState extends State<Start> {
                   RawMaterialButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => (Solo(detaillMap))));
+                          MaterialPageRoute(builder: (context) => (Solo(detaillMap, docID))));
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
@@ -85,7 +86,7 @@ class _StartState extends State<Start> {
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => (Solo(detaillMap))));
+                            MaterialPageRoute(builder: (context) => (Solo(detaillMap, docID))));
                       },
                       child: const Text('Solo'),
                     ),

@@ -1,8 +1,8 @@
 class ListenDetails{
   String? userName;
-  String? viewCount;
   String? likeCount;
   String? imgURL;
+  String? audioFileName;
 
-  ListenDetails(this.userName,this.viewCount,this.likeCount,this.imgURL);
+  ListenDetails(this.userName,this.likeCount,this.imgURL,this.audioFileName);
 }

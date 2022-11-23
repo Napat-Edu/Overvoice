@@ -21,7 +21,8 @@ class _SearchState extends State<Search> {
     setState(() {
       displayList = mainTitleList
           .where((element) =>
-              element.titleName!.toLowerCase().contains(value.toLowerCase()))
+              element.titleName!.toLowerCase().contains(value.toLowerCase()) ||
+              element.titleNameEng!.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -34,8 +35,8 @@ class _SearchState extends State<Search> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        list.add(TitleDetails(
-            doc["name"], doc["episode"], doc["duration"], doc["img"], doc.id));
+        list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
+            doc["duration"], doc["img"], doc.id));
       });
     });
 
@@ -44,6 +45,8 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
         child: Column(children: <Widget>[
       Container(
@@ -73,14 +76,14 @@ class _SearchState extends State<Search> {
           ),
         ),
       ),
-      const SizedBox(
-        height: 10,
+      SizedBox(
+        height: screenHeight / 200,
       ),
       Expanded(
           child: displayList.isEmpty
               ? const Center(
                   child: Text(
-                    "Your search didn't match any documents.",
+                    "ขอโทษนะ ไม่พบเรื่องที่คุณตามหาเลย",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 )
@@ -98,7 +101,7 @@ class _SearchState extends State<Search> {
                             BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
                           ]),
                           child: Image.network(
-                            mainTitleList[index].imgURL!,
+                            displayList[index].imgURL!,
                             fit: BoxFit.cover,
                           ),
                         )),
@@ -110,7 +113,7 @@ class _SearchState extends State<Search> {
                           fontSize: 18),
                     ),
                     subtitle: Text(
-                      'Episode : ${displayList[index].episode!}',
+                      displayList[index].episode!,
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
