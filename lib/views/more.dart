@@ -4,8 +4,6 @@ import 'package:overvoice_project/views/record.dart';
 import 'package:overvoice_project/views/start.dart';
 import 'listen_list_page.dart';
 
-import 'listen_list_page.dart';
-
 class More extends StatefulWidget {
   String docID;
   More(this.docID, {super.key});

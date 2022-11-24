@@ -26,7 +26,11 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: const Color(0xFFFF7200),
         elevation: 0,
         actions: [
-          PopupMenuButton(
+          LogoutAvatar(context),
+          SizedBox(
+            width: 10,
+          ),
+          /*PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem<int>(
                 value: 0,
@@ -34,19 +38,25 @@ class ProfilePage extends StatelessWidget {
               ),
               PopupMenuItem<int>(
                 value: 1,
-                child: Text("Logout"),
+                child: Text("ลงชื่อออก"),
               ),
             ],
             onSelected: (item) => selectedItem(context, item),
-          ),
+          ),*/
         ],
       ),
       body: Column(
         children: <Widget>[
           SizedBox(height: 120,),
           loadData(context),
-          buildContent(),
+          SizedBox(
+            height: 30,
+          ),
+          //buildContent(),
           recLike(context),
+          SizedBox(
+            height: 30,
+          ),
           buildMiddler(),
           buildBelow(),
           //LogoutAvatar(context),
@@ -56,8 +66,14 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget LogoutAvatar(BuildContext context) => ActionChip(
-        avatar: const Icon(Icons.logout),
-        label: const Text("Logout"),
+        avatar: const Icon(
+          Icons.logout,
+          color: Colors.grey,
+        ),
+        label: const Text(
+          "ลงชื่อออก",
+          style: TextStyle(color: Colors.grey),
+        ),
         onPressed: () {
           Provider.of<LoginController>(context, listen: false).logout();
           Navigator.pushReplacement(
@@ -65,6 +81,7 @@ class ProfilePage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const LoginPageRoute()),
           );
         },
+        backgroundColor: Colors.white,
       );
 
   Widget buildContent() => Container(
@@ -80,7 +97,7 @@ class ProfilePage extends StatelessWidget {
               }
 
               return const Center(
-                child: Text("Loading"),
+                child: Text("กำลังโหลด..."),
               );
             }),
           ),
@@ -120,14 +137,14 @@ class ProfilePage extends StatelessWidget {
   Widget recLike(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          buildRecLike(text: 'recordings', value: 0),
+          buildRecLike(text: 'บันทึกเสียงรวม', value: 0),
           /*VerticalDivider(
             color: Colors.black,
             thickness: 2,
           ),*/
           Image.asset("assets/image/LineRL.png"),
           Image.asset("assets/image/LineRL.png"),
-          buildRecLike(text: 'likes', value: 0),
+          buildRecLike(text: 'ถูกใจทั้งหมด', value: 0),
         ],
       );
 
@@ -150,7 +167,7 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 2),
             Text(
               text,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 14),
             ),
           ],
         ),
@@ -170,7 +187,7 @@ class ProfilePage extends StatelessWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {},
-                child: Text('          Records          ',
+                child: Text('       ประวัติพากย์       ',
                     style: TextStyle(fontSize: 20)),
               ),
               SizedBox(height: 12),
@@ -180,7 +197,7 @@ class ProfilePage extends StatelessWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {},
-                child: Text('         Favorites         ',
+                child: Text('  บันทึกเสียงที่ถูกใจ  ',
                     style: TextStyle(fontSize: 20)),
               ),
             ],
@@ -199,7 +216,7 @@ class ProfilePage extends StatelessWidget {
             }
 
             return const Center(
-              child: Text("Loading"),
+              child: Text("กำลังโหลด..."),
             );
           }),
         ),
@@ -214,10 +231,13 @@ class ProfilePage extends StatelessWidget {
       return listenList.isEmpty
           ? Column(
               children: [
+                SizedBox(
+                  height: 100,
+                ),
                 Image.asset("assets/image/Recordvoice.png"),
                 SizedBox(height: 12),
                 Text(
-                  'Create your first performance!',
+                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 12),
@@ -227,7 +247,8 @@ class ProfilePage extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {},
-                  child: Text('Start Record', style: TextStyle(fontSize: 20)),
+                  child: Text('เริ่มอัดเสียงแรกกันเถอะ',
+                      style: TextStyle(fontSize: 18)),
                 ),
               ],
             )
@@ -364,7 +385,7 @@ class ProfilePage extends StatelessWidget {
       );
     } else {
       return const Center(
-        child: Text("Loading"),
+        child: Text("กำลังโหลด..."),
       );
     }
   }

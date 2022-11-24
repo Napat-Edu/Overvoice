@@ -6,7 +6,8 @@ class Record extends StatefulWidget {
   String character;
   String docID;
   String characterimgURL;
-  Record(this.detailList, this.character, this.characterimgURL, this.docID, {super.key});
+  Record(this.detailList, this.character, this.characterimgURL, this.docID,
+      {super.key});
 
   @override
   State<Record> createState() =>
@@ -18,7 +19,8 @@ class _RecordState extends State<Record> {
   String character;
   String characterimgURL;
   String docID;
-  _RecordState(this.detailList, this.character, this.characterimgURL, this.docID);
+  _RecordState(
+      this.detailList, this.character, this.characterimgURL, this.docID);
 
   late List conversationList = detailList["conversation"].split(",");
 
