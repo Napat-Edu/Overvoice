@@ -61,12 +61,14 @@ class _StartState extends State<Start> {
                 child: Column(children: [
                   RawMaterialButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => (Solo(detaillMap, docID))));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (Solo(detaillMap, docID))));
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.person, size:70.0, color: Colors.white),
+                    child: Icon(Icons.person, size: 70.0, color: Colors.white),
                     padding: EdgeInsets.all(15.0),
                     shape: CircleBorder(),
                   ),
@@ -85,10 +87,13 @@ class _StartState extends State<Start> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => (Solo(detaillMap, docID))));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    (Solo(detaillMap, docID))));
                       },
-                      child: const Text('Solo'),
+                      child: const Text('พากย์เดี่ยว'),
                     ),
                   )
                 ]),
@@ -121,7 +126,7 @@ class _StartState extends State<Start> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {},
-                      child: const Text('Duet'),
+                      child: const Text('พากย์คู่'),
                     ),
                   )
                 ]),

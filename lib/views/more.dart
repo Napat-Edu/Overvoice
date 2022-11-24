@@ -18,10 +18,9 @@ class _MoreState extends State<More> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    
+
     print(" Height ${screenHeight}");
     print("Width ${screenWidth}");
 
@@ -86,8 +85,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 21, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
@@ -158,7 +156,7 @@ class _MoreState extends State<More> {
                                 builder: (context) =>
                                     Listen(detailList, docID)));
                       },
-                      child: const Text('Listen'),
+                      child: const Text('ไปฟังเสียง'),
                     ),
                   ),
                   SizedBox(
@@ -191,7 +189,7 @@ class _MoreState extends State<More> {
                                       Start(detailList, docID)));
                         }
                       },
-                      child: const Text('Start'),
+                      child: const Text('ไปพากย์เสียง'),
                     ),
                   )
                 ],

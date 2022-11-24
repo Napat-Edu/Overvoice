@@ -146,7 +146,7 @@ class _ListenPageState extends State<ListenPage> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Conversation",
+                            "บทพูด",
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
@@ -261,7 +261,7 @@ class _ListenPageState extends State<ListenPage> {
                       textStyle: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w600)),
                   onPressed: () {},
-                  child: const Text('Continue'),
+                  child: const Text('ช่วงถัดไป'),
                 ),
               ),
             ],

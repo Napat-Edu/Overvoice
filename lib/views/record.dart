@@ -81,7 +81,8 @@ class _RecordState extends State<Record> {
                 Container(
                   height: screenHeight / 2.1, // กรอบบท
                   width: double.infinity,
-                  padding: EdgeInsets.only(top: screenHeight / 44.5, left: 26, right: 26),
+                  padding: EdgeInsets.only(
+                      top: screenHeight / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -90,7 +91,7 @@ class _RecordState extends State<Record> {
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Conversation",
+                          "บทพูด",
                           style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
@@ -127,7 +128,9 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
-            SizedBox(height: screenHeight / 10,),
+            SizedBox(
+              height: screenHeight / 10,
+            ),
             RecordButton(conversationList, docID),
           ],
         ),

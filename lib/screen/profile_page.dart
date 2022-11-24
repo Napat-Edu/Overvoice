@@ -16,9 +16,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-  double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -34,7 +33,9 @@ class ProfilePage extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          SizedBox(height: 120,),
+          SizedBox(
+            height: 120,
+          ),
           loadData(context),
           SizedBox(
             height: 30,
@@ -123,10 +124,6 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           buildRecLike(text: 'บันทึกเสียงรวม', value: 0),
-          /*VerticalDivider(
-            color: Colors.black,
-            thickness: 2,
-          ),*/
           Image.asset("assets/image/LineRL.png"),
           Image.asset("assets/image/LineRL.png"),
           buildRecLike(text: 'ถูกใจทั้งหมด', value: 0),
@@ -161,38 +158,37 @@ class ProfilePage extends StatelessWidget {
   Widget buildMiddler() => Container(
         decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
         height: 40,
-          margin: EdgeInsets.only(top: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF4700),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: Text('       ประวัติพากย์       ',
-                    style: TextStyle(fontSize: 20)),
+        margin: EdgeInsets.only(top: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 12),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFFF4700),
+                foregroundColor: Colors.white,
               ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7200),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: Text('  บันทึกเสียงที่ถูกใจ  ',
-                    style: TextStyle(fontSize: 20)),
+              onPressed: () {},
+              child: Text('       ประวัติพากย์       ',
+                  style: TextStyle(fontSize: 20)),
+            ),
+            SizedBox(height: 12),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFFF7200),
+                foregroundColor: Colors.white,
               ),
-            ],
-          ),
-        
+              onPressed: () {},
+              child: Text('  บันทึกเสียงที่ถูกใจ  ',
+                  style: TextStyle(fontSize: 20)),
+            ),
+          ],
+        ),
       );
 
   Widget buildBelow() => Container(
-        // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 300,
+        //decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 366,
         child: FutureBuilder<Widget>(
           future: getHistoryList(),
           builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
@@ -208,11 +204,9 @@ class ProfilePage extends StatelessWidget {
       );
 
   Future<Widget> getHistoryList() async {
-    
     List<ListenDetails> listenList = [];
     listenList = await getHistoryData();
     return Future.delayed(const Duration(seconds: 0), () {
-      
       return listenList.isEmpty
           ? Column(
               children: [
@@ -244,17 +238,17 @@ class ProfilePage extends StatelessWidget {
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
                     leading: SizedBox(
-            width: 55,
-            height: 55,
-            child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
-              ]),
-              child: Image.network(
-                listenList[index].imgURL!,
-                fit: BoxFit.cover,
-              ),
-            )),
+                        width: 55,
+                        height: 55,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                          ]),
+                          child: Image.network(
+                            listenList[index].imgURL!,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
                     title: Text(
                       ' ${audioName[index]}',
                       style: const TextStyle(
@@ -290,7 +284,7 @@ class ProfilePage extends StatelessWidget {
                                 builder: (context) => ListenPage(
                                     detailList!, listenList[index])));
                       },
-                      child: const Text('Play'),
+                      child: const Text('เล่น'),
                     ),
                   ));
     });

@@ -59,13 +59,13 @@ class _RecordButtonState extends State<RecordButton> {
 
     final text;
     if (isPaused) {
-      text = 'Reading';
+      text = 'อ่านบทพูด';
     } else if (isRecording) {
-      text = 'Show Time';
+      text = 'พากย์เลย';
     } else if (isStopped && StageVoice != 0) {
-      text = 'Finished';
+      text = 'เสร็จสิ้น';
     } else {
-      text = 'Start';
+      text = 'เริ่มพากย์';
     }
 
     List<String> TimeCountDown = [];
@@ -109,7 +109,7 @@ class _RecordButtonState extends State<RecordButton> {
                     setState(() {});
                   },
             child: Text(
-              StageVoice >= TimeCountDown.length ? 'Finish' : text,
+              StageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
             ),
           ),
         )

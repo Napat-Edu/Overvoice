@@ -50,7 +50,7 @@ class _SoloState extends State<Solo> {
           ),
           Container(
             child: Text(
-              "Choose your character!",
+              "เลือกตัวละครที่ต้องการพากย์",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
@@ -65,8 +65,14 @@ class _SoloState extends State<Solo> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Record(detaillMap, characterA, detaillMap["characterImageA"], docID)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Record(
+                                  detaillMap,
+                                  characterA,
+                                  detaillMap["characterImageA"],
+                                  docID)));
                     },
                     child: CircleAvatar(
                       radius: 56,
@@ -75,8 +81,8 @@ class _SoloState extends State<Solo> {
                         alignment: Alignment.center,
                         child: CircleAvatar(
                           radius: 52,
-                          backgroundImage: NetworkImage(
-                              detaillMap["characterImageA"]),
+                          backgroundImage:
+                              NetworkImage(detaillMap["characterImageA"]),
                         ),
                       ),
                     ),
@@ -96,8 +102,14 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Record(detaillMap, characterA, detaillMap["characterImageA"], docID)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Record(
+                                    detaillMap,
+                                    characterA,
+                                    detaillMap["characterImageA"],
+                                    docID)));
                       },
                       child: Text(characterA),
                     ),
@@ -111,8 +123,14 @@ class _SoloState extends State<Solo> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Record(detaillMap, characterB, detaillMap["characterImageB"], docID)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Record(
+                                  detaillMap,
+                                  characterB,
+                                  detaillMap["characterImageB"],
+                                  docID)));
                     },
                     child: CircleAvatar(
                       radius: 56,
@@ -121,8 +139,8 @@ class _SoloState extends State<Solo> {
                         alignment: Alignment.center,
                         child: CircleAvatar(
                           radius: 52,
-                          backgroundImage: NetworkImage(
-                              detaillMap["characterImageB"]),
+                          backgroundImage:
+                              NetworkImage(detaillMap["characterImageB"]),
                         ),
                       ),
                     ),
@@ -142,8 +160,14 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Record(detaillMap, characterB, detaillMap["characterImageB"], docID)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Record(
+                                    detaillMap,
+                                    characterB,
+                                    detaillMap["characterImageB"],
+                                    docID)));
                       },
                       child: Text(characterB),
                     ),

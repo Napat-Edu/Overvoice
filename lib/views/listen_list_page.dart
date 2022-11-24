@@ -78,9 +78,9 @@ class _ListenState extends State<Listen> {
                       Expanded(
                           flex: 3,
                           child: Text(
-                            "Recommended for you",
+                            "แนะนำสำหรับคุณ",
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white),
                           )),
@@ -105,7 +105,7 @@ class _ListenState extends State<Listen> {
                   }
 
                   return const Center(
-                    child: Text("Loading"),
+                    child: Text("กำลังโหลด..."),
                   );
                 }),
               ),
@@ -175,7 +175,7 @@ class _ListenState extends State<Listen> {
                                 builder: (context) =>
                                     ListenPage(detailList, listenList[index])));
                       },
-                      child: const Text('Play'),
+                      child: const Text('เล่น'),
                     ),
                   ));
     });
