@@ -30,19 +30,6 @@ class ProfilePage extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          /*PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text("Edit"),
-              ),
-              PopupMenuItem<int>(
-                value: 1,
-                child: Text("ลงชื่อออก"),
-              ),
-            ],
-            onSelected: (item) => selectedItem(context, item),
-          ),*/
         ],
       ),
       body: Column(
@@ -52,14 +39,12 @@ class ProfilePage extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
-          //buildContent(),
           recLike(context),
           SizedBox(
             height: 30,
           ),
           buildMiddler(),
           buildBelow(),
-          //LogoutAvatar(context),
         ],
       ),
     );
@@ -387,20 +372,6 @@ class ProfilePage extends StatelessWidget {
       return const Center(
         child: Text("กำลังโหลด..."),
       );
-    }
-  }
-
-  selectedItem(BuildContext context, int item) async {
-    switch (item) {
-      case 0:
-        break;
-      case 1:
-        Provider.of<LoginController>(context, listen: false).logout();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPageRoute()),
-        );
-        break;
     }
   }
 }
