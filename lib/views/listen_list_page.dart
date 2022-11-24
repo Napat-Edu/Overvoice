@@ -89,12 +89,9 @@ class _ListenState extends State<Listen> {
                 )
               ],
             )),
-<<<<<<< HEAD
             SizedBox(
               height: 10,
             ),
-=======
->>>>>>> 97a3807f6bbb638ce9fa748d80d80776c443c156
             Expanded(
               child: FutureBuilder<Widget>(
                 future: getDataUI(docID),
@@ -172,7 +169,8 @@ class _ListenState extends State<Listen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ListenPage(detailList, listenList[index])));
+                                builder: (context) =>
+                                    ListenPage(detailList, listenList[index])));
                       },
                       child: const Text('Play'),
                     ),
@@ -190,8 +188,12 @@ class _ListenState extends State<Listen> {
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
-      listenList.add(
-          ListenDetails(data!["username"], doc["likeCount"], data["photoURL"], doc["sound_1"],));
+      listenList.add(ListenDetails(
+        data!["username"],
+        doc["likeCount"],
+        data["photoURL"],
+        doc["sound_1"],
+      ));
     });
 
     //listenList.where();

@@ -52,7 +52,7 @@ class _SearchState extends State<Search> {
         child: const Align(
           alignment: Alignment.topLeft,
           child: Text(
-            "Search",
+            "ค้นหา",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
         ),
@@ -68,7 +68,7 @@ class _SearchState extends State<Search> {
             prefixIcon: Icon(Icons.search),
             iconColor: Color(0xFF4D331F),
             border: InputBorder.none,
-            hintText: 'Search',
+            hintText: ('คุณต้องการค้นหาอะไร'),
             fillColor: Color(0xFFFFAA66),
             filled: true,
           ),
@@ -128,7 +128,7 @@ class _SearchState extends State<Search> {
                                 builder: (context) =>
                                     More(displayList[index].docID!)));
                       },
-                      child: const Text('More'),
+                      child: const Text('เข้าชม'),
                     ),
                   ),
                 ))

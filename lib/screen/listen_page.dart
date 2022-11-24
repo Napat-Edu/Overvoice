@@ -226,8 +226,8 @@ class _ListenPageState extends State<ListenPage> {
                       await audioPlayer.pause();
                     } else {
                       final storageRef = await FirebaseStorage.instance.ref();
-                      final soundRef = await storageRef
-                          .child(listenList.audioFileName!); // <-- your file name
+                      final soundRef = await storageRef.child(
+                          listenList.audioFileName!); // <-- your file name
                       final metaData = await soundRef.getDownloadURL();
                       log('data: ${metaData.toString()}');
                       String url = metaData.toString();

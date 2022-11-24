@@ -13,6 +13,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       child: Column(children: <Widget>[
         Container(
@@ -22,7 +25,7 @@ class _HomeState extends State<Home> {
               const Expanded(
                   flex: 9,
                   child: Text(
-                    "Good Morning",
+                    "ยินดีต้อนรับ",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   )),
               Expanded(
@@ -42,50 +45,54 @@ class _HomeState extends State<Home> {
             children: [
               Semantics(
                 label: "้ค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // Image border
-                    child: Image.network(
-                        "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg")),
+                child: SizedBox(
+                    width: screenWidth,
+                    height: screenHeight / 4.75,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                          "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg"),
+                    )),
               ),
             ],
           ),
         ),
         Container(
-            color: Color(0xFFFF7200),
+            color: const Color(0xFFFF7200),
             child: Container(
               height: 40,
-              child: Row(children: const <Widget>[
+              child: Row(children: <Widget>[
                 Expanded(
                     flex: 1,
                     child: Icon(
                       Icons.menu,
                       color: Colors.white,
                     )),
-                SizedBox(width: 10),
+                SizedBox(width: screenWidth / 41.1),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Recommended",
+                      "แนะนำ",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     )),
-                SizedBox(width: 10),
+                SizedBox(width: screenWidth / 41.1),
                 Expanded(
                     child: Text(
-                  "Popular",
+                  "ที่นิยม",
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 )),
-                SizedBox(width: 20),
+                SizedBox(width: screenWidth / 10),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Trending Now",
+                      "กำลังมาแรง",
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -101,7 +108,7 @@ class _HomeState extends State<Home> {
                   return snapshot.data!;
                 }
 
-                return const Text("Loading");
+                return const Text("กำลังโหลด...");
               }),
         ),
       ]),
@@ -110,6 +117,8 @@ class _HomeState extends State<Home> {
 
   Future<Widget> getData() async {
     List<TitleDetails> mainTitleList = await getRecommendAudioInfo();
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
       separatorBuilder: (context, index) => const Divider(
         color: Color(0xFFFFAA66),
@@ -149,7 +158,7 @@ class _HomeState extends State<Home> {
                 MaterialPageRoute(
                     builder: (context) => More(mainTitleList[index].docID!)));
           },
-          child: const Text('More'),
+          child: const Text('เข้าชม'),
         ),
       ),
     );
