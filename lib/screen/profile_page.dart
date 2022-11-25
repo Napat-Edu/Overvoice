@@ -226,7 +226,7 @@ class ProfilePage extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {},
-                  child: Text('เริ่มอัดเสียงแรกกันเถอะ',
+                  child: Text('เริ่มพากย์เสียงแรกกันเถอะ',
                       style: TextStyle(fontSize: 18)),
                 ),
               ],
