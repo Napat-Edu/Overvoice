@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:overvoice_project/nav.dart';
 import 'package:provider/provider.dart';
@@ -31,17 +33,37 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: checkUserSatus(),
+        home: FutureBuilder<Widget>(
+            future: checkUserStatus(),
+            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
+
+              return const Text("กำลังโหลด...");
+            }),
       ),
     );
   }
 
-  checkUserSatus() {
-    if (FirebaseAuth.instance.currentUser != null) {
-      return const Navbar();
+  Future<Widget> checkUserStatus() async {
+    bool internetStatus = await checkInternetStatus();
+    if (internetStatus == true) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        return const Navbar();
+      } else {
+        return const LoginPage();
+      }
     }
+    return const Center(
+      child: Text(
+          "คุณไม่ได้เชื่อมต่ออินเทอร์เน็ต\nโปรดเชื่อมต่อแล้วกลับมาอีกครั้งนะ"),
+    );
+  }
 
-    return const LoginPage();
+  Future<bool> checkInternetStatus() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    return result;
   }
 }
 
