@@ -3,9 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -145,7 +142,6 @@ class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecordingInitialised = false;
   String docID;
-
   SoundRecorder(this.docID);
   bool get isRecording => _audioRecorder!.isRecording;
   bool get isPaused => _audioRecorder!.isPaused;

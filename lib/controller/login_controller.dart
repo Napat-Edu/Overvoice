@@ -76,7 +76,6 @@ class LoginController with ChangeNotifier {
         users
             .doc(userEmail)
             .set({
-              'caption': "ยังไม่มีคำอธิบายโปรไฟล์",
               'likeAmount': "0",
               'recordAmount': "0",
               'photoURL': FirebaseAuth.instance.currentUser!.photoURL,

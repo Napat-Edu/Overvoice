@@ -6,13 +6,13 @@ class AudioInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('AudioInfo');
+    CollectionReference users =
+        FirebaseFirestore.instance.collection('AudioInfo');
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc("SAO01").get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
@@ -22,8 +22,11 @@ class AudioInfo extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-          return Text("Character: ${data['character']}""\n""Detail: ${data['detail']}");
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Text("Character: ${data['character']}"
+              "\n"
+              "Detail: ${data['detail']}");
         }
 
         return Text("loading");

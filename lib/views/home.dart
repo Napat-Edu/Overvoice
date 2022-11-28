@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
               const Expanded(
                   flex: 9,
                   child: Text(
-                    "Good Morning",
+                    "ยินดีต้อนรับ",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   )),
               Expanded(
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Recommended",
+                      "แนะนำ",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
                 SizedBox(width: screenWidth / 41.1),
                 Expanded(
                     child: Text(
-                  "Popular",
+                  "ที่นิยม",
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Trending Now",
+                      "กำลังมาแรง",
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -108,7 +108,7 @@ class _HomeState extends State<Home> {
                   return snapshot.data!;
                 }
 
-                return const Text("Loading");
+                return const Text("กำลังโหลด...");
               }),
         ),
       ]),
@@ -156,7 +156,7 @@ class _HomeState extends State<Home> {
                 MaterialPageRoute(
                     builder: (context) => More(mainTitleList[index].docID!)));
           },
-          child: const Text('More'),
+          child: const Text('เข้าชม'),
         ),
       ),
     );

@@ -11,7 +11,6 @@ class FullCon extends StatefulWidget {
 }
 
 class _FullConState extends State<FullCon> {
-
   List<ConverDetails> converList = [
     ConverDetails(
         "Sword Art Online", "Kirito", "ไม่หรอกไม่มีทางเป็นแบบนั้นหรอก"),
@@ -116,29 +115,30 @@ class _FullConState extends State<FullCon> {
                       ),
                     ),
                     Positioned(
-                        top: 100,
-                        left: 10,
-                        height: 340,
-                        width: 352,
-                        child: Container(
+                      top: 100,
+                      left: 10,
+                      height: 340,
+                      width: 352,
+                      child: Container(
                           height: 360,
                           decoration: BoxDecoration(
                               color: Color(0xFFFFD4B2),
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(10),
                                   bottomRight: Radius.circular(10))),
-                        child: Expanded(
-                          child: ListView.builder(
-                              itemCount: converList.length,
-                              itemBuilder: (context, index) => ListTile(
-                                    title: Text(
-                                      converList[index].conversation!,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                        )),)
+                          child: Expanded(
+                            child: ListView.builder(
+                                itemCount: converList.length,
+                                itemBuilder: (context, index) => ListTile(
+                                      title: Text(
+                                        converList[index].conversation!,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    )),
+                          )),
+                    )
                   ],
                 ),
                 SizedBox(
