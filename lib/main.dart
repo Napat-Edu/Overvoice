@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Overvoice',
         theme: ThemeData(
           primarySwatch: Colors.blue,

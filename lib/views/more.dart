@@ -21,9 +21,7 @@ class _MoreState extends State<More> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    
-    print(" Height ${screenHeight}");
-    print("Width ${screenWidth}");
+  
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -125,7 +123,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 70,
+                height: screenHeight / 100,
               ),
               Container(
                 child: Text(
@@ -138,7 +136,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 6,
+                height: screenHeight / 7,
               ),
               Row(
                 children: [

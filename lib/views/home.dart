@@ -117,8 +117,6 @@ class _HomeState extends State<Home> {
 
   Future<Widget> getData() async {
     List<TitleDetails> mainTitleList = await getRecommendAudioInfo();
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
       separatorBuilder: (context, index) => const Divider(
         color: Color(0xFFFFAA66),
