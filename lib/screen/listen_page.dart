@@ -249,21 +249,21 @@ class _ListenPageState extends State<ListenPage> {
               SizedBox(
                 height: screenHeight / 30,
               ),
-              SizedBox(
-                width: screenWidth / 1.4,
-                height: screenHeight / 20,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      backgroundColor: Colors.white,
-                      foregroundColor: Color(0xFFFF7200),
-                      textStyle: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                  onPressed: () {},
-                  child: const Text('Continue'),
-                ),
-              ),
+              // SizedBox(
+              //   width: screenWidth / 1.4,
+              //   height: screenHeight / 20,
+              //   child: TextButton(
+              //     style: TextButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(5)),
+              //         backgroundColor: Colors.white,
+              //         foregroundColor: Color(0xFFFF7200),
+              //         textStyle: const TextStyle(
+              //             fontSize: 20, fontWeight: FontWeight.w600)),
+              //     onPressed: () {},
+              //     child: const Text('Continue'),
+              //   ),
+              // ),
             ],
           )),
     );
