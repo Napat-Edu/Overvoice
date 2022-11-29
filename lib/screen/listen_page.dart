@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 
 import 'package:overvoice_project/model/listen_detail.dart';
+import 'package:overvoice_project/screen/nowifi_page.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -260,7 +261,12 @@ class _ListenPageState extends State<ListenPage> {
                       foregroundColor: Color(0xFFFF7200),
                       textStyle: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w600)),
-                  onPressed: () {},
+                  onPressed: () { // Test NoWifi page!
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NoWifi()));
+                  },
                   child: const Text('Continue'),
                 ),
               ),
