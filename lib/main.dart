@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:overvoice_project/nav.dart';
+import 'package:overvoice_project/screen/nowifi_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 
@@ -41,7 +42,15 @@ class MyApp extends StatelessWidget {
                 return snapshot.data!;
               }
 
-              return const Text("กำลังโหลด...");
+              return Material(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.white,
+                  child: const Center(
+                    child: Text("กำลังโหลด..."),
+                  ),
+                ),
+              );
             }),
       ),
     );
@@ -56,10 +65,7 @@ class MyApp extends StatelessWidget {
         return const LoginPage();
       }
     }
-    return const Center(
-      child: Text(
-          "คุณไม่ได้เชื่อมต่ออินเทอร์เน็ต\nโปรดเชื่อมต่อแล้วกลับมาอีกครั้งนะ"),
-    );
+    return const NoWifi();
   }
 
   Future<bool> checkInternetStatus() async {
