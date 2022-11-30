@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:overvoice_project/login_page.dart';
 import 'package:overvoice_project/nav.dart';
+import 'package:overvoice_project/screen/nowifi_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 
@@ -27,21 +30,47 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Overvoice',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: checkUserSatus(),
+        home: FutureBuilder<Widget>(
+            future: checkUserStatus(),
+            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
+
+              return Material(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.white,
+                  child: const Center(
+                    child: Text("กำลังโหลด..."),
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }
 
-  checkUserSatus() {
-    if (FirebaseAuth.instance.currentUser != null) {
-      return const Navbar();
+  Future<Widget> checkUserStatus() async {
+    bool internetStatus = await checkInternetStatus();
+    if (internetStatus == true) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        return const Navbar();
+      } else {
+        return const LoginPage();
+      }
     }
+    return const NoWifi();
+  }
 
-    return const LoginPage();
+  Future<bool> checkInternetStatus() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    return result;
   }
 }
 

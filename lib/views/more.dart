@@ -125,7 +125,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 70,
+                height: screenHeight / 100,
               ),
               Container(
                 child: Text(
@@ -138,7 +138,7 @@ class _MoreState extends State<More> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 6,
+                height: screenHeight / 7,
               ),
               Row(
                 children: [

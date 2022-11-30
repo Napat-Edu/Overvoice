@@ -16,9 +16,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-  double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -32,21 +31,56 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(height: 120,),
-          loadData(context),
-          SizedBox(
-            height: 30,
-          ),
-          recLike(context),
-          SizedBox(
-            height: 30,
-          ),
-          buildMiddler(),
-          buildBelow(),
-        ],
+      body: FutureBuilder<Widget>(
+        future: getData(context),
+        builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+          if (snapshot.hasData) {
+            return snapshot.data!;
+          }
+
+          return Column(
+            children: [
+              SizedBox(
+                height: 120,
+              ),
+              getUserSection(context),
+              SizedBox(
+                height: 30,
+              ),
+              Text("กำลังโหลด..."),
+              SizedBox(
+                height: 30,
+              ),
+              buildMiddler(),
+              Text("กำลังโหลด..."),
+            ],
+          );
+        }),
       ),
+    );
+  }
+
+  Future<Widget> getData(BuildContext context) async {
+    List<ListenDetails> listenList = [];
+    listenList = await getHistoryData();
+    String? userEmail = FirebaseAuth.instance.currentUser!.email;
+    Map<String, dynamic> userData = await getUserInfo(userEmail!);
+    return Column(
+      children: [
+        SizedBox(
+          height: 120,
+        ),
+        getUserSection(context),
+        SizedBox(
+          height: 30,
+        ),
+        recLike(context, userData),
+        SizedBox(
+          height: 30,
+        ),
+        buildMiddler(),
+        buildBelow(listenList),
+      ],
     );
   }
 
@@ -69,47 +103,6 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: Colors.white,
       );
 
-  Widget buildContent() => Container(
-        //decoration: BoxDecoration(color: const Color(0xFFFF7200)),
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: FutureBuilder<Widget>(
-            future: getCaptionData(),
-            builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data!;
-              }
-
-              return const Center(
-                child: Text("กำลังโหลด..."),
-              );
-            }),
-          ),
-        ),
-      );
-  Future<Widget> getCaptionData() async {
-    var dataDoc = await queryData();
-
-    return Future.delayed(const Duration(seconds: 0), () {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            dataDoc!["caption"],
-            textAlign: TextAlign.justify,
-            style: TextStyle(
-              fontSize: 12,
-              height: 1.4,
-              color: Color.fromARGB(255, 152, 137, 137),
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
   Future<Map<String, dynamic>?> queryData() async {
     var dataDoc = await FirebaseFirestore.instance
         .collection('UserInfo')
@@ -119,17 +112,17 @@ class ProfilePage extends StatelessWidget {
     return fieldMap;
   }
 
-  Widget recLike(BuildContext context) => Row(
+  Widget recLike(BuildContext context, Map<String, dynamic> userData) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          buildRecLike(text: 'บันทึกเสียงรวม', value: 0),
+          buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
           /*VerticalDivider(
             color: Colors.black,
             thickness: 2,
           ),*/
           Image.asset("assets/image/LineRL.png"),
           Image.asset("assets/image/LineRL.png"),
-          buildRecLike(text: 'ถูกใจทั้งหมด', value: 0),
+          buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
         ],
       );
 
@@ -161,142 +154,122 @@ class ProfilePage extends StatelessWidget {
   Widget buildMiddler() => Container(
         decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
         height: 40,
-          margin: EdgeInsets.only(top: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF4700),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: Text('       ประวัติพากย์       ',
-                    style: TextStyle(fontSize: 20)),
+        margin: EdgeInsets.only(top: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 12),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFFF4700),
+                foregroundColor: Colors.white,
               ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7200),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: Text('  บันทึกเสียงที่ถูกใจ  ',
-                    style: TextStyle(fontSize: 20)),
+              onPressed: () {},
+              child: Text('       ประวัติพากย์       ',
+                  style: TextStyle(fontSize: 20)),
+            ),
+            SizedBox(height: 12),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFFF7200),
+                foregroundColor: Colors.white,
               ),
-            ],
-          ),
-        
-      );
-
-  Widget buildBelow() => Container(
-        // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 300,
-        child: FutureBuilder<Widget>(
-          future: getHistoryList(),
-          builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data!;
-            }
-
-            return const Center(
-              child: Text("กำลังโหลด..."),
-            );
-          }),
+              onPressed: () {},
+              child: Text('  บันทึกเสียงที่ถูกใจ  ',
+                  style: TextStyle(fontSize: 20)),
+            ),
+          ],
         ),
       );
 
-  Future<Widget> getHistoryList() async {
-    
-    List<ListenDetails> listenList = [];
-    listenList = await getHistoryData();
-    return Future.delayed(const Duration(seconds: 0), () {
-      
-      return listenList.isEmpty
-          ? Column(
-              children: [
-                SizedBox(
-                  height: 100,
-                ),
-                Image.asset("assets/image/Recordvoice.png"),
-                SizedBox(height: 12),
-                Text(
-                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 12),
-                ElevatedButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Color(0xFFFF7200),
-                    foregroundColor: Colors.white,
+  Widget buildBelow(List<ListenDetails> listenList) => Container(
+        // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 350,
+        child: listenList.isEmpty
+            ? Column(
+                children: [
+                  SizedBox(
+                    height: 100,
                   ),
-                  onPressed: () {},
-                  child: Text('เริ่มอัดเสียงแรกกันเถอะ',
-                      style: TextStyle(fontSize: 18)),
-                ),
-              ],
-            )
-          : ListView.separated(
-              separatorBuilder: (context, index) => const Divider(
-                    color: Color(0xFFFFAA66),
+                  Image.asset("assets/image/Recordvoice.png"),
+                  SizedBox(height: 12),
+                  Text(
+                    'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
+                    style: TextStyle(fontSize: 16),
                   ),
-              itemCount: listenList.length,
-              itemBuilder: (context, index) => ListTile(
-                    leading: SizedBox(
-            width: 55,
-            height: 55,
-            child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
-              ]),
-              child: Image.network(
-                listenList[index].imgURL!,
-                fit: BoxFit.cover,
-              ),
-            )),
-                    title: Text(
-                      ' ${audioName[index]}',
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFFFF7200),
+                      foregroundColor: Colors.white,
                     ),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(
-                          Icons.favorite,
-                          size: 18,
-                        ),
-                        Text(' ${listenList[index].likeCount!}'),
-                      ],
+                    onPressed: () {},
+                    child: Text('เริ่มอัดเสียงแรกกันเถอะ',
+                        style: TextStyle(fontSize: 18)),
+                  ),
+                ],
+              )
+            : ListView.separated(
+                separatorBuilder: (context, index) => const Divider(
+                      color: Color(0xFFFFAA66),
                     ),
-                    trailing: TextButton(
-                      style: TextButton.styleFrom(
-                          fixedSize: const Size(10, 10),
-                          backgroundColor: const Color(0xFFFF7200),
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16)),
-                      onPressed: () async {
-                        var dataDoc = await FirebaseFirestore.instance
-                            .collection('AudioInfo')
-                            .doc(docID[index])
-                            .get();
-                        Map<String, dynamic>? detailList = dataDoc.data();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ListenPage(
-                                    detailList!, listenList[index])));
-                      },
-                      child: const Text('Play'),
-                    ),
-                  ));
-    });
-  }
+                itemCount: listenList.length,
+                itemBuilder: (context, index) => ListTile(
+                      leading: SizedBox(
+                          width: 55,
+                          height: 55,
+                          child: Container(
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                            ]),
+                            child: Image.network(
+                              listenList[index].imgURL!,
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                      title: Text(
+                        ' ${audioName[index]}',
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(
+                            Icons.favorite,
+                            size: 18,
+                          ),
+                          Text(' ${listenList[index].likeCount!}'),
+                        ],
+                      ),
+                      trailing: TextButton(
+                        style: TextButton.styleFrom(
+                            fixedSize: const Size(10, 10),
+                            backgroundColor: const Color(0xFFFF7200),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 16)),
+                        onPressed: () async {
+                          var dataDoc = await FirebaseFirestore.instance
+                              .collection('AudioInfo')
+                              .doc(docID[index])
+                              .get();
+                          Map<String, dynamic>? detailList = dataDoc.data();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ListenPage(
+                                      detailList!, listenList[index])));
+                        },
+                        child: const Text('Play'),
+                      ),
+                    )),
+      );
 
   Future<List<ListenDetails>> getHistoryData() async {
+    audioName = [];
+    docID = [];
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('status', isEqualTo: true)
@@ -316,7 +289,6 @@ class ProfilePage extends StatelessWidget {
         doc["sound_1"],
       ));
     });
-
     return listenList;
   }
 
@@ -332,7 +304,7 @@ class ProfilePage extends StatelessWidget {
     return docSnapshot.data();
   }
 
-  Widget loadData(BuildContext context) {
+  Widget getUserSection(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
       final user = FirebaseAuth.instance.currentUser;
       return Center(

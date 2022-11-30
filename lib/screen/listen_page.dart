@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 
 import 'package:overvoice_project/model/listen_detail.dart';
+import 'package:overvoice_project/screen/nowifi_page.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -249,21 +250,21 @@ class _ListenPageState extends State<ListenPage> {
               SizedBox(
                 height: screenHeight / 30,
               ),
-              SizedBox(
-                width: screenWidth / 1.4,
-                height: screenHeight / 20,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      backgroundColor: Colors.white,
-                      foregroundColor: Color(0xFFFF7200),
-                      textStyle: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                  onPressed: () {},
-                  child: const Text('Continue'),
-                ),
-              ),
+              // SizedBox(
+              //   width: screenWidth / 1.4,
+              //   height: screenHeight / 20,
+              //   child: TextButton(
+              //     style: TextButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(5)),
+              //         backgroundColor: Colors.white,
+              //         foregroundColor: Color(0xFFFF7200),
+              //         textStyle: const TextStyle(
+              //             fontSize: 20, fontWeight: FontWeight.w600)),
+              //     onPressed: () {},
+              //     child: const Text('Continue'),
+              //   ),
+              // ),
             ],
           )),
     );
