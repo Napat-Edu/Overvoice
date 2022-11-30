@@ -76,8 +76,8 @@ class LoginController with ChangeNotifier {
         users
             .doc(userEmail)
             .set({
-              'likeAmount': "0",
-              'recordAmount': "0",
+              'likeAmount': 0,
+              'recordAmount': 0,
               'photoURL': FirebaseAuth.instance.currentUser!.photoURL,
               'username': FirebaseAuth.instance.currentUser!.displayName,
             })

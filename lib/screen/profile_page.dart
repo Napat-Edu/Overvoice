@@ -115,14 +115,14 @@ class ProfilePage extends StatelessWidget {
   Widget recLike(BuildContext context, Map<String, dynamic> userData) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          buildRecLike(text: 'บันทึกเสียงรวม', value: int.parse(userData["recordAmount"])),
+          buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
           /*VerticalDivider(
             color: Colors.black,
             thickness: 2,
           ),*/
           Image.asset("assets/image/LineRL.png"),
           Image.asset("assets/image/LineRL.png"),
-          buildRecLike(text: 'ถูกใจทั้งหมด', value: int.parse(userData["likeAmount"])),
+          buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
         ],
       );
 
@@ -184,7 +184,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget buildBelow(List<ListenDetails> listenList) => Container(
         // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
-        height: 300,
+        height: 350,
         child: listenList.isEmpty
             ? Column(
                 children: [
@@ -268,6 +268,8 @@ class ProfilePage extends StatelessWidget {
       );
 
   Future<List<ListenDetails>> getHistoryData() async {
+    audioName = [];
+    docID = [];
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('status', isEqualTo: true)
@@ -287,7 +289,6 @@ class ProfilePage extends StatelessWidget {
         doc["sound_1"],
       ));
     });
-
     return listenList;
   }
 
