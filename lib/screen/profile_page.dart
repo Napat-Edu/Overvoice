@@ -339,7 +339,7 @@ class ProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Semantics(
-              label: "รูปโปรไฟล์",
+              label: "รูปโปรไฟล์คุณ",
               child: CircleAvatar(
                 backgroundColor: Color(0xFFFFAA66),
                 radius: 54,
