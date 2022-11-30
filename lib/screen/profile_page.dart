@@ -31,6 +31,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
+<<<<<<< HEAD
       body: FutureBuilder<Widget>(
         future: getData(context),
         builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
@@ -56,6 +57,24 @@ class ProfilePage extends StatelessWidget {
             ],
           );
         }),
+=======
+      body: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 120,
+          ),
+          loadData(context),
+          SizedBox(
+            height: 30,
+          ),
+          recLike(context),
+          SizedBox(
+            height: 30,
+          ),
+          buildMiddler(),
+          buildBelow(),
+        ],
+>>>>>>> 83e1a8f07e2185e462a3dd3fa5c03d8a2c0856d3
       ),
     );
   }
@@ -179,6 +198,7 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(fontSize: 20)),
             ),
           ],
+<<<<<<< HEAD
         ),
       );
 
@@ -190,6 +210,49 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   SizedBox(
                     height: 100,
+=======
+        ),
+      );
+
+  Widget buildBelow() => Container(
+        // decoration: BoxDecoration(color: Color.fromARGB(88, 255, 115, 0)),
+        height: 300,
+        child: FutureBuilder<Widget>(
+          future: getHistoryList(),
+          builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data!;
+            }
+
+            return const Center(
+              child: Text("กำลังโหลด..."),
+            );
+          }),
+        ),
+      );
+
+  Future<Widget> getHistoryList() async {
+    List<ListenDetails> listenList = [];
+    listenList = await getHistoryData();
+    return Future.delayed(const Duration(seconds: 0), () {
+      return listenList.isEmpty
+          ? Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                ),
+                Image.asset("assets/image/Recordvoice.png"),
+                SizedBox(height: 12),
+                Text(
+                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 12),
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Color(0xFFFF7200),
+                    foregroundColor: Colors.white,
+>>>>>>> 83e1a8f07e2185e462a3dd3fa5c03d8a2c0856d3
                   ),
                   Image.asset("assets/image/Recordvoice.png"),
                   SizedBox(height: 12),
@@ -197,11 +260,34 @@ class ProfilePage extends StatelessWidget {
                     'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
                     style: TextStyle(fontSize: 16),
                   ),
+<<<<<<< HEAD
                   SizedBox(height: 12),
                   ElevatedButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Color(0xFFFF7200),
                       foregroundColor: Colors.white,
+=======
+              itemCount: listenList.length,
+              itemBuilder: (context, index) => ListTile(
+                    leading: SizedBox(
+                        width: 55,
+                        height: 55,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                          ]),
+                          child: Image.network(
+                            listenList[index].imgURL!,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    title: Text(
+                      ' ${audioName[index]}',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+>>>>>>> 83e1a8f07e2185e462a3dd3fa5c03d8a2c0856d3
                     ),
                     onPressed: () {},
                     child: Text('เริ่มอัดเสียงแรกกันเถอะ',
@@ -312,14 +398,17 @@ class ProfilePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              backgroundColor: Color(0xFFFFAA66),
-              radius: 54,
-              child: Align(
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: Image.network(user!.photoURL ?? "").image,
+            Semantics(
+              label: "รูปโปรไฟล์คุณ",
+              child: CircleAvatar(
+                backgroundColor: Color(0xFFFFAA66),
+                radius: 54,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: Image.network(user!.photoURL ?? "").image,
+                  ),
                 ),
               ),
             ),

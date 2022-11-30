@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/views/recordButton.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:developer';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -22,7 +25,27 @@ class _RecordState extends State<Record> {
   _RecordState(
       this.detailList, this.character, this.characterimgURL, this.docID);
 
+  final audioPlayer = AudioPlayer();
   late List conversationList = detailList["conversation"].split(",");
+  bool isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to states: playing, paused, stopped
+    audioPlayer.onDurationChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.PLAYING;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +104,8 @@ class _RecordState extends State<Record> {
                 Container(
                   height: screenHeight / 2.1, // กรอบบท
                   width: double.infinity,
-                  padding: EdgeInsets.only(top: screenHeight / 44.5, left: 26, right: 26),
+                  padding: EdgeInsets.only(
+                      top: screenHeight / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -127,8 +151,45 @@ class _RecordState extends State<Record> {
                     ))
               ],
             ),
-            SizedBox(height: screenHeight / 10,),
+            SizedBox(
+              height: screenHeight / 30,
+            ),
             RecordButton(conversationList, docID),
+            SizedBox(
+              height: screenHeight / 50,
+            ),
+            SizedBox(
+              width: screenWidth / 1.4,
+              height: screenHeight / 20,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    backgroundColor: Color(0xFFFB8C00),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w600)),
+                onPressed: () async {
+                  if (isPlaying) {
+                    await audioPlayer.pause();
+                  } else {
+                    final storageRef = await FirebaseStorage.instance.ref();
+                    final soundRef = await storageRef.child(
+                        "helloworld2.aac"); // <-- your file name // listenList.audioFileName!
+                    final metaData = await soundRef.getDownloadURL();
+                    log('data: ${metaData.toString()}');
+                    String url = metaData.toString();
+
+                    await audioPlayer.play(url);
+                  }
+                  //
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
+                child: const Text('Get Help?'),
+              ),
+            ),
           ],
         ),
       ),

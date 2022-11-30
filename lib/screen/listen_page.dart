@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
-
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/nowifi_page.dart';
 
@@ -37,7 +36,7 @@ class _ListenPageState extends State<ListenPage> {
   _ListenPageState(this.detailList, this.listenList);
 
   final audioPlayer = AudioPlayer();
-  // log('data: $metadata');
+  final audioPlayer2 = AudioPlayer();
 
   bool isPlaying = false;
   Duration duration = Duration.zero;
@@ -49,6 +48,13 @@ class _ListenPageState extends State<ListenPage> {
 
     // Listen to states: playing, paused, stopped
     audioPlayer.onDurationChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.PLAYING;
+      });
+    });
+
+    // Listen to states: playing, paused, stopped
+    audioPlayer2.onDurationChanged.listen((state) {
       setState(() {
         isPlaying = state == PlayerState.PLAYING;
       });
@@ -72,12 +78,9 @@ class _ListenPageState extends State<ListenPage> {
   @override
   void dispose() {
     audioPlayer.dispose();
+    audioPlayer2.dispose();
     super.dispose();
   }
-
-// body: Center(
-//           child: Text(widget.titleName),
-//         ),
 
   @override
   Widget build(BuildContext context) {
@@ -195,9 +198,11 @@ class _ListenPageState extends State<ListenPage> {
                 onChanged: (value) async {
                   final position = Duration(seconds: value.toInt());
                   await audioPlayer.seek(position);
+                  await audioPlayer2.seek(position);
 
                   // Play audio if was pa
                   await audioPlayer.resume();
+                  await audioPlayer2.resume();
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,
@@ -235,10 +240,16 @@ class _ListenPageState extends State<ListenPage> {
                       final storageRef = await FirebaseStorage.instance.ref();
                       final soundRef = await storageRef.child(
                           listenList.audioFileName!); // <-- your file name
+                      final soundRef2 = await storageRef
+                          .child("helloworld2.aac"); // <-- your file name
                       final metaData = await soundRef.getDownloadURL();
+                      final metaData2 = await soundRef2.getDownloadURL();
                       log('data: ${metaData.toString()}');
+                      log('data: ${metaData2.toString()}');
                       String url = metaData.toString();
+                      String url2 = metaData2.toString();
                       await audioPlayer.play(url);
+                      await audioPlayer2.play(url2);
                     }
                     //
                     setState(() {
