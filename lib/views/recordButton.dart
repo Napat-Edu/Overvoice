@@ -59,7 +59,7 @@ class _RecordButtonState extends State<RecordButton> {
 
     final text;
     if (isPaused) {
-      text = 'อ่านบทพูด';
+      text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
       text = 'พากย์เลย';
     } else if (isStopped && StageVoice != 0) {

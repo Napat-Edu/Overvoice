@@ -187,7 +187,7 @@ class _RecordState extends State<Record> {
                     isPlaying = !isPlaying;
                   });
                 },
-                child: const Text('Get Help?'),
+                child: const Text('ฟังตัวอย่างการพากย์'),
               ),
             ),
           ],

@@ -46,7 +46,7 @@ class _StartState extends State<Start> {
           ),
           Container(
             child: Text(
-              "Start your own recording!",
+              "เลือกรูปแบบการพากย์ของคุณ",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),

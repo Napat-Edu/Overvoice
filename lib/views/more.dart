@@ -47,7 +47,7 @@ class _MoreState extends State<More> {
             }
 
             return const Center(
-              child: Text("Loading"),
+              child: Text("กำลังโหลด..."),
             );
           }),
         ),

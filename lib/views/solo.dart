@@ -50,7 +50,7 @@ class _SoloState extends State<Solo> {
           ),
           Container(
             child: Text(
-              "เลือกตัวละครที่ต้องการพากย์",
+              "เลือกตัวละครที่คุณต้องการพากย์",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),

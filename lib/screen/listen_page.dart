@@ -150,7 +150,7 @@ class _ListenPageState extends State<ListenPage> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "บทพูด",
+                            "บทที่ทำการพากย์",
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
