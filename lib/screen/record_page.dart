@@ -114,7 +114,7 @@ class _RecordState extends State<Record> {
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "บทพูด",
+                          "บทที่ต้องทำการพากย์",
                           style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,

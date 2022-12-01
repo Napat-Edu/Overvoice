@@ -262,7 +262,7 @@ class ProfilePage extends StatelessWidget {
                                   builder: (context) => ListenPage(
                                       detailList!, listenList[index])));
                         },
-                        child: const Text('Play'),
+                        child: const Text('เล่น'),
                       ),
                     )),
       );
