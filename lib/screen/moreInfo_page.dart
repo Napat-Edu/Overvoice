@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/record.dart';
-import 'package:overvoice_project/views/start.dart';
-import 'listen_list_page.dart';
+import 'package:overvoice_project/screen/record_page.dart';
+import 'package:overvoice_project/screen/record_select_type_page.dart';
+import 'listen_select_list_page.dart';
 
 class More extends StatefulWidget {
   String docID;

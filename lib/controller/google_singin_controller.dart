@@ -3,8 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSigninController with ChangeNotifier
 {
-  //object
-  var _googleSignIn = GoogleSignIn();
+  //object for login
+  final _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? googleSignInAccount;
 
   //login function

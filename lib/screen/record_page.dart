@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/recordButton.dart';
+import 'package:overvoice_project/controller/recordButton_controller.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';

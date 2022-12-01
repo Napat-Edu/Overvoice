@@ -1,6 +1,5 @@
-// young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/solo.dart';
+import 'package:overvoice_project/screen/record_select_character_page.dart';
 
 class Start extends StatefulWidget {
   Map<String, dynamic> detaillMap;
@@ -46,7 +45,7 @@ class _StartState extends State<Start> {
           ),
           Container(
             child: Text(
-              "Start your own recording!",
+              "มาเริ่มพากย์เสียงกันเถอะ!",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),

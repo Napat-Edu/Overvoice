@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/profile_page.dart';
-import 'package:overvoice_project/views/home.dart';
-import 'package:overvoice_project/views/search.dart';
+import 'package:overvoice_project/screen/home_page.dart';
+import 'package:overvoice_project/screen/search_page.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -12,13 +12,13 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
-  // ignore: prefer_final_fields
-  List<Widget> _widgetOption = <Widget>[
+  final List<Widget> _widgetOption = <Widget>[
     const Home(),
     const Search(),
     ProfilePage(),
   ];
 
+  // use for update a screen index from the user
   void _onItemTap(int index) {
     setState(() {
       _selectedIndex = index;

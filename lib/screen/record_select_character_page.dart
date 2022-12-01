@@ -1,6 +1,6 @@
 // young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/record.dart';
+import 'package:overvoice_project/screen/record_page.dart';
 
 class Solo extends StatefulWidget {
   Map<String, dynamic> detaillMap;

@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
-import '../screen/listen_page.dart';
+import 'listen_page.dart';
 
 class Listen extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -193,13 +192,11 @@ class _ListenState extends State<Listen> {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
       listenList.add(ListenDetails(
         data!["username"],
-        doc["likeCount"],
+        doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],
       ));
     });
-
-    //listenList.where();
 
     return listenList;
   }
