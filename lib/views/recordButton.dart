@@ -220,9 +220,9 @@ class SoundRecorder {
 
     await soundRef.putFile(file);
 
-    CollectionReference users =
+    CollectionReference usersHistory =
         FirebaseFirestore.instance.collection('History');
-    users
+    usersHistory
         .doc()
         .set({
           'audioInfo': docID,
@@ -235,5 +235,11 @@ class SoundRecorder {
         })
         .then((value) => print("History Added"))
         .catchError((error) => print("Failed to add user: $error"));
+
+    CollectionReference usersInfo =
+        FirebaseFirestore.instance.collection('UserInfo');
+    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
+      "recordAmount": FieldValue.increment(1),
+    });
   }
 }

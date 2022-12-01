@@ -29,24 +29,25 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  audioplayers: ^0.20.1
   cloud_firestore: ^4.0.3
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.1.1
   firebase_core: ^2.1.1
+  firebase_core_platform_interface: 4.5.2
+  firebase_storage: ^11.0.5
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.11.0
-  flutter_signin_button: ^2.0.0
-  flutter_phoenix: ^1.1.0
-  google_sign_in: ^5.4.2
-  provider: ^6.0.4
-  firebase_core_platform_interface: 4.5.2
-  audioplayers: ^0.20.1
-  firebase_storage: ^11.0.5
   flutter_beep: ^1.0.0
-  permission_handler: ^10.2.0
+  flutter_launcher_icons: ^0.11.0
+  flutter_phoenix: ^1.1.0
+  flutter_signin_button: ^2.0.0
   flutter_sound: ^9.2.13
-  
+  google_sign_in: ^5.4.2
+  permission_handler: ^10.2.0
+  provider: ^6.0.4
+  internet_connection_checker: ^1.0.0+1
+
 flutter_icons:
   android: true
   image_path: "assets/image/adaptive_logo.png"
