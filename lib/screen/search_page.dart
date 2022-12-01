@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 
-import 'more.dart';
+import 'moreInfo_page.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});

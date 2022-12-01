@@ -1,24 +1,19 @@
-// young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/record.dart';
+import 'package:overvoice_project/screen/record_select_character_page.dart';
 
-class Solo extends StatefulWidget {
+class Start extends StatefulWidget {
   Map<String, dynamic> detaillMap;
   String docID;
-  Solo(this.detaillMap, this.docID, {super.key});
+  Start(this.detaillMap, this.docID, {super.key});
 
   @override
-  State<Solo> createState() => _SoloState(detaillMap, docID);
+  State<Start> createState() => _StartState(detaillMap, docID);
 }
 
-class _SoloState extends State<Solo> {
+class _StartState extends State<Start> {
   Map<String, dynamic> detaillMap;
   String docID;
-  _SoloState(this.detaillMap, this.docID);
-
-  late final splitChar = detaillMap["character"].split(",");
-  late final characterA = splitChar[0];
-  late final characterB = splitChar[1];
+  _StartState(this.detaillMap, this.docID);
 
   @override
   Widget build(BuildContext context) {
@@ -50,42 +45,31 @@ class _SoloState extends State<Solo> {
           ),
           Container(
             child: Text(
-              "เลือกตัวละครที่คุณต้องการพากย์",
+              "เลือกรูปแบบการพากย์ของคุณ",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 45,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
                 child: Column(children: [
-                  GestureDetector(
-                    onTap: () {
+                  RawMaterialButton(
+                    onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Record(
-                                  detaillMap,
-                                  characterA,
-                                  detaillMap["characterImageA"],
-                                  docID)));
+                              builder: (context) => (Solo(detaillMap, docID))));
                     },
-                    child: CircleAvatar(
-                      radius: 56,
-                      backgroundColor: Color(0xFFFFAA66),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 52,
-                          backgroundImage:
-                              NetworkImage(detaillMap["characterImageA"]),
-                        ),
-                      ),
-                    ),
+                    elevation: 2.0,
+                    fillColor: Color(0xFFFF7200),
+                    child: Icon(Icons.person, size: 70.0, color: Colors.white),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
                   ),
                   SizedBox(
                     height: 18,
@@ -105,13 +89,10 @@ class _SoloState extends State<Solo> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Record(
-                                    detaillMap,
-                                    characterA,
-                                    detaillMap["characterImageA"],
-                                    docID)));
+                                builder: (context) =>
+                                    (Solo(detaillMap, docID))));
                       },
-                      child: Text(characterA),
+                      child: const Text('พากย์เดี่ยว'),
                     ),
                   )
                 ]),
@@ -121,29 +102,13 @@ class _SoloState extends State<Solo> {
               ),
               Container(
                 child: Column(children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Record(
-                                  detaillMap,
-                                  characterB,
-                                  detaillMap["characterImageB"],
-                                  docID)));
-                    },
-                    child: CircleAvatar(
-                      radius: 56,
-                      backgroundColor: Color(0xFFFFAA66),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 52,
-                          backgroundImage:
-                              NetworkImage(detaillMap["characterImageB"]),
-                        ),
-                      ),
-                    ),
+                  RawMaterialButton(
+                    onPressed: () {},
+                    elevation: 2.0,
+                    fillColor: Color(0xFFFF7200),
+                    child: Icon(Icons.people, size: 70.0, color: Colors.white),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
                   ),
                   SizedBox(
                     height: 18,
@@ -159,17 +124,8 @@ class _SoloState extends State<Solo> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Record(
-                                    detaillMap,
-                                    characterB,
-                                    detaillMap["characterImageB"],
-                                    docID)));
-                      },
-                      child: Text(characterB),
+                      onPressed: () {},
+                      child: const Text('พากย์คู่'),
                     ),
                   )
                 ]),

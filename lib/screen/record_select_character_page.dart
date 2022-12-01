@@ -1,20 +1,24 @@
 // young mai dai chai
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/views/solo.dart';
+import 'package:overvoice_project/screen/record_page.dart';
 
-class Start extends StatefulWidget {
+class Solo extends StatefulWidget {
   Map<String, dynamic> detaillMap;
   String docID;
-  Start(this.detaillMap, this.docID, {super.key});
+  Solo(this.detaillMap, this.docID, {super.key});
 
   @override
-  State<Start> createState() => _StartState(detaillMap, docID);
+  State<Solo> createState() => _SoloState(detaillMap, docID);
 }
 
-class _StartState extends State<Start> {
+class _SoloState extends State<Solo> {
   Map<String, dynamic> detaillMap;
   String docID;
-  _StartState(this.detaillMap, this.docID);
+  _SoloState(this.detaillMap, this.docID);
+
+  late final splitChar = detaillMap["character"].split(",");
+  late final characterA = splitChar[0];
+  late final characterB = splitChar[1];
 
   @override
   Widget build(BuildContext context) {
@@ -46,31 +50,42 @@ class _StartState extends State<Start> {
           ),
           Container(
             child: Text(
-              "เลือกรูปแบบการพากย์ของคุณ",
+              "เลือกตัวละครที่คุณต้องการพากย์",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
           SizedBox(
-            height: 45,
+            height: 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
                 child: Column(children: [
-                  RawMaterialButton(
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => (Solo(detaillMap, docID))));
+                              builder: (context) => Record(
+                                  detaillMap,
+                                  characterA,
+                                  detaillMap["characterImageA"],
+                                  docID)));
                     },
-                    elevation: 2.0,
-                    fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.person, size: 70.0, color: Colors.white),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
+                    child: CircleAvatar(
+                      radius: 56,
+                      backgroundColor: Color(0xFFFFAA66),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 52,
+                          backgroundImage:
+                              NetworkImage(detaillMap["characterImageA"]),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 18,
@@ -90,10 +105,13 @@ class _StartState extends State<Start> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    (Solo(detaillMap, docID))));
+                                builder: (context) => Record(
+                                    detaillMap,
+                                    characterA,
+                                    detaillMap["characterImageA"],
+                                    docID)));
                       },
-                      child: const Text('พากย์เดี่ยว'),
+                      child: Text(characterA),
                     ),
                   )
                 ]),
@@ -103,13 +121,29 @@ class _StartState extends State<Start> {
               ),
               Container(
                 child: Column(children: [
-                  RawMaterialButton(
-                    onPressed: () {},
-                    elevation: 2.0,
-                    fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.people, size: 70.0, color: Colors.white),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Record(
+                                  detaillMap,
+                                  characterB,
+                                  detaillMap["characterImageB"],
+                                  docID)));
+                    },
+                    child: CircleAvatar(
+                      radius: 56,
+                      backgroundColor: Color(0xFFFFAA66),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 52,
+                          backgroundImage:
+                              NetworkImage(detaillMap["characterImageB"]),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 18,
@@ -125,8 +159,17 @@ class _StartState extends State<Start> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600)),
-                      onPressed: () {},
-                      child: const Text('พากย์คู่'),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Record(
+                                    detaillMap,
+                                    characterB,
+                                    detaillMap["characterImageB"],
+                                    docID)));
+                      },
+                      child: Text(characterB),
                     ),
                   )
                 ]),

@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:overvoice_project/login_page.dart';
+import 'package:overvoice_project/screen/login_page.dart';
 import 'package:overvoice_project/nav.dart';
-import 'package:overvoice_project/screen/nowifi_page.dart';
+import 'package:overvoice_project/screen/noInternet_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 
@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
                 return snapshot.data!;
               }
 
+              // loading screen, while waiting for user status checking
               return Material(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
@@ -56,24 +57,31 @@ class MyApp extends StatelessWidget {
     );
   }
 
+  // use for check that user already login and connect the internet or not
   Future<Widget> checkUserStatus() async {
     bool internetStatus = await checkInternetStatus();
     if (internetStatus == true) {
       if (FirebaseAuth.instance.currentUser != null) {
+        // already login
         return const Navbar();
       } else {
+        // doesn't login before
         return const LoginPage();
       }
     }
+
+    // user does not connected the internet
     return const NoWifi();
   }
 
+  // use for check internet connection of user
   Future<bool> checkInternetStatus() async {
     bool result = await InternetConnectionChecker().hasConnection;
     return result;
   }
 }
 
+// navigation path to our main screen
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -85,6 +93,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// navigation path to our login page
 class LoginPageRoute extends StatelessWidget {
   const LoginPageRoute({super.key});
 

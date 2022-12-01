@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/title_detail.dart';
-import 'more.dart';
+import 'moreInfo_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,20 +21,13 @@ class _HomeState extends State<Home> {
         Container(
           margin: const EdgeInsets.only(top: 20, right: 15, left: 15),
           child: Row(
-            children: <Widget>[
-              const Expanded(
+            children: const <Widget>[
+              Expanded(
                   flex: 9,
                   child: Text(
                     "ยินดีต้อนรับ",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   )),
-              Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {},
-                    iconSize: 30,
-                  ))
             ],
           ),
         ),
@@ -44,7 +37,7 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Semantics(
-                label: "้ค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
+                label: "้ลองค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
                 child: SizedBox(
                     width: screenWidth,
                     height: screenHeight / 4.75,
