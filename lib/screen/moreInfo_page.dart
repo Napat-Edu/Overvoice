@@ -15,7 +15,7 @@ class More extends StatefulWidget {
 class _MoreState extends State<More> {
   String docID;
   _MoreState(this.docID);
-
+  
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

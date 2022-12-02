@@ -116,6 +116,7 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
+          SizedBox(width: 5,),
           /*VerticalDivider(
             color: Colors.black,
             thickness: 2,
