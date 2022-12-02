@@ -47,14 +47,7 @@ class _ListenPageState extends State<ListenPage> {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayer.onDurationChanged.listen((state) {
-      setState(() {
-        isPlaying = state == PlayerState.PLAYING;
-      });
-    });
-
-    // Listen to states: playing, paused, stopped
-    audioPlayer2.onDurationChanged.listen((state) {
+    audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
         isPlaying = state == PlayerState.PLAYING;
       });
@@ -62,6 +55,13 @@ class _ListenPageState extends State<ListenPage> {
 
     // Listen to audio duration
     audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    // Listen to audio duration
+    audioPlayer2.onDurationChanged.listen((newDuration) {
       setState(() {
         duration = newDuration;
       });
@@ -202,7 +202,7 @@ class _ListenPageState extends State<ListenPage> {
 
                   // Play audio if was pa
                   await audioPlayer.resume();
-                  await audioPlayer2.resume();
+                  //await audioPlayer2.resume();
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,
@@ -247,14 +247,15 @@ class _ListenPageState extends State<ListenPage> {
                       log('data: ${metaData.toString()}');
                       log('data: ${metaData2.toString()}');
                       String url = metaData.toString();
-                      String url2 = metaData2.toString();
+                      // String url2 = metaData2.toString();
                       await audioPlayer.play(url);
-                      await audioPlayer2.play(url2);
+                      // await audioPlayer2.play(url2);
+
                     }
-                    //
                     setState(() {
                       isPlaying = !isPlaying;
                     });
+                    //
                   },
                 ),
               ),
