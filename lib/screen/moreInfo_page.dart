@@ -18,11 +18,9 @@ class _MoreState extends State<More> {
   
   @override
   Widget build(BuildContext context) {
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    print(" Height ${screenHeight}");
-    print("Width ${screenWidth}");
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -70,7 +68,7 @@ class _MoreState extends State<More> {
           Container(
             child: Container(
               width: double.infinity,
-              height: screenHeight / 3.56,
+              height: screenHeight / 3.56, 
               child: Image.network(detailList!["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
@@ -85,18 +83,18 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
-                height: screenHeight / 127,
+                height: screenHeight / 100,
               ),
               Container(
                 child: Text(
                   detailList['episode'],
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontSize: 19, fontWeight: FontWeight.w700),
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               SizedBox(
@@ -107,16 +105,16 @@ class _MoreState extends State<More> {
                   "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.w600),
+                      fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               SizedBox(
-                height: screenHeight / 89,
+                height: screenHeight / 50,
               ),
               Container(
                 height: screenHeight / 4.5,
                 child: Text(
-                  "\n${detailList['detail']}",
+                  "${detailList['detail']}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 15, fontWeight: FontWeight.w400),
@@ -132,7 +130,7 @@ class _MoreState extends State<More> {
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
-                      color: Colors.grey),
+                      color: Colors.black45),
                 ),
               ),
               SizedBox(

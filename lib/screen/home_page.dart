@@ -91,7 +91,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return snapshot.data!;
                 }
 
-                return const Text("กำลังโหลด...");
+                return const Text("กำลังโหลด...",textAlign: TextAlign.center,);
               }),
           Center(
             child: Text("เป็นที่นิยม"),
@@ -100,45 +100,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             child: Text("กำลังมาแรง"),
           ),
         ])))
-
-        // Expanded(
-        //   child: TabBar(
-        //       indicatorColor: Colors.white,
-        //       labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        //       unselectedLabelStyle:
-        //           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        //       tabs: [
-        //         Tab(
-        //           text: "แนะนำ",
-        //         ),
-        //         Tab(
-        //           text: "เป็นที่นิยม",
-        //         ),
-        //         Tab(
-        //           text: "กำลังมาแรง",
-        //         ),
-        //       ]),
-        // ),
-        // Expanded(
-        //   child: TabBarView(children: <Widget>[
-        //     FutureBuilder<Widget>(
-        //         future: getData(),
-        //         builder:
-        //             (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-        //           if (snapshot.hasData) {
-        //             return snapshot.data!;
-        //           }
-
-        //           return const Text("กำลังโหลด...");
-        //         }),
-        //     Center(
-        //       child: Text("เป็นที่นิยม"),
-        //     ),
-        //     Center(
-        //       child: Text("กำลังมาแรง"),
-        //     ),
-        //   ]),
-        // )
       ]),
     );
   }
