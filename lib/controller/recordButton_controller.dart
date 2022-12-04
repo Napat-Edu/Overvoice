@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,11 +15,13 @@ class RecordButton extends StatefulWidget {
   final ValueChanged<int> converIndexSetter;
   List conversationList;
   String docID;
-  RecordButton(this.conversationList, this.docID, {required this.converIndexSetter, super.key});
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
+  RecordButton(this.conversationList, this.docID, this.onCountChanged, this.onStatusChanged, {required this.converIndexSetter, super.key});
 
   @override
   State<RecordButton> createState() =>
-      _RecordButtonState(conversationList, docID, converIndexSetter: converIndexSetter);
+      _RecordButtonState(conversationList, docID, onCountChanged, onStatusChanged, converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -28,6 +31,8 @@ class _RecordButtonState extends State<RecordButton> {
 
   int StageVoice = 0;
   bool status = false;
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   String docID;
 
   late final recorder = SoundRecorder(docID);
@@ -36,7 +41,8 @@ class _RecordButtonState extends State<RecordButton> {
 
   final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonState(this.conversationList, this.docID, {required this.converIndexSetter});
+  _RecordButtonState(this.conversationList, this.docID, this.onCountChanged,
+      this.onStatusChanged, {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
 
@@ -65,7 +71,7 @@ class _RecordButtonState extends State<RecordButton> {
     if (isPaused) {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
-      text = 'พากย์เลย';
+      text = 'กำลังพากย์อยู่';
     } else if (isStopped && StageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
@@ -77,6 +83,7 @@ class _RecordButtonState extends State<RecordButton> {
       TimeCountDown.add(
           conversationList[i].toString().split('(')[1].split(')')[0]);
     }
+    onCountChanged(TimeCountDown); // push time number in () to record_page
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
@@ -104,6 +111,7 @@ class _RecordButtonState extends State<RecordButton> {
                         await recorder._record();
                       } else {
                         await recorder._resume();
+
                         await null;
                       }
                       countdown(int.parse(TimeCountDown[StageVoice++]),
@@ -123,6 +131,7 @@ class _RecordButtonState extends State<RecordButton> {
   }
 
   void countdown(int n, int m) {
+    onStatusChanged(true); // check status of buttons
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
       print(timer.tick);
@@ -131,6 +140,7 @@ class _RecordButtonState extends State<RecordButton> {
         FlutterBeep.beep(false);
         print('Cancel timer');
         timer.cancel();
+        onStatusChanged(false);
         if (n >= m) {
           recorder._stop();
         } else {
