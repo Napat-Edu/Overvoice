@@ -219,37 +219,37 @@ class SoundRecorder {
   }
 
   Future _uploadFile(file) async {
-    // // Directory appDocDir = await getApplicationDocumentsDirectory();
+    // Directory appDocDir = await getApplicationDocumentsDirectory();
 
-    // // Create a storage reference from our app
-    // final storageRef = FirebaseStorage.instance.ref();
+    // Create a storage reference from our app
+    final storageRef = FirebaseStorage.instance.ref();
 
-    // final soundRef = storageRef.child(voiceName);
-    // // String filePath = '${appDocDir.path}/audio.aac';
-    // // File file = File(filePath);
+    final soundRef = storageRef.child(voiceName);
+    // String filePath = '${appDocDir.path}/audio.aac';
+    // File file = File(filePath);
 
-    // await soundRef.putFile(file);
+    await soundRef.putFile(file);
 
-    // CollectionReference usersHistory =
-    //     FirebaseFirestore.instance.collection('History');
-    // usersHistory
-    //     .doc()
-    //     .set({
-    //       'audioInfo': docID,
-    //       'likeCount': 0,
-    //       'sound_1': voiceName,
-    //       'sound_2': "",
-    //       'status': true,
-    //       'user_1': FirebaseAuth.instance.currentUser!.email,
-    //       'user_2': "",
-    //     })
-    //     .then((value) => print("History Added"))
-    //     .catchError((error) => print("Failed to add user: $error"));
+    CollectionReference usersHistory =
+        FirebaseFirestore.instance.collection('History');
+    usersHistory
+        .doc()
+        .set({
+          'audioInfo': docID,
+          'likeCount': 0,
+          'sound_1': voiceName,
+          'sound_2': "",
+          'status': true,
+          'user_1': FirebaseAuth.instance.currentUser!.email,
+          'user_2': "",
+        })
+        .then((value) => print("History Added"))
+        .catchError((error) => print("Failed to add user: $error"));
 
-    // CollectionReference usersInfo =
-    //     FirebaseFirestore.instance.collection('UserInfo');
-    // usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-    //   "recordAmount": FieldValue.increment(1),
-    // });
+    CollectionReference usersInfo =
+        FirebaseFirestore.instance.collection('UserInfo');
+    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
+      "recordAmount": FieldValue.increment(1),
+    });
   }
 }
