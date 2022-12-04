@@ -10,7 +10,15 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = new TabController(length: 3, vsync: this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -32,7 +40,8 @@ class _HomeState extends State<Home> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+          padding:
+              const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -51,59 +60,45 @@ class _HomeState extends State<Home> {
           ),
         ),
         Container(
-            color: const Color(0xFFFF7200),
-            child: Container(
-              height: 40,
-              child: Row(children: <Widget>[
-                Expanded(
-                    flex: 1,
-                    child: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    )),
-                SizedBox(width: screenWidth / 41.1),
-                Expanded(
-                    flex: 2,
-                    child: Text(
-                      "แนะนำ",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    )),
-                SizedBox(width: screenWidth / 41.1),
-                Expanded(
-                    child: Text(
-                  "ที่นิยม",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
-                )),
-                SizedBox(width: screenWidth / 20.55),
-                Expanded(
-                    flex: 2,
-                    child: Text(
-                      "กำลังมาแรง",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    )),
-              ]),
-            )),
+            height: 45,
+            color: Color(0xFFFF7200),
+            child: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.white,
+                labelStyle:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                unselectedLabelStyle:
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                tabs: [
+                  Tab(
+                    text: "แนะนำ",
+                  ),
+                  Tab(
+                    text: "เป็นที่นิยม",
+                  ),
+                  Tab(
+                    text: "กำลังมาแรง",
+                  )
+                ])),
         Expanded(
-          child: FutureBuilder<Widget>(
+            child: Container(
+                child:
+                    TabBarView(controller: _tabController, children: <Widget>[
+          FutureBuilder<Widget>(
               future: getData(),
               builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data!;
                 }
-
                 return const Text("กำลังโหลด...");
               }),
-        ),
+          Center(
+            child: Text("เป็นที่นิยม"),
+          ),
+          Center(
+            child: Text("กำลังมาแรง"),
+          ),
+        ])))
       ]),
     );
   }
@@ -149,7 +144,9 @@ class _HomeState extends State<Home> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => More(mainTitleList[index].docID!)));
+                  builder: (context) => More(mainTitleList[index].docID!),
+                  fullscreenDialog: true,
+                ));
           },
           child: const Text('เข้าชม'),
         ),
@@ -162,7 +159,7 @@ class _HomeState extends State<Home> {
 
     await FirebaseFirestore.instance
         .collection('AudioInfo')
-        .limit(5)
+        .limit(6)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
