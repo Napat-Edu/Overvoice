@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<resource>
-<string name="app_name">Overvoice</string>
-<string name="facebook_app_id">531744765414632</string>
-<string name="fb_login_protocol_scheme">fb531744765414632</string>
-<string name="facebook_client_token">d9910029e2058f9b307bece1543ac446</string>
-</resource>
