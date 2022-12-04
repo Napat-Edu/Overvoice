@@ -8,14 +8,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 
+import '../screen/record_page.dart';
+
 class RecordButton extends StatefulWidget {
+  final ValueChanged<int> converIndexSetter;
   List conversationList;
   String docID;
-  RecordButton(this.conversationList, this.docID, {super.key});
+  RecordButton(this.conversationList, this.docID, {required this.converIndexSetter, super.key});
 
   @override
   State<RecordButton> createState() =>
-      _RecordButtonState(conversationList, docID);
+      _RecordButtonState(conversationList, docID, converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -31,7 +34,9 @@ class _RecordButtonState extends State<RecordButton> {
 
   List conversationList;
 
-  _RecordButtonState(this.conversationList, this.docID);
+  final ValueChanged<int> converIndexSetter;
+
+  _RecordButtonState(this.conversationList, this.docID, {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
 
@@ -95,6 +100,7 @@ class _RecordButtonState extends State<RecordButton> {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
+                        converIndexSetter(Record.converIndex);
                         await recorder._record();
                       } else {
                         await recorder._resume();
@@ -130,6 +136,11 @@ class _RecordButtonState extends State<RecordButton> {
         } else {
           recorder._pause();
         }
+
+        // go for next conversation index in record_page
+        Record.converIndex++;
+        converIndexSetter(Record.converIndex);
+
         setState(() {});
       }
     });
@@ -208,37 +219,37 @@ class SoundRecorder {
   }
 
   Future _uploadFile(file) async {
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
+    // // Directory appDocDir = await getApplicationDocumentsDirectory();
 
-    // Create a storage reference from our app
-    final storageRef = FirebaseStorage.instance.ref();
+    // // Create a storage reference from our app
+    // final storageRef = FirebaseStorage.instance.ref();
 
-    final soundRef = storageRef.child(voiceName);
-    // String filePath = '${appDocDir.path}/audio.aac';
-    // File file = File(filePath);
+    // final soundRef = storageRef.child(voiceName);
+    // // String filePath = '${appDocDir.path}/audio.aac';
+    // // File file = File(filePath);
 
-    await soundRef.putFile(file);
+    // await soundRef.putFile(file);
 
-    CollectionReference usersHistory =
-        FirebaseFirestore.instance.collection('History');
-    usersHistory
-        .doc()
-        .set({
-          'audioInfo': docID,
-          'likeCount': 0,
-          'sound_1': voiceName,
-          'sound_2': "",
-          'status': true,
-          'user_1': FirebaseAuth.instance.currentUser!.email,
-          'user_2': "",
-        })
-        .then((value) => print("History Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    // CollectionReference usersHistory =
+    //     FirebaseFirestore.instance.collection('History');
+    // usersHistory
+    //     .doc()
+    //     .set({
+    //       'audioInfo': docID,
+    //       'likeCount': 0,
+    //       'sound_1': voiceName,
+    //       'sound_2': "",
+    //       'status': true,
+    //       'user_1': FirebaseAuth.instance.currentUser!.email,
+    //       'user_2': "",
+    //     })
+    //     .then((value) => print("History Added"))
+    //     .catchError((error) => print("Failed to add user: $error"));
 
-    CollectionReference usersInfo =
-        FirebaseFirestore.instance.collection('UserInfo');
-    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-      "recordAmount": FieldValue.increment(1),
-    });
+    // CollectionReference usersInfo =
+    //     FirebaseFirestore.instance.collection('UserInfo');
+    // usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
+    //   "recordAmount": FieldValue.increment(1),
+    // });
   }
 }
