@@ -12,6 +12,8 @@ class Record extends StatefulWidget {
   Record(this.detailList, this.character, this.characterimgURL, this.docID,
       {super.key});
 
+  static int converIndex = 0;
+
   @override
   State<Record> createState() =>
       _RecordState(detailList, character, characterimgURL, docID);
@@ -28,6 +30,9 @@ class _RecordState extends State<Record> {
   final audioPlayer = AudioPlayer();
   late List conversationList = detailList["conversation"].split(",");
   bool isPlaying = false;
+  bool isStarted = false;
+
+  late String currentText = conversationList[0];
 
   @override
   void initState() {
@@ -36,13 +41,14 @@ class _RecordState extends State<Record> {
     // Listen to states: playing, paused, stopped
     audioPlayer.onDurationChanged.listen((state) {
       setState(() {
-        isPlaying = state == PlayerState.PLAYING;
+        isPlaying = state == PlayerState.playing;
       });
     });
   }
 
   @override
   void dispose() {
+    Record.converIndex = 0;
     audioPlayer.dispose();
     super.dispose();
   }
@@ -138,23 +144,17 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
-                      child: ListView.builder(
-                          itemCount: conversationList.length,
-                          itemBuilder: (context, index) => ListTile(
-                                title: Text(
-                                  conversationList[index],
-                                  style: TextStyle(
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              )),
+                      child: displayConversation(),
+                      //ConversationController(conversationList),
                     ))
               ],
             ),
             SizedBox(
               height: screenHeight / 30,
             ),
-            RecordButton(conversationList, docID),
+            // record button all-function here
+            RecordButton(conversationList, docID,
+                converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -180,9 +180,8 @@ class _RecordState extends State<Record> {
                     log('data: ${metaData.toString()}');
                     String url = metaData.toString();
 
-                    await audioPlayer.play(url);
+                    await audioPlayer.setSourceUrl(url);
                   }
-                  //
                   setState(() {
                     isPlaying = !isPlaying;
                   });
@@ -194,5 +193,31 @@ class _RecordState extends State<Record> {
         ),
       ),
     );
+  }
+
+  Widget displayConversation() {
+    if (isStarted == false) {
+      int i;
+      String fullConversation = "";
+      for (i = 0; i < conversationList.length; i++) {
+        fullConversation += "ประโยคที่ ${i+1} " + conversationList[i] + "\n\n";
+      }
+      currentText = fullConversation;
+    }
+    return ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) => ListTile(
+              title: Text(
+                currentText,
+                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+              ),
+            ));
+  }
+
+  // use for change conversation text
+  void _converIndexSetter(int converIndex) {
+    isStarted = true;
+    currentText = conversationList[converIndex];
+    setState(() {});
   }
 }

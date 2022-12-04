@@ -62,7 +62,7 @@ class _ProfilePage extends State<ProfilePage>
               SizedBox(
                 height: 30,
               ),
-              Text("กำลังโหลด..."),
+              //Text("กำลังโหลด..."),
               SizedBox(
                 height: 30,
               ),

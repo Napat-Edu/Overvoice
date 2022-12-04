@@ -90,7 +90,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 if (snapshot.hasData) {
                   return snapshot.data!;
                 }
-                return const Text("กำลังโหลด...");
+
+                return const Text("กำลังโหลด...",textAlign: TextAlign.center,);
               }),
           Center(
             child: Text("เป็นที่นิยม"),
@@ -171,3 +172,46 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return list;
   }
 }
+
+// Container(
+//               height: 40,
+//               child: Row(children: <Widget>[
+//                 Expanded(
+//                     flex: 1,
+//                     child: Icon(
+//                       Icons.menu,
+//                       color: Colors.white,
+//                     )),
+//                 SizedBox(width: screenWidth / 41.1),
+//                 Expanded(
+//                     flex: 1,
+//                     child: Text(
+//                       "แนะนำ",
+//                       style: TextStyle(
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     )),
+//                 SizedBox(width: screenWidth / 41.1),
+//                 Expanded(
+//                   flex: 1,
+//                     child: Text(
+//                   "ที่นิยม",
+//                   style: TextStyle(
+//                       fontSize: 15,
+//                       fontWeight: FontWeight.w500,
+//                       color: Colors.white),
+//                 )),
+//                 SizedBox(width: screenWidth / 41.1),
+//                 Expanded(
+//                     flex: 1,
+//                     child: Text(
+//                       "กำลังมาแรง",
+//                       style: TextStyle(
+//                           fontSize: 15,
+//                           fontWeight: FontWeight.w500,
+//                           color: Colors.white),
+//                     )),
+//               ]),
+//             )
