@@ -24,7 +24,7 @@ class _SearchState extends State<Search> {
               element.titleName!.toLowerCase().contains(value.toLowerCase()) ||
               element.titleNameEng!.toLowerCase().contains(value.toLowerCase()))
           .toList();
-      if(value == "") {
+      if (value == "") {
         displayList = [];
       }
     });

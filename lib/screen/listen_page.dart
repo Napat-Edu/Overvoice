@@ -9,7 +9,7 @@ String formatTime(Duration duration) {
   final hours = twoDigits(duration.inHours);
   final minutes = twoDigits(duration.inMinutes.remainder(60));
   final seconds = twoDigits(duration.inSeconds.remainder(60));
-
+  
   return [
     if (duration.inHours > 0) hours,
     minutes,
@@ -17,9 +17,8 @@ String formatTime(Duration duration) {
   ].join(':');
 }
 
-enum PlayerStateA { stoppedA, playingA, pausedA }
-
-enum PlayerStateBGM { stoppedBGM, playingBGM, pausedBGM }
+// enum PlayerStateA { stoppedA, playingA, pausedA }
+// enum PlayerStateBGM { stoppedBGM, playingBGM, pausedBGM }
 
 class ListenPage extends StatefulWidget {
   // const ListenPage({super.key, required titleName});
@@ -46,6 +45,7 @@ class _ListenPageState extends State<ListenPage> {
   AudioPlayer audioPlayerA = AudioPlayer();
   // PlayerStateA playerStateA = PlayerStateA.stoppedA;
   // get isPlayingA => playerStateA == PlayerStateA.playingA;
+  
   // for the BGM
   AudioPlayer audioPlayerBGM = AudioPlayer();
   // PlayerStateBGM playerStateBGM = PlayerStateBGM.stoppedBGM;
@@ -60,23 +60,28 @@ class _ListenPageState extends State<ListenPage> {
     // Listen to states: playing, paused, stopped
     audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
       print('Current player state: $s');
+      if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
     audioPlayerA.onDurationChanged.listen((Duration d) {
-      print('Max duration: $d');
+      //print('Max duration: $d');
+      if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
     audioPlayerA.onPositionChanged.listen((Duration p) {
-      print('Current position: $p');
+      //print('Current position: $p');
+      if (!mounted) return;
       setState(() => position = p);
     });
 
+    // Listen when audio complete
     audioPlayerA.onPlayerComplete.listen((event) {
       isPlaying = false;
+      if (!mounted) return;
       setState(() {
         position = duration;
       });
@@ -158,7 +163,7 @@ class _ListenPageState extends State<ListenPage> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "บทพูด",
+                            "บทที่ทำการพากย์",
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
@@ -206,6 +211,7 @@ class _ListenPageState extends State<ListenPage> {
                 onChanged: (value) async {
                   final currentPosition = Duration(seconds: value.toInt());
                   await audioPlayerA.seek(currentPosition);
+                  await audioPlayerBGM.seek(currentPosition);
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,

@@ -1,4 +1,3 @@
-// young mai dai chai
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 
@@ -22,6 +21,10 @@ class _SoloState extends State<Solo> {
 
   @override
   Widget build(BuildContext context) {
+    
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,22 +44,22 @@ class _SoloState extends State<Solo> {
       ),
       body: Container(
         padding: EdgeInsets.only(top: 40, left: 40, right: 40),
-        height: 550,
+        height: screenHeight / 1.6,
         width: double.infinity,
         child: Container(
             child: Column(children: <Widget>[
           SizedBox(
-            height: 100,
+            height: screenHeight / 8.9,
           ),
           Container(
             child: Text(
-              "เลือกตัวละครที่ต้องการพากย์",
+              "เลือกตัวละครที่คุณต้องการพากย์",
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
             ),
           ),
           SizedBox(
-            height: 30,
+            height: screenHeight / 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,12 +78,12 @@ class _SoloState extends State<Solo> {
                                   docID)));
                     },
                     child: CircleAvatar(
-                      radius: 56,
+                      radius: 54,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 52,
+                          radius: 50,
                           backgroundImage:
                               NetworkImage(detaillMap["characterImageA"]),
                         ),
@@ -88,11 +91,11 @@ class _SoloState extends State<Solo> {
                     ),
                   ),
                   SizedBox(
-                    height: 18,
+                    height: screenHeight / 49,
                   ),
                   SizedBox(
-                    width: 104,
-                    height: 40,
+                    width: screenWidth / 3.4,
+                    height: screenHeight / 20.5,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -100,7 +103,7 @@ class _SoloState extends State<Solo> {
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -117,7 +120,7 @@ class _SoloState extends State<Solo> {
                 ]),
               ),
               SizedBox(
-                width: 50,
+                width: screenWidth / 10,
               ),
               Container(
                 child: Column(children: [
@@ -133,12 +136,12 @@ class _SoloState extends State<Solo> {
                                   docID)));
                     },
                     child: CircleAvatar(
-                      radius: 56,
+                      radius: 54,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 52,
+                          radius: 50,
                           backgroundImage:
                               NetworkImage(detaillMap["characterImageB"]),
                         ),
@@ -146,11 +149,11 @@ class _SoloState extends State<Solo> {
                     ),
                   ),
                   SizedBox(
-                    height: 18,
+                    height: screenHeight / 49,
                   ),
                   SizedBox(
-                    width: 104,
-                    height: 40,
+                    width: screenWidth / 3.4,
+                    height: screenHeight / 20.5,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -158,7 +161,7 @@ class _SoloState extends State<Solo> {
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,

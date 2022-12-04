@@ -13,6 +13,8 @@ class Record extends StatefulWidget {
   Record(this.detailList, this.character, this.characterimgURL, this.docID,
       {super.key});
 
+  static int converIndex = 0;
+
   @override
   State<Record> createState() =>
       _RecordState(detailList, character, characterimgURL, docID);
@@ -43,6 +45,9 @@ class _RecordState extends State<Record> {
 
   AudioPlayer audioPlayer = AudioPlayer();
   PlayerState playerState = PlayerState.stopped;
+  bool isStarted = false;
+
+  late String currentText = conversationList[0];
 
   @override
   void initState() {
@@ -50,18 +55,21 @@ class _RecordState extends State<Record> {
 
     // Listen to states: playing, paused, stopped
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
-      print('Current player state: $s');
+      //print('Current player state: $s');
+      if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
     audioPlayer.onDurationChanged.listen((Duration d) {
-      print('Max duration: $d');
+      //print('Max duration: $d');
+      if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
     audioPlayer.onPositionChanged.listen((Duration p) {
+      if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
@@ -73,6 +81,7 @@ class _RecordState extends State<Record> {
 
     audioPlayer.onPlayerComplete.listen((event) {
       isPlaying = false;
+      if (!mounted) return;
       setState(() {
         position = duration;
       });
@@ -81,6 +90,7 @@ class _RecordState extends State<Record> {
 
   @override
   void dispose() {
+    Record.converIndex = 0;
     audioPlayer.dispose();
     super.dispose();
   }
@@ -152,7 +162,7 @@ class _RecordState extends State<Record> {
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "บทพูด",
+                          "บทที่ต้องทำการพากย์",
                           style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
@@ -176,16 +186,8 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
-                      child: ListView.builder(
-                          itemCount: conversationList.length,
-                          itemBuilder: (context, index) => ListTile(
-                                title: Text(
-                                  conversationList[index],
-                                  style: TextStyle(
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              )),
+                      child: displayConversation(),
+                      //ConversationController(conversationList),
                     ))
               ],
             ),
@@ -193,7 +195,8 @@ class _RecordState extends State<Record> {
               height: screenHeight / 30,
             ),
             RecordButton(conversationList, docID, (a) => {setup(a)},
-                (status) => {checkStatus(status)}),
+                (status) => {checkStatus(status)},
+                converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -246,25 +249,11 @@ class _RecordState extends State<Record> {
 
   Future play() async {
     audioPlayer.resume();
-    // audioPlayerBGM.resume();
-    // setState(() {
-    //   playerStateA = PlayerStateA.playingA;
-    // });
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.playingBGM;
-    // });
   }
 
   Future pause() async {
     await audioPlayer.pause();
     isPlaying = false;
-    // setState(() {
-    //   playerStateA = PlayerStateA.pausedA;
-    // });
-    // await audioPlayerBGM.pause();
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.pausedBGM;
-    // });
   }
 
   Future checkStatus(bool status) async {
@@ -305,5 +294,33 @@ class _RecordState extends State<Record> {
       await audioPlayer.setSourceUrl(urlBGM);
       print("Already Set!");
     }
+  }
+
+  Widget displayConversation() {
+    if (isStarted == false) {
+      int i;
+      String fullConversation = "";
+      for (i = 0; i < conversationList.length; i++) {
+        fullConversation +=
+            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+      }
+      currentText = fullConversation;
+    }
+    return ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) => ListTile(
+              title: Text(
+                currentText,
+                style:
+                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+              ),
+            ));
+  }
+
+  // use for change conversation text
+  void _converIndexSetter(int converIndex) {
+    isStarted = true;
+    currentText = conversationList[converIndex];
+    setState(() {});
   }
 }

@@ -9,18 +9,19 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 
+import '../screen/record_page.dart';
+
 class RecordButton extends StatefulWidget {
+  final ValueChanged<int> converIndexSetter;
   List conversationList;
   String docID;
-  Function(List) onCountChanged; // intial function for push next page
-  Function(bool) onStatusChanged; // intial function for push next page
-  RecordButton(this.conversationList, this.docID, this.onCountChanged,
-      this.onStatusChanged,
-      {super.key});
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
+  RecordButton(this.conversationList, this.docID, this.onCountChanged, this.onStatusChanged, {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButton> createState() => _RecordButtonState(
-      conversationList, docID, onCountChanged, onStatusChanged);
+  State<RecordButton> createState() =>
+      _RecordButtonState(conversationList, docID, onCountChanged, onStatusChanged, converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -30,16 +31,18 @@ class _RecordButtonState extends State<RecordButton> {
 
   int StageVoice = 0;
   bool status = false;
-  final Function(List) onCountChanged;
-  final Function(bool) onStatusChanged;
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   String docID;
 
   late final recorder = SoundRecorder(docID);
 
   List conversationList;
 
+  final ValueChanged<int> converIndexSetter;
+
   _RecordButtonState(this.conversationList, this.docID, this.onCountChanged,
-      this.onStatusChanged);
+      this.onStatusChanged, {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
 
@@ -66,7 +69,7 @@ class _RecordButtonState extends State<RecordButton> {
 
     final text;
     if (isPaused) {
-      text = 'พากย์ต่อ';
+      text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
       text = 'กำลังพากย์อยู่';
     } else if (isStopped && StageVoice != 0) {
@@ -104,6 +107,7 @@ class _RecordButtonState extends State<RecordButton> {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
+                        converIndexSetter(Record.converIndex);
                         await recorder._record();
                       } else {
                         await recorder._resume();
@@ -142,6 +146,11 @@ class _RecordButtonState extends State<RecordButton> {
         } else {
           recorder._pause();
         }
+
+        // go for next conversation index in record_page
+        Record.converIndex++;
+        converIndexSetter(Record.converIndex);
+
         setState(() {});
       }
     });
