@@ -66,14 +66,14 @@ class _ListenPageState extends State<ListenPage> {
 
     // Listen to audio duration
     audioPlayerA.onDurationChanged.listen((Duration d) {
-      print('Max duration: $d');
+      //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
     audioPlayerA.onPositionChanged.listen((Duration p) {
-      print('Current position: $p');
+      //print('Current position: $p');
       if (!mounted) return;
       setState(() => position = p);
     });
