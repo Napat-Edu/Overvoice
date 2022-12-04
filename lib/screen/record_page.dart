@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/controller/recordButton_controller.dart';
+import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -153,8 +154,12 @@ class _RecordState extends State<Record> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            RecordButton(conversationList, docID,
-                converIndexSetter: _converIndexSetter),
+
+            detailList["voiceoverAmount"] == 1
+                ? RecordButton(conversationList, docID,
+                    converIndexSetter: _converIndexSetter)
+                : RecordButtonDuo(conversationList, docID, character,
+                    converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -200,7 +205,8 @@ class _RecordState extends State<Record> {
       int i;
       String fullConversation = "";
       for (i = 0; i < conversationList.length; i++) {
-        fullConversation += "ประโยคที่ ${i+1} " + conversationList[i] + "\n\n";
+        fullConversation +=
+            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
       }
       currentText = fullConversation;
     }
@@ -209,7 +215,8 @@ class _RecordState extends State<Record> {
         itemBuilder: (context, index) => ListTile(
               title: Text(
                 currentText,
-                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
               ),
             ));
   }
