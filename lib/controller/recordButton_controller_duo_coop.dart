@@ -11,20 +11,24 @@ import 'package:audioplayers/audioplayers.dart';
 import '../screen/record_page.dart';
 
 class RecordButtonDuoCoop extends StatefulWidget {
-  final ValueChanged<int> converIndexSetter;
+  // final ValueChanged<int> converIndexSetter;
   List conversationList;
   String character;
   String hisID;
-  RecordButtonDuoCoop(this.conversationList, this.hisID, this.character,
-      {required this.converIndexSetter, super.key});
+  String soundOver;
+  RecordButtonDuoCoop(
+      this.conversationList, this.hisID, this.character, this.soundOver,
+      {super.key});
 
   @override
   State<RecordButtonDuoCoop> createState() =>
-      _RecordButtonDuoCoopState(conversationList, hisID, character,
-          converIndexSetter: converIndexSetter);
+      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver);
 }
 
 bool voiceStart = false;
+// dummy
+String HistoryID = 'E5iMPSaSyjIo8YZK108U';
+String VoiceName = '2022-12-0501:10:05994528omegyzr.aac';
 
 class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
@@ -37,11 +41,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   List conversationList;
   String character;
+  String soundOver;
 
-  final ValueChanged<int> converIndexSetter;
+  // final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonDuoCoopState(this.conversationList, this.hisID, this.character,
-      {required this.converIndexSetter});
+  _RecordButtonDuoCoopState(
+      this.conversationList, this.hisID, this.character, this.soundOver);
 
   Object? get TimeCountDown => null;
 
@@ -66,6 +71,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
     final text;
+
     if (isPaused) {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
@@ -105,21 +111,23 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
+                    if (StageVoice >= TimeCountDown.length) {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
-                        converIndexSetter(Record.converIndex);
+                        // converIndexSetter(Record.converIndex);
                         await recorder._record();
                       } else {
                         await recorder._resume();
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(int.parse(TimeCountDown[StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
-                    setState(() {});
+                    setState(() {
+                      StageVoice += 1;
+                    });
                   },
             child: Text(
               StageVoice >= TimeCountDown.length
@@ -150,8 +158,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        // Record.converIndex++;
+        // converIndexSetter(Record.converIndex);
 
         setState(() {});
       }
@@ -245,7 +253,7 @@ class SoundRecorder {
     CollectionReference usersHistory =
         FirebaseFirestore.instance.collection('History');
     usersHistory
-        .doc(hisID)
+        .doc(HistoryID)
         .update({
           "sound_2": voiceName,
           "status": true,
