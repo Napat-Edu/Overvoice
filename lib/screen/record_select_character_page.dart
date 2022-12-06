@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_page.dart';
+import 'package:overvoice_project/screen/record_select_buddy_page.dart';
 
-class Solo extends StatefulWidget {
+class SelectCharacter extends StatefulWidget {
   Map<String, dynamic> detaillMap;
   String docID;
-  Solo(this.detaillMap, this.docID, {super.key});
+  bool isPairBuddyMode;
+
+  SelectCharacter(this.detaillMap, this.docID, this.isPairBuddyMode, {super.key});
 
   @override
-  State<Solo> createState() => _SoloState(detaillMap, docID);
+  State<SelectCharacter> createState() =>
+      _SelectCharacterState(detaillMap, docID, isPairBuddyMode);
 }
 
-class _SoloState extends State<Solo> {
+class _SelectCharacterState extends State<SelectCharacter> {
   Map<String, dynamic> detaillMap;
   String docID;
-  _SoloState(this.detaillMap, this.docID);
+  bool isPairBuddyMode;
+  _SelectCharacterState(this.detaillMap, this.docID, this.isPairBuddyMode);
 
   late final splitChar = detaillMap["character"].split(",");
   late final characterA = splitChar[0];
@@ -21,7 +26,6 @@ class _SoloState extends State<Solo> {
 
   @override
   Widget build(BuildContext context) {
-    
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -68,14 +72,7 @@ class _SoloState extends State<Solo> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Record(
-                                  detaillMap,
-                                  characterA,
-                                  detaillMap["characterImageA"],
-                                  docID)));
+                      checkAudioAmount(characterA, detaillMap["characterImageA"]);
                     },
                     child: CircleAvatar(
                       radius: 54,
@@ -105,14 +102,7 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Record(
-                                    detaillMap,
-                                    characterA,
-                                    detaillMap["characterImageA"],
-                                    docID)));
+                        checkAudioAmount(characterA, detaillMap["characterImageA"]);
                       },
                       child: Text(characterA),
                     ),
@@ -126,14 +116,7 @@ class _SoloState extends State<Solo> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Record(
-                                  detaillMap,
-                                  characterB,
-                                  detaillMap["characterImageB"],
-                                  docID)));
+                      checkAudioAmount(characterB, detaillMap["characterImageB"]);
                     },
                     child: CircleAvatar(
                       radius: 54,
@@ -163,14 +146,7 @@ class _SoloState extends State<Solo> {
                           textStyle: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Record(
-                                    detaillMap,
-                                    characterB,
-                                    detaillMap["characterImageB"],
-                                    docID)));
+                        checkAudioAmount(characterB, detaillMap["characterImageB"]);
                       },
                       child: Text(characterB),
                     ),
@@ -182,5 +158,29 @@ class _SoloState extends State<Solo> {
         ])),
       ),
     );
+  }
+
+  checkAudioAmount(String character, String characterImageURL) {
+    if(detaillMap["voiceoverAmount"] == "1" || isPairBuddyMode == false) {
+      toRecordPage(character, characterImageURL);
+    } else {
+      toSelectBuddyPage(character);
+    }
+  }
+
+  toRecordPage(String character, String characterImageURL) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Record(
+                detaillMap, character, characterImageURL, docID)));
+  }
+
+  toSelectBuddyPage(String character) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SelectBuddy(
+                detaillMap, docID, character)));
   }
 }

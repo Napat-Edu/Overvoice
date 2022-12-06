@@ -4,21 +4,42 @@ import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import '../controller/recordButton_controller_duo_coop.dart';
+import '../model/listen_detail.dart';
 
 class RecordDuo extends StatefulWidget {
-  RecordDuo({super.key});
+  Map<String, dynamic> detailList;
+  String character;
+  String docID;
+  ListenDetails yourBuddy;
+  String hisID;
+
+  RecordDuo(this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
+      {super.key});
 
   static int converIndex = 0;
 
   @override
-  State<RecordDuo> createState() => _RecordDuoState();
+  State<RecordDuo> createState() =>
+      _RecordDuoState(detailList, character, yourBuddy, docID, hisID);
 }
 
 class _RecordDuoState extends State<RecordDuo> {
-  _RecordDuoState();
+  Map<String, dynamic> detailList;
+  String character;
+  ListenDetails yourBuddy;
+  String docID;
+  String hisID;
 
+  _RecordDuoState(
+    this.detailList,
+    this.character,
+    this.yourBuddy,
+    this.docID,
+    this.hisID
+  );
+
+  late List conversationList = detailList["conversation"].split(",");
   bool isPlaying = false;
   bool checkButton =
       false; // for check status of button (ว่าปุ่มนี้กำลังกดอยู่หรือไม่ กันกดปุ่มทับกัน)
@@ -32,10 +53,12 @@ class _RecordDuoState extends State<RecordDuo> {
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
+  late String currentText = conversationList[0];
+
   @override
   void initState() {
     super.initState();
-
+    
     // Listen to states: playing, paused, stopped
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
@@ -85,7 +108,7 @@ class _RecordDuoState extends State<RecordDuo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "name",
+          detailList["name"],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -113,6 +136,7 @@ class _RecordDuoState extends State<RecordDuo> {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: screenWidth / 7.9,
+                  backgroundImage: NetworkImage(yourBuddy.imgURL.toString()),
                 ),
               ),
             ),
@@ -120,7 +144,7 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 80,
             ),
             Text(
-              "มิโิดริยะ",
+              "คุณกำลังพากย์คู่กับ ${yourBuddy.userName}",
               style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
@@ -168,6 +192,7 @@ class _RecordDuoState extends State<RecordDuo> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
+                      child: displayConversation(),
                       //ConversationController(conversationList),
                     ))
               ],
@@ -176,15 +201,7 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            RecordButtonDuoCoop([
-              "ท็อปฮีโร่น่ะ มักจะสร้างตำนานตั้งแต่สมัยเรียน ในเรื่องราวของพวกเขามีสิ่งหนึ่งที่เหมือนกัน ร่างกายของพวกเขาขยับก่อนที่จะได้คิดยังไงล่ะ(3:ออลไมท์)",
-              "ด้วยเหตุผลบางอย่าง ผมนึกถึงคำพูดของแม่ขึ้นมา(4:มิโดริยะ)",
-              "เธอเองก็ เป็นแบบนั้นใช่มั้ยล่ะ(5:ออลไมท์)",
-              "ตอบรับด้วยเสียงสะอื้น และคิดในใจว่า ไม่ใช่อย่างนั้นหรอกครับคุณแม่ ในตอนนั้น สิ่งที่ผมอยากให้แม่พูดน่ะ สิ่งที่ผมอยากได้ยินก็คือ(3:มิโดริยะ)",
-              "นายเอง ก็เป็นฮีโร่ได้นะ(2:ออลไมท์)",
-              "ตอบรับด้วยเสียงสะอื้นปนร้องไห้ และคิดในใจอีกครั้งว่า ในที่สุดความฝันก็กลายเป็นจริง จากนั้นเว้นช่วงเล็กน้อยและพูดว่า และนี่ คือเรื่องราวก่อนที่ผมจะกลายเป็นฮีโร่ที่ยอดยี่ยมที่สุด(3:มิโดริยะ)"
-            ], "5GWs2nJnWnZPIY86nvlx", "มิโดริยะ",
-                "2022-12-0501:10:05994528omegyzr.aac"),
+            RecordButtonDuoCoop(conversationList, character, hisID, yourBuddy.audioFileName.toString(), converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -282,5 +299,33 @@ class _RecordDuoState extends State<RecordDuo> {
       await audioPlayer.setSourceUrl(urlBGM);
       print("Already Set!");
     }
+  }
+
+  Widget displayConversation() {
+    if (isStarted == false) {
+      int i;
+      String fullConversation = "";
+      for (i = 0; i < conversationList.length; i++) {
+        fullConversation +=
+            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+      }
+      currentText = fullConversation;
+    }
+    return ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) => ListTile(
+              title: Text(
+                currentText,
+                style:
+                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+              ),
+            ));
+  }
+
+  // use for change conversation text
+  void _converIndexSetter(int converIndex) {
+    isStarted = true;
+    currentText = conversationList[converIndex];
+    setState(() {});
   }
 }

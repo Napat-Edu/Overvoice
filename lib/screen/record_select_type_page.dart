@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
 
-import '../controller/recordButton_controller_duo_coop.dart';
-
-class Start extends StatefulWidget {
+class SelectDuoRecordType extends StatefulWidget {
   Map<String, dynamic> detaillMap;
   String docID;
-  Start(this.detaillMap, this.docID, {super.key});
+  SelectDuoRecordType(this.detaillMap, this.docID, {super.key});
 
   @override
-  State<Start> createState() => _StartState(detaillMap, docID);
+  State<SelectDuoRecordType> createState() =>
+      _SelectDuoRecordTypeState(detaillMap, docID);
 }
 
-class _StartState extends State<Start> {
+class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
   Map<String, dynamic> detaillMap;
   String docID;
-  _StartState(this.detaillMap, this.docID);
+  _SelectDuoRecordTypeState(this.detaillMap, this.docID);
+
+  bool isPairBuddyMode = true;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,8 @@ class _StartState extends State<Start> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => (Solo(detaillMap, docID))));
+                              builder: (context) =>
+                                  (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
@@ -96,7 +98,7 @@ class _StartState extends State<Start> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    (Solo(detaillMap, docID))));
+                                    (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
                       },
                       child: const Text('พากย์เดี่ยว'),
                     ),
@@ -109,7 +111,13 @@ class _StartState extends State<Start> {
               Container(
                 child: Column(children: [
                   RawMaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
+                    },
                     elevation: 2.0,
                     fillColor: Color(0xFFFF7200),
                     child: Icon(Icons.people, size: 74.0, color: Colors.white),
@@ -134,7 +142,8 @@ class _StartState extends State<Start> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => (RecordDuo())));
+                                builder: (context) =>
+                                    (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
                       },
                       child: const Text('พากย์คู่'),
                     ),
