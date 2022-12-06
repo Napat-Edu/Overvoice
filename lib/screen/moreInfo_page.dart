@@ -15,10 +15,9 @@ class More extends StatefulWidget {
 class _MoreState extends State<More> {
   String docID;
   _MoreState(this.docID);
-  
+
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -68,7 +67,7 @@ class _MoreState extends State<More> {
           Container(
             child: Container(
               width: double.infinity,
-              height: screenHeight / 3.56, 
+              height: screenHeight / 3.56,
               child: Image.network(detailList!["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
