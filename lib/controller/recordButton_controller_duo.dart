@@ -105,7 +105,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
+                    if (StageVoice > TimeCountDown.length) {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
@@ -150,8 +150,10 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        if (Record.converIndex < conversationList.length - 1) {
+          Record.converIndex++;
+          converIndexSetter(Record.converIndex);
+        }
 
         setState(() {});
       }

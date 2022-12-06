@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
+
+import '../controller/recordButton_controller_duo_coop.dart';
 
 class Start extends StatefulWidget {
   Map<String, dynamic> detaillMap;
@@ -17,7 +20,6 @@ class _StartState extends State<Start> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -128,7 +130,12 @@ class _StartState extends State<Start> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => (RecordDuo())));
+                      },
                       child: const Text('พากย์คู่'),
                     ),
                   )
