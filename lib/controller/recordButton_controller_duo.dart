@@ -150,8 +150,10 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        if (Record.converIndex < conversationList.length - 1) {
+          Record.converIndex++;
+          converIndexSetter(Record.converIndex);
+        }
 
         setState(() {});
       }

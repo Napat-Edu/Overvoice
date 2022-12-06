@@ -17,11 +17,14 @@ class RecordButton extends StatefulWidget {
   String docID;
   late Function(List) onCountChanged; // intial function for push next page
   late Function(bool) onStatusChanged; // intial function for push next page
-  RecordButton(this.conversationList, this.docID, this.onCountChanged, this.onStatusChanged, {required this.converIndexSetter, super.key});
+  RecordButton(this.conversationList, this.docID, this.onCountChanged,
+      this.onStatusChanged,
+      {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButton> createState() =>
-      _RecordButtonState(conversationList, docID, onCountChanged, onStatusChanged, converIndexSetter: converIndexSetter);
+  State<RecordButton> createState() => _RecordButtonState(
+      conversationList, docID, onCountChanged, onStatusChanged,
+      converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -42,7 +45,8 @@ class _RecordButtonState extends State<RecordButton> {
   final ValueChanged<int> converIndexSetter;
 
   _RecordButtonState(this.conversationList, this.docID, this.onCountChanged,
-      this.onStatusChanged, {required this.converIndexSetter});
+      this.onStatusChanged,
+      {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
 
@@ -148,8 +152,10 @@ class _RecordButtonState extends State<RecordButton> {
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        if (Record.converIndex < conversationList.length - 1) {
+          Record.converIndex++;
+          converIndexSetter(Record.converIndex);
+        }
 
         setState(() {});
       }
