@@ -22,10 +22,12 @@ class RecordButtonDuoCoop extends StatefulWidget {
 
   @override
   State<RecordButtonDuoCoop> createState() =>
-      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver, converIndexSetter: converIndexSetter);
+      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver,
+          converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
+
 class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
 
@@ -42,12 +44,14 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   final ValueChanged<int> converIndexSetter;
 
   _RecordButtonDuoCoopState(
-      this.conversationList, this.hisID, this.character, this.soundOver, {required this.converIndexSetter});
+      this.conversationList, this.hisID, this.character, this.soundOver,
+      {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
 
   @override
   void initState() {
+    Record.converIndex = 0;
     super.initState();
 
     recorder.init();
@@ -111,7 +115,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
-                        // converIndexSetter(Record.converIndex);
+                        converIndexSetter(Record.converIndex);
                         await recorder._record();
                       } else {
                         await recorder._resume();
@@ -125,9 +129,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
-                    setState(() {
-                      StageVoice += 1;
-                    });
+                    setState(() {});
                   },
             child: Text(
               StageVoice >= TimeCountDown.length

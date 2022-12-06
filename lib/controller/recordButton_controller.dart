@@ -127,10 +127,6 @@ class _RecordButtonState extends State<RecordButton> {
                                   : StageVoice]),
                           TimeCountDown.length);
 
-                      if (StageVoice < TimeCountDown.length) {
-                        StageVoice++;
-                      }
-
                       //print(TimeCountDown[StageVoice++]);
                     }
                     setState(() {});
