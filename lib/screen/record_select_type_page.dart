@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
 
 class SelectDuoRecordType extends StatefulWidget {

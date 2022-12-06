@@ -107,7 +107,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
+                    if (StageVoice > TimeCountDown.length) {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
