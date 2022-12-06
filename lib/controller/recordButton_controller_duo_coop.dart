@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,44 +7,40 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 import '../screen/record_page.dart';
 
-class RecordButton extends StatefulWidget {
+class RecordButtonDuoCoop extends StatefulWidget {
   final ValueChanged<int> converIndexSetter;
   List conversationList;
-  String docID;
-  late Function(List) onCountChanged; // intial function for push next page
-  late Function(bool) onStatusChanged; // intial function for push next page
-  RecordButton(this.conversationList, this.docID, this.onCountChanged,
-      this.onStatusChanged,
+  String character;
+  String hisID;
+  RecordButtonDuoCoop(this.conversationList, this.hisID, this.character,
       {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButton> createState() => _RecordButtonState(
-      conversationList, docID, onCountChanged, onStatusChanged,
-      converIndexSetter: converIndexSetter);
+  State<RecordButtonDuoCoop> createState() =>
+      _RecordButtonDuoCoopState(conversationList, hisID, character,
+          converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
 
-class _RecordButtonState extends State<RecordButton> {
+class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
 
   int StageVoice = 0;
   bool status = false;
-  late final Function(List) onCountChanged;
-  late final Function(bool) onStatusChanged;
-  String docID;
+  String hisID;
 
-  late final recorder = SoundRecorder(docID);
+  late final recorder = SoundRecorder(hisID);
 
   List conversationList;
+  String character;
 
   final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonState(this.conversationList, this.docID, this.onCountChanged,
-      this.onStatusChanged,
+  _RecordButtonDuoCoopState(this.conversationList, this.hisID, this.character,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -70,12 +65,11 @@ class _RecordButtonState extends State<RecordButton> {
     final onProgress = recorder.onProgress;
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
-
     final text;
     if (isPaused) {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
-      text = 'กำลังพากย์อยู่';
+      text = 'พากย์เลย';
     } else if (isStopped && StageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
@@ -83,13 +77,17 @@ class _RecordButtonState extends State<RecordButton> {
     }
 
     List<String> TimeCountDown = [];
+    List<String> characterList = [];
     for (int i = 0; i < conversationList.length; i++) {
       TimeCountDown.add(
-          conversationList[i].toString().split('(')[1].split(')')[0]);
+          conversationList[i].toString().split('(')[1].split(':')[0]);
+      characterList
+          .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
-    onCountChanged(TimeCountDown); // push time number in () to record_page
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    print(characterList + TimeCountDown); // Debug
     return Container(
         child: Column(
       children: <Widget>[
@@ -115,18 +113,20 @@ class _RecordButtonState extends State<RecordButton> {
                         await recorder._record();
                       } else {
                         await recorder._resume();
-
                         await null;
                       }
                       countdown(int.parse(TimeCountDown[StageVoice++]),
                           TimeCountDown.length);
-
                       //print(TimeCountDown[StageVoice++]);
                     }
                     setState(() {});
                   },
             child: Text(
-              StageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
+              StageVoice >= TimeCountDown.length
+                  ? 'เสร็จสิ้น'
+                  : character == characterList[StageVoice]
+                      ? text
+                      : 'บทของคู่คุณ',
             ),
           ),
         )
@@ -135,16 +135,14 @@ class _RecordButtonState extends State<RecordButton> {
   }
 
   void countdown(int n, int m) {
-    onStatusChanged(true); // check status of buttons
+    print(n);
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
       print(timer.tick);
       n--;
       if (n == 0) {
         FlutterBeep.beep(false);
-        print('Cancel timer');
         timer.cancel();
-        onStatusChanged(false);
         if (n >= m) {
           recorder._stop();
         } else {
@@ -152,10 +150,8 @@ class _RecordButtonState extends State<RecordButton> {
         }
 
         // go for next conversation index in record_page
-        if (Record.converIndex < conversationList.length - 1) {
-          Record.converIndex++;
-          converIndexSetter(Record.converIndex);
-        }
+        Record.converIndex++;
+        converIndexSetter(Record.converIndex);
 
         setState(() {});
       }
@@ -167,8 +163,8 @@ class _RecordButtonState extends State<RecordButton> {
 class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecordingInitialised = false;
-  String docID;
-  SoundRecorder(this.docID);
+  String hisID;
+  SoundRecorder(this.hisID);
   bool get isRecording => _audioRecorder!.isRecording;
   bool get isPaused => _audioRecorder!.isPaused;
   bool get isStopped => _audioRecorder!.isStopped;
@@ -249,18 +245,15 @@ class SoundRecorder {
     CollectionReference usersHistory =
         FirebaseFirestore.instance.collection('History');
     usersHistory
-        .doc()
-        .set({
-          'audioInfo': docID,
-          'likeCount': 0,
-          'sound_1': voiceName,
-          'sound_2': "",
-          'status': true,
-          'user_1': FirebaseAuth.instance.currentUser!.email,
-          'user_2': "",
+        .doc(hisID)
+        .update({
+          "sound_2": voiceName,
+          "status": true,
+          "user_2": FirebaseAuth.instance.currentUser!.email,
         })
-        .then((value) => print("History Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .then((value) => print("History Updated"))
+        .catchError((error) => print("Failed to update: $error"));
+    ;
 
     CollectionReference usersInfo =
         FirebaseFirestore.instance.collection('UserInfo');
