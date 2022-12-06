@@ -196,7 +196,14 @@ class _RecordState extends State<Record> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            generateButton(),
+
+            detailList["voiceoverAmount"] == 1
+                ? RecordButtonDuo(conversationList, docID, character,
+                    converIndexSetter: _converIndexSetter)
+                : RecordButton(conversationList, docID, (a) => {setup(a)},
+                    (status) => {checkStatus(status)},
+                    converIndexSetter: _converIndexSetter),
+
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -245,17 +252,6 @@ class _RecordState extends State<Record> {
         ),
       ),
     );
-  }
-
-  Widget generateButton() {
-    if (detailList["voiceoverAmount"] == "1") {
-      return RecordButton(conversationList, docID, (a) => {setup(a)},
-          (status) => {checkStatus(status)},
-          converIndexSetter: _converIndexSetter);
-    } else {
-      return RecordButtonDuo(conversationList, docID, character,
-          converIndexSetter: _converIndexSetter);
-    }
   }
 
   Future play() async {
