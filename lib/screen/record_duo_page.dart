@@ -201,7 +201,7 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            RecordButtonDuoCoop(conversationList, character, hisID, yourBuddy.audioFileName.toString(), converIndexSetter: _converIndexSetter),
+            RecordButtonDuoCoop(conversationList, hisID, character, yourBuddy.audioFileName.toString(), converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),

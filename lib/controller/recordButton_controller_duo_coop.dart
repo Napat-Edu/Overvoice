@@ -54,7 +54,6 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   @override
   void initState() {
-    Record.converIndex = 0;
     super.initState();
 
     recorder.init();
@@ -75,6 +74,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   @override
   void dispose() {
+    Record.converIndex = 0;
     recorder.dispose();
     audioPlayer.dispose();
     super.dispose();
@@ -124,7 +124,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
+            onPressed: status || (isStopped && StageVoice != 0)
                 ? null
                 : () async {
                     if (StageVoice >= TimeCountDown.length) {
@@ -140,6 +140,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                         await null;
                         playPartner();
                       }
+                      print(StageVoice);
+                      print(TimeCountDown.length);
                       countdown(
                           int.parse(TimeCountDown[
                               StageVoice < TimeCountDown.length
@@ -192,7 +194,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   }
 
   Future play() async {
-    audioPlayer.resume();
+    await audioPlayer.resume();
   }
 
   Future pause() async {
