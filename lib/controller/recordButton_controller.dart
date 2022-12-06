@@ -118,7 +118,11 @@ class _RecordButtonState extends State<RecordButton> {
 
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
 
                       //print(TimeCountDown[StageVoice++]);

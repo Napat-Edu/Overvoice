@@ -139,13 +139,15 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                         await null;
                         playPartner();
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
-                    setState(() {
-                      StageVoice += 1;
-                    });
+                    setState(() {});
                   },
             child: Text(
               StageVoice >= TimeCountDown.length
