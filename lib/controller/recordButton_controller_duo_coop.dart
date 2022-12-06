@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../screen/record_page.dart';
+import 'dart:developer';
 
 class RecordButtonDuoCoop extends StatefulWidget {
   // final ValueChanged<int> converIndexSetter;
@@ -36,13 +37,14 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int StageVoice = 0;
   bool status = false;
   String hisID;
-
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
   late final recorder = SoundRecorder(hisID);
+  AudioPlayer audioPlayer = AudioPlayer();
 
   List conversationList;
   String character;
   String soundOver;
-
   // final ValueChanged<int> converIndexSetter;
 
   _RecordButtonDuoCoopState(
@@ -55,12 +57,25 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     super.initState();
 
     recorder.init();
+
+    // Listen to audio position
+    audioPlayer.onPositionChanged.listen((Duration p) {
+      if (!mounted) return;
+      setState(() => position = p);
+    });
+
+    audioPlayer.onPlayerComplete.listen((event) {
+      if (!mounted) return;
+      setState(() {
+        position = duration;
+      });
+    });
   }
 
   @override
   void dispose() {
     recorder.dispose();
-
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -117,9 +132,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                       if (StageVoice == 0) {
                         // converIndexSetter(Record.converIndex);
                         await recorder._record();
+                        await audioPlayer.resume();
+                        playPartner();
                       } else {
                         await recorder._resume();
                         await null;
+                        playPartner();
                       }
                       countdown(int.parse(TimeCountDown[StageVoice]),
                           TimeCountDown.length);
@@ -155,6 +173,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
           recorder._stop();
         } else {
           recorder._pause();
+          pause();
         }
 
         // go for next conversation index in record_page
@@ -165,6 +184,35 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       }
     });
     status = true;
+  }
+
+  Future play() async {
+    audioPlayer.resume();
+  }
+
+  Future pause() async {
+    await audioPlayer.pause();
+  }
+
+  Future playPartner() async {
+    final storageRef = await FirebaseStorage.instance.ref();
+    // final soundRefA =
+    //     await storageRef.child(listenList.audioFileName!); // <-- your file name
+    // final soundRefBGM =
+    //     await storageRef.child("helloworld2.aac"); // <-- your file name
+    // // final metaDataA = await soundRefA.getDownloadURL();
+    // final metaDataBGM = await soundRefBGM.getDownloadURL();
+    // // log('data: ${metaDataA.toString()}');
+    // log('data: ${metaDataBGM.toString()}');
+    // // String urlA = metaDataA.toString();
+    // String urlBGM = metaDataBGM.toString();
+    // await audioPlayerA.setSourceUrl(urlA);
+    // await audioPlayerBGM.setSourceUrl(urlBGM);
+    // play(urlA, urlBGM);
+    String url =
+        "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
+    await audioPlayer.setSourceUrl(url);
+    play();
   }
 }
 
@@ -177,6 +225,7 @@ class SoundRecorder {
   bool get isPaused => _audioRecorder!.isPaused;
   bool get isStopped => _audioRecorder!.isStopped;
   get onProgress => _audioRecorder!.onProgress;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";

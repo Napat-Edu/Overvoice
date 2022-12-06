@@ -198,11 +198,12 @@ class _RecordState extends State<Record> {
             // record button all-function here
 
             detailList["voiceoverAmount"] == 1
-                ? RecordButton(conversationList, docID, (a) => {setup(a)},
-                    (status) => {checkStatus(status)},
+                ? RecordButtonDuo(conversationList, docID, character,
                     converIndexSetter: _converIndexSetter)
-                : RecordButtonDuo(conversationList, docID, character,
+                : RecordButton(conversationList, docID, (a) => {setup(a)},
+                    (status) => {checkStatus(status)},
                     converIndexSetter: _converIndexSetter),
+
             SizedBox(
               height: screenHeight / 50,
             ),
