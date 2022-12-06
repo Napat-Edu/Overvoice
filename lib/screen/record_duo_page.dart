@@ -4,34 +4,39 @@ import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../controller/recordButton_controller_duo_coop.dart';
+import '../model/listen_detail.dart';
 
-class Record extends StatefulWidget {
+class RecordDuo extends StatefulWidget {
   Map<String, dynamic> detailList;
   String character;
   String docID;
-  String characterimgURL;
+  ListenDetails yourBuddy;
+  String hisID;
 
-  Record(this.detailList, this.character, this.characterimgURL, this.docID,
+  RecordDuo(this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
       {super.key});
 
   static int converIndex = 0;
 
   @override
-  State<Record> createState() =>
-      _RecordState(detailList, character, characterimgURL, docID);
+  State<RecordDuo> createState() =>
+      _RecordDuoState(detailList, character, yourBuddy, docID, hisID);
 }
 
-class _RecordState extends State<Record> {
+class _RecordDuoState extends State<RecordDuo> {
   Map<String, dynamic> detailList;
   String character;
-  String characterimgURL;
+  ListenDetails yourBuddy;
   String docID;
+  String hisID;
 
-  _RecordState(
+  _RecordDuoState(
     this.detailList,
     this.character,
-    this.characterimgURL,
+    this.yourBuddy,
     this.docID,
+    this.hisID
   );
 
   late List conversationList = detailList["conversation"].split(",");
@@ -53,7 +58,7 @@ class _RecordState extends State<Record> {
   @override
   void initState() {
     super.initState();
-
+    
     // Listen to states: playing, paused, stopped
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
@@ -91,7 +96,7 @@ class _RecordState extends State<Record> {
 
   @override
   void dispose() {
-    Record.converIndex = 0;
+    RecordDuo.converIndex = 0;
     audioPlayer.dispose();
     super.dispose();
   }
@@ -131,7 +136,7 @@ class _RecordState extends State<Record> {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: screenWidth / 7.9,
-                  backgroundImage: NetworkImage(characterimgURL),
+                  backgroundImage: NetworkImage(yourBuddy.imgURL.toString()),
                 ),
               ),
             ),
@@ -139,7 +144,7 @@ class _RecordState extends State<Record> {
               height: screenHeight / 80,
             ),
             Text(
-              character,
+              "คุณกำลังพากย์คู่กับ ${yourBuddy.userName}",
               style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
@@ -196,7 +201,7 @@ class _RecordState extends State<Record> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            generateButton(),
+            RecordButtonDuoCoop(conversationList, character, hisID, converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -245,17 +250,6 @@ class _RecordState extends State<Record> {
         ),
       ),
     );
-  }
-
-  Widget generateButton() {
-    if (detailList["voiceoverAmount"] == "1") {
-      return RecordButton(conversationList, docID, (a) => {setup(a)},
-          (status) => {checkStatus(status)},
-          converIndexSetter: _converIndexSetter);
-    } else {
-      return RecordButtonDuo(conversationList, docID, character,
-          converIndexSetter: _converIndexSetter);
-    }
   }
 
   Future play() async {

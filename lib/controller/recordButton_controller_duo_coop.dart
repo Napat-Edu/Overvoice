@@ -115,7 +115,11 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                         await recorder._resume();
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
@@ -150,8 +154,10 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        if (Record.converIndex < conversationList.length - 1) {
+          Record.converIndex++;
+          converIndexSetter(Record.converIndex);
+        }
 
         setState(() {});
       }

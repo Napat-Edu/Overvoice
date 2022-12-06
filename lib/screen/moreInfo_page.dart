@@ -183,7 +183,7 @@ class _MoreState extends State<More> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      Start(detailList, docID)));
+                                      SelectDuoRecordType(detailList, docID)));
                         }
                       },
                       child: const Text('ไปพากย์เสียง'),

@@ -49,6 +49,8 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   void initState() {
     super.initState();
 
+    print("this is Record Duo button!");
+
     recorder.init();
   }
 
@@ -115,7 +117,11 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
                         await recorder._resume();
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
