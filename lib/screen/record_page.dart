@@ -142,6 +142,7 @@ class _RecordState extends State<Record> {
             ),
             Text(
               character,
+              textAlign: TextAlign.center,
               style: GoogleFonts.prompt(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,

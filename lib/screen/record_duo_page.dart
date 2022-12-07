@@ -142,7 +142,8 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 80,
             ),
             Text(
-              "คุณกำลังพากย์คู่กับ ${yourBuddy.userName}",
+              "คุณพากย์คู่กับ ${yourBuddy.userName}",
+              textAlign: TextAlign.center,
               style: GoogleFonts.prompt(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
