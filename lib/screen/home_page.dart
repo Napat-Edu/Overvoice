@@ -16,7 +16,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = new TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -76,16 +76,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Tab(
                     text: "เป็นที่นิยม",
                   ),
-                  Tab(
-                    text: "กำลังมาแรง",
-                  )
                 ])),
         Expanded(
             child: Container(
                 child:
                     TabBarView(controller: _tabController, children: <Widget>[
           FutureBuilder<Widget>(
-              future: getData(),
+              future: getData(1),
               builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data!;
@@ -97,19 +94,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 );
               }),
-          Center(
-            child: Text("เป็นที่นิยม", style: GoogleFonts.prompt()),
-          ),
-          Center(
-            child: Text("กำลังมาแรง", style: GoogleFonts.prompt()),
-          ),
+          FutureBuilder<Widget>(
+              future: getData(2),
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                }
+
+                return Text(
+                  "กำลังโหลด...",
+                  style: GoogleFonts.prompt(),
+                  textAlign: TextAlign.center,
+                );
+              }),
         ])))
       ]),
     );
   }
 
-  Future<Widget> getData() async {
-    List<TitleDetails> mainTitleList = await getRecommendAudioInfo();
+  Future<Widget> getData(int index) async {
+    List<TitleDetails> mainTitleList = [];
+
+    if (index == 1) {
+      mainTitleList = await getNewsAudio();
+    } else if (index == 2) {
+      mainTitleList = await getTopHitAudio();
+    }
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
@@ -160,12 +171,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Future<List<TitleDetails>> getRecommendAudioInfo() async {
+  Future<List<TitleDetails>> getNewsAudio() async {
     List<TitleDetails> list = [];
 
     await FirebaseFirestore.instance
         .collection('AudioInfo')
-        .limit(6)
+        .limit(5)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -173,6 +184,62 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             doc["duration"], doc["img"], doc.id));
       });
     });
+
+    return list;
+  }
+
+  Future<List<TitleDetails>> getTopHitAudio() async {
+    var topHitMap = Map();
+
+    await FirebaseFirestore.instance
+        .collection("History")
+        .get()
+        .then((snapshot) {
+      snapshot.docs.map((element) {
+        if (!topHitMap.containsKey(element.data()['audioInfo'])) {
+          topHitMap[element.data()['audioInfo']] = 1;
+        } else {
+          topHitMap[element.data()['audioInfo']] += 1;
+        }
+      }).toList();
+    });
+
+    List<TitleDetails> list = [];
+
+    int dataCount = 0;
+    var mostPopularKey = topHitMap.keys.first;
+    int mostPopularCount = topHitMap.values.first;
+    while (topHitMap.isNotEmpty && dataCount != 5) {
+      topHitMap.forEach(
+        (key, value) {
+          if (value > mostPopularCount) {
+            mostPopularKey = key;
+            mostPopularCount = value;
+          }
+        },
+      );
+
+      await FirebaseFirestore.instance
+          .collection('AudioInfo')
+          .doc(mostPopularKey)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          list.add(TitleDetails(
+              documentSnapshot["name"],
+              documentSnapshot["enName"],
+              documentSnapshot["episode"],
+              documentSnapshot["duration"],
+              documentSnapshot["img"],
+              documentSnapshot.id));
+        }
+      });
+
+      topHitMap.remove(mostPopularKey);
+      mostPopularKey = topHitMap.keys.first;
+      mostPopularCount = topHitMap.values.first;
+      dataCount++;
+    }
 
     return list;
   }
