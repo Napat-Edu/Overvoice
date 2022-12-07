@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Overvoice"),
+        title: Text("Overvoice",style: GoogleFonts.prompt(fontWeight: FontWeight.w600),),
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFFF7200),

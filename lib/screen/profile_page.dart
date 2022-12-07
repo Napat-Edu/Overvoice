@@ -173,9 +173,9 @@ class _ProfilePage extends State<ProfilePage>
                     controller: _tabController,
                     indicatorColor: Colors.white,
                     labelStyle:
-                        GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
+                        GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
                     unselectedLabelStyle:
-                        GoogleFonts.prompt(fontSize: 16, fontWeight: FontWeight.w600),
+                        GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
                     tabs: [
                       Tab(
                         text: "ประวัติพากย์",
@@ -202,7 +202,7 @@ class _ProfilePage extends State<ProfilePage>
                     SizedBox(height: 12),
                     Text(
                       'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
-                      style: GoogleFonts.prompt(fontSize: 16),
+                      style: GoogleFonts.prompt(fontSize: 15),
                     ),
                     SizedBox(height: 12),
                     ElevatedButton(
@@ -212,7 +212,7 @@ class _ProfilePage extends State<ProfilePage>
                       ),
                       onPressed: () {},
                       child: Text('เริ่มอัดเสียงแรกกันเถอะ',
-                          style: GoogleFonts.prompt(fontSize: 18)),
+                          style: GoogleFonts.prompt(fontSize: 17)),
                     ),
                   ],
                 )
@@ -224,8 +224,8 @@ class _ProfilePage extends State<ProfilePage>
                   itemCount: listenList.length,
                   itemBuilder: (context, index) => ListTile(
                         leading: SizedBox(
-                            width: 55,
-                            height: 55,
+                            width: 53,
+                            height: 53,
                             child: Container(
                               decoration: BoxDecoration(boxShadow: [
                                 BoxShadow(
@@ -240,8 +240,8 @@ class _ProfilePage extends State<ProfilePage>
                           ' ${audioName[index]}',
                           style: GoogleFonts.prompt(
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
                         ),
                         // like count under content
                         subtitle: Row(
@@ -259,7 +259,7 @@ class _ProfilePage extends State<ProfilePage>
                               fixedSize: const Size(10, 10),
                               backgroundColor: const Color(0xFFFF7200),
                               foregroundColor: Colors.white,
-                              textStyle: GoogleFonts.prompt(fontSize: 16)),
+                              textStyle: GoogleFonts.prompt(fontSize: 15)),
                           onPressed: () async {
                             var dataDoc = await FirebaseFirestore.instance
                                 .collection('AudioInfo')
@@ -331,11 +331,11 @@ class _ProfilePage extends State<ProfilePage>
               label: "รูปโปรไฟล์คุณ",
               child: CircleAvatar(
                 backgroundColor: Color(0xFFFFAA66),
-                radius: 54,
+                radius: 52,
                 child: Align(
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    radius: 50,
+                    radius: 48,
                     backgroundImage: Image.network(user!.photoURL ?? "").image,
                   ),
                 ),
@@ -346,14 +346,14 @@ class _ProfilePage extends State<ProfilePage>
             ),
             Text(
               user.displayName ?? "",
-              style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
+              style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               height: 5,
             ),
             Text(
               user.email ?? "",
-              style: GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
+              style: GoogleFonts.prompt(fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ],
         ),

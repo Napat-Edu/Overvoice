@@ -56,7 +56,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
             child: Text(
               "เลือกรูปแบบการพากย์ของคุณ",
               textAlign: TextAlign.center,
-              style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 19),
+              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
           SizedBox(
@@ -86,7 +86,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -94,7 +94,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -131,7 +131,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -139,7 +139,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,

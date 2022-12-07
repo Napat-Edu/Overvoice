@@ -32,7 +32,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         title: Text(
           'ยินดีต้อนรับ',
           style: GoogleFonts.prompt(
-              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
       body: Column(children: <Widget>[
@@ -66,9 +66,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 controller: _tabController,
                 indicatorColor: Colors.white,
                 labelStyle: GoogleFonts.prompt(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                    fontSize: 17, fontWeight: FontWeight.w600),
                 unselectedLabelStyle: GoogleFonts.prompt(
-                    fontSize: 16, fontWeight: FontWeight.w600),
+                    fontSize: 15, fontWeight: FontWeight.w500),
                 tabs: [
                   Tab(
                     text: "แนะนำ",
@@ -120,8 +120,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
         leading: SizedBox(
-            width: 55,
-            height: 55,
+            width: 53,
+            height: 53,
             child: Container(
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
@@ -134,18 +134,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         title: Text(
           mainTitleList[index].titleName!,
           style: GoogleFonts.prompt(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
         ),
         subtitle: Text(
           mainTitleList[index].episode!,
-          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 16),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 15),
         ),
         trailing: TextButton(
           style: TextButton.styleFrom(
               fixedSize: const Size(10, 10),
               backgroundColor: const Color(0xFFFF7200),
               foregroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 16)),
+              textStyle: const TextStyle(fontSize: 15,)),
           onPressed: () {
             Navigator.push(
                 context,

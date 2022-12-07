@@ -85,7 +85,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           child: Text(
                             "คุณอยากจับคู่กับใครล่ะ",
                             style: GoogleFonts.prompt(
-                                fontSize: 16,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
@@ -129,7 +129,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
               ),
             )
           : ListView.separated(
@@ -155,8 +155,8 @@ class _SelectBuddyState extends State<SelectBuddy> {
                       ' ${listenList[index].userName!}',
                       style: GoogleFonts.prompt(
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17),
                     ),
                     // change like count under title to buddy acount name
                     subtitle: Row(
@@ -173,7 +173,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: GoogleFonts.prompt(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 15)),
                       onPressed: () {
                         Navigator.push(
                             context,

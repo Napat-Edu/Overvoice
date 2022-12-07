@@ -57,7 +57,7 @@ class _SearchState extends State<Search> {
           title: Text(
             'ค้นหา',
             style: GoogleFonts.prompt(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
         body: Column(children: <Widget>[
@@ -67,7 +67,7 @@ class _SearchState extends State<Search> {
               // autofocus: true,
               onChanged: (value) => updateList(value),
               style:
-                  GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.w500),
+                  GoogleFonts.prompt(fontSize: 24, fontWeight: FontWeight.w500),
               controller: null,
               decoration: const InputDecoration(
                 prefixIcon: IconTheme(
@@ -89,7 +89,7 @@ class _SearchState extends State<Search> {
                       child: Text(
                         "ขอโทษนะ ไม่พบเรื่องที่คุณตามหาเลย",
                         style: GoogleFonts.prompt(
-                            fontSize: 19, fontWeight: FontWeight.w600),
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     )
                   : ListView.separated(
@@ -116,20 +116,20 @@ class _SearchState extends State<Search> {
                           displayList[index].titleName!,
                           style: GoogleFonts.prompt(
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
                         ),
                         subtitle: Text(
                           displayList[index].episode!,
                           style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.w500, fontSize: 16),
+                              fontWeight: FontWeight.w500, fontSize: 15),
                         ),
                         trailing: TextButton(
                           style: TextButton.styleFrom(
                               fixedSize: const Size(10, 10),
                               backgroundColor: const Color(0xFFFF7200),
                               foregroundColor: Colors.white,
-                              textStyle: GoogleFonts.prompt(fontSize: 16)),
+                              textStyle: GoogleFonts.prompt(fontSize: 15)),
                           onPressed: () {
                             Navigator.push(
                                 context,

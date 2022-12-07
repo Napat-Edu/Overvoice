@@ -36,7 +36,7 @@ class _NoWifiState extends State<NoWifi> {
                 child: Text(
                   "โอ้ไม่นะ",
                   style: GoogleFonts.prompt(
-                      fontSize: 30,
+                      fontSize: 29,
                       fontWeight: FontWeight.bold,
                       color: Colors.black45),
                 ),
@@ -47,7 +47,7 @@ class _NoWifiState extends State<NoWifi> {
                 child: Text(
                   "คุณไม่ได้เชื่อมต่ออินเทอร์เน็ต\nโปรดเชื่อมต่อแล้วกลับมาใหม่นะ",
                   style: GoogleFonts.prompt(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: Colors.black38),
                   textAlign: TextAlign.center,

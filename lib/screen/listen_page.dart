@@ -97,7 +97,7 @@ class _ListenPageState extends State<ListenPage> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -118,12 +118,12 @@ class _ListenPageState extends State<ListenPage> {
           child: Column(
             children: <Widget>[
               CircleAvatar(
-                radius: screenWidth / 7.3,
+                radius: 52,
                 backgroundColor: Colors.white,
                 child: Align(
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    radius: screenWidth / 7.9,
+                    radius: 48,
                     backgroundImage: NetworkImage(detailList["coverimg"]),
                   ),
                 ),
@@ -134,7 +134,7 @@ class _ListenPageState extends State<ListenPage> {
               Text(
                 "พากย์เสียงโดย ${listenList.userName!}",
                 style: GoogleFonts.prompt(
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white),
               ),
@@ -158,8 +158,8 @@ class _ListenPageState extends State<ListenPage> {
                           child: Text(
                             "บทที่ทำการพากย์",
                             style: GoogleFonts.prompt(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -187,7 +187,7 @@ class _ListenPageState extends State<ListenPage> {
                                   title: Text(
                                     conversationList[index],
                                     style: GoogleFonts.prompt(
-                                        fontSize: 19,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w500),
                                   ),
                                 )),

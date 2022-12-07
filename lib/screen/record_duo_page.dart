@@ -107,7 +107,7 @@ class _RecordDuoState extends State<RecordDuo> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -128,12 +128,12 @@ class _RecordDuoState extends State<RecordDuo> {
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: screenWidth / 7.3,
+              radius: 52,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: screenWidth / 7.9,
+                  radius: 48,
                   backgroundImage: NetworkImage(yourBuddy.imgURL.toString()),
                 ),
               ),
@@ -145,7 +145,7 @@ class _RecordDuoState extends State<RecordDuo> {
               "คุณพากย์คู่กับ ${yourBuddy.userName}",
               textAlign: TextAlign.center,
               style: GoogleFonts.prompt(
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
             ),
@@ -169,8 +169,8 @@ class _RecordDuoState extends State<RecordDuo> {
                         child: Text(
                           "บทที่ต้องทำการพากย์",
                           style: GoogleFonts.prompt(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -221,7 +221,7 @@ class _RecordDuoState extends State<RecordDuo> {
                     backgroundColor: Color(0xFFFB8C00),
                     foregroundColor: Colors.white,
                     textStyle: GoogleFonts.prompt(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
+                        fontSize: 19, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
@@ -312,7 +312,7 @@ class _RecordDuoState extends State<RecordDuo> {
               title: Text(
                 currentText,
                 style:
-                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w500),
+                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }

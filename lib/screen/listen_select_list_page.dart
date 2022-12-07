@@ -31,7 +31,7 @@ class _ListenState extends State<Listen> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -81,7 +81,7 @@ class _ListenState extends State<Listen> {
                           child: Text(
                             "แนะนำสำหรับคุณ",
                             style: GoogleFonts.prompt(
-                                fontSize: 16,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
@@ -105,8 +105,8 @@ class _ListenState extends State<Listen> {
                     return snapshot.data!;
                   }
 
-                  return const Center(
-                    child: Text("กำลังโหลด..."),
+                  return Center(
+                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
                   );
                 }),
               ),
@@ -125,7 +125,7 @@ class _ListenState extends State<Listen> {
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
               ),
             )
           : ListView.separated(
@@ -136,12 +136,12 @@ class _ListenState extends State<Listen> {
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
                     leading: CircleAvatar(
-                      radius: 28,
+                      radius: 27,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 26,
+                          radius: 25,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
                               // for 2 character 
@@ -159,8 +159,8 @@ class _ListenState extends State<Listen> {
                       ' ${listenList[index].userName!}',
                       style: GoogleFonts.prompt(
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17),
                     ),
                     // like count under title
                     subtitle: Row(
@@ -169,7 +169,7 @@ class _ListenState extends State<Listen> {
                         Text(
                           " w/ @Gongzu",
                           style: GoogleFonts.prompt(
-                              fontSize: 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Colors.black38),
                         )
@@ -186,7 +186,7 @@ class _ListenState extends State<Listen> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: GoogleFonts.prompt(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 15)),
                       onPressed: () {
                         Navigator.push(
                             context,
