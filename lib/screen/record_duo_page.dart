@@ -218,10 +218,10 @@ class _RecordDuoState extends State<RecordDuo> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
                     textStyle: GoogleFonts.prompt(
-                        fontSize: 19, fontWeight: FontWeight.w600)),
+                        fontSize: 18, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
@@ -302,7 +302,7 @@ class _RecordDuoState extends State<RecordDuo> {
       String fullConversation = "";
       for (i = 0; i < conversationList.length; i++) {
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1}: " + conversationList[i] + "\n\n";
       }
       currentText = fullConversation;
     }

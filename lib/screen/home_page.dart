@@ -156,6 +156,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           },
           child: Text('เข้าชม', style: GoogleFonts.prompt()),
         ),
+        onTap: () {
+          Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => More(mainTitleList[index].docID!),
+                  fullscreenDialog: true,
+                ));
+        },
       ),
     );
   }

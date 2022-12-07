@@ -139,6 +139,15 @@ class _SearchState extends State<Search> {
                           },
                           child: const Text('เข้าชม'),
                         ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    More(mainTitleList[index].docID!),
+                                fullscreenDialog: true,
+                              ));
+                        },
                       ),
                     ))
         ]));

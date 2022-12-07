@@ -212,7 +212,7 @@ class _RecordState extends State<Record> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
                     textStyle: GoogleFonts.prompt(
                         fontSize: 19, fontWeight: FontWeight.w600)),
