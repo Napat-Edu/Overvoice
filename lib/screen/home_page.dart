@@ -91,7 +91,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return snapshot.data!;
                 }
 
-                return const Text("กำลังโหลด...",textAlign: TextAlign.center,);
+                return const Text(
+                  "กำลังโหลด...",
+                  textAlign: TextAlign.center,
+                );
               }),
           Center(
             child: Text("เป็นที่นิยม"),
@@ -109,6 +112,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
+      padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const Divider(
         color: Color(0xFFFFAA66),
       ),

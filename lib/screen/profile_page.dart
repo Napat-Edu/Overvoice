@@ -25,7 +25,7 @@ class _ProfilePage extends State<ProfilePage>
 
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(length: 1, vsync: this);
     super.initState();
   }
 
@@ -62,7 +62,7 @@ class _ProfilePage extends State<ProfilePage>
               SizedBox(
                 height: 30,
               ),
-              //Text("กำลังโหลด..."),
+              Text("กำลังโหลด..."),
               SizedBox(
                 height: 30,
               ),
@@ -130,9 +130,9 @@ class _ProfilePage extends State<ProfilePage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
-          Image.asset("assets/image/LineRL.png"),
-          Image.asset("assets/image/LineRL.png"),
-          buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
+          //Image.asset("assets/image/LineRL.png"),
+          //Image.asset("assets/image/LineRL.png"),
+          //buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
         ],
       );
 
@@ -178,9 +178,6 @@ class _ProfilePage extends State<ProfilePage>
                       Tab(
                         text: "ประวัติพากย์",
                       ),
-                      Tab(
-                        text: "บันทึกเสียงที่ถูกใจ",
-                      ),
                     ])),
           ],
         ),
@@ -215,7 +212,8 @@ class _ProfilePage extends State<ProfilePage>
                   ],
                 )
               : ListView.separated(
-                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  //shrinkWrap: true,
                   separatorBuilder: (context, index) => const Divider(
                         color: Color(0xFFFFAA66),
                       ),
@@ -273,8 +271,95 @@ class _ProfilePage extends State<ProfilePage>
                         ),
                       )),
         ),
+      ]));
+
+  Widget buildBelow2(List<ListenDetails> listenList) => Expanded(
+          child: TabBarView(controller: _tabController, children: <Widget>[
         Center(
-          child: Text("บันทึกเสียงที่ถูกใจ"),
+          //child: Text("ประวัติพากย์"),
+          child: listenList.isEmpty
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Image.asset("assets/image/Recordvoice.png"),
+                    SizedBox(height: 12),
+                    Text(
+                      'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 12),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xFFFF7200),
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {},
+                      child: Text('เริ่มอัดเสียงแรกกันเถอะ',
+                          style: TextStyle(fontSize: 18)),
+                    ),
+                  ],
+                )
+              : ListView.separated(
+                  padding: EdgeInsets.zero,
+                  //shrinkWrap: true,
+                  separatorBuilder: (context, index) => const Divider(
+                        color: Color(0xFFFFAA66),
+                      ),
+                  itemCount: listenList.length,
+                  itemBuilder: (context, index) => ListTile(
+                        leading: SizedBox(
+                            width: 55,
+                            height: 55,
+                            child: Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFFFFAA66), blurRadius: 5)
+                              ]),
+                              child: Image.network(
+                                listenList[index].imgURL!,
+                                fit: BoxFit.cover,
+                              ),
+                            )),
+                        title: Text(
+                          ' ${audioName[index]}',
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.favorite,
+                              size: 18,
+                            ),
+                            Text(' ${listenList[index].likeCount!}'),
+                          ],
+                        ),
+                        trailing: TextButton(
+                          style: TextButton.styleFrom(
+                              fixedSize: const Size(10, 10),
+                              backgroundColor: const Color(0xFFFF7200),
+                              foregroundColor: Colors.white,
+                              textStyle: const TextStyle(fontSize: 16)),
+                          onPressed: () async {
+                            var dataDoc = await FirebaseFirestore.instance
+                                .collection('AudioInfo')
+                                .doc(docID[index])
+                                .get();
+                            Map<String, dynamic>? detailList = dataDoc.data();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListenPage(
+                                        detailList!, listenList[index])));
+                          },
+                          child: const Text('เล่น'),
+                        ),
+                      )),
         ),
       ]));
 
