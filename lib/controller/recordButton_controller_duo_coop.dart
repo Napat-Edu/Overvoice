@@ -17,14 +17,21 @@ class RecordButtonDuoCoop extends StatefulWidget {
   String character;
   String hisID;
   String soundOver;
-  RecordButtonDuoCoop(
-      this.conversationList, this.hisID, this.character, this.soundOver,
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
+  RecordButtonDuoCoop(this.conversationList, this.hisID, this.character,
+      this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButtonDuoCoop> createState() =>
-      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver,
-          converIndexSetter: converIndexSetter);
+  State<RecordButtonDuoCoop> createState() => _RecordButtonDuoCoopState(
+      conversationList,
+      hisID,
+      character,
+      soundOver,
+      onCountChanged,
+      onStatusChanged,
+      converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -37,6 +44,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   String hisID;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   late final recorder = SoundRecorder(hisID);
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -46,8 +55,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonDuoCoopState(
-      this.conversationList, this.hisID, this.character, this.soundOver,
+  _RecordButtonDuoCoopState(this.conversationList, this.hisID, this.character,
+      this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -106,6 +115,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
+    onCountChanged(TimeCountDown); // push time number in () to record_page
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -174,6 +184,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       if (n == 0) {
         FlutterBeep.beep(false);
         timer.cancel();
+        onStatusChanged(false);
         if (n >= m) {
           recorder._stop();
         } else {

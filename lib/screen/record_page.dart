@@ -219,21 +219,6 @@ class _RecordState extends State<Record> {
                     return;
                   }
                   if (isPlaying == false) {
-                    // -------------------- Old setup song --------------------
-                    // final storageRef = await FirebaseStorage.instance.ref();
-                    // final time = await RecordButton.TimeCountDown.instance();
-                    // final soundRefA = await storageRef
-                    //     .child(listenList.audioFileName!); // <-- your file name
-                    // final soundRefBGM = await storageRef
-                    //     .child("helloworld2.aac"); // <-- your file name
-                    // final metaDataA = await soundRefA.getDownloadURL();
-                    // final metaDataBGM = await soundRefBGM.getDownloadURL();
-                    // String urlBGM =
-                    //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-                    // log('data: ${metaDataA.toString()}');
-                    // log('data: ${metaDataBGM.toString()}');
-                    // await audioPlayer.setSourceUrl(urlBGM);
-                    // isPlaying = true;
                     play();
                   } else {
                     isPlaying = false;
@@ -265,6 +250,7 @@ class _RecordState extends State<Record> {
           converIndexSetter: _converIndexSetter);
     } else {
       return RecordButtonDuo(conversationList, docID, character,
+          (a) => {setup(a)}, (status) => {checkStatus(status)},
           converIndexSetter: _converIndexSetter);
     }
   }
