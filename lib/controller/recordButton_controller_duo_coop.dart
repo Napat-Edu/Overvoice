@@ -88,8 +88,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final isStopped = recorder.isStopped;
     final text;
 
+    if(isRecording) {
+      status = true;
+    }
+
     if (isPaused) {
-      text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
+      text = 'อ่านบทแล้ว พร้อมพากย์';
     } else if (isRecording) {
       text = 'พากย์เลย';
     } else if (isStopped && StageVoice != 0) {
@@ -124,7 +128,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || (isStopped && StageVoice != 0)
+            onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
                     if (StageVoice >= TimeCountDown.length) {
@@ -140,8 +144,6 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                         await null;
                         playPartner();
                       }
-                      print(StageVoice);
-                      print(TimeCountDown.length);
                       countdown(
                           int.parse(TimeCountDown[
                               StageVoice < TimeCountDown.length
@@ -187,10 +189,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
           converIndexSetter(Record.converIndex);
         }
 
-        setState(() {});
+        setState(() {
+          status = true;
+        });
       }
+      status = false;
     });
-    status = true;
   }
 
   Future play() async {
@@ -294,34 +298,34 @@ class SoundRecorder {
   }
 
   Future _uploadFile(file) async {
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
+    // // Directory appDocDir = await getApplicationDocumentsDirectory();
 
-    // Create a storage reference from our app
-    final storageRef = FirebaseStorage.instance.ref();
+    // // Create a storage reference from our app
+    // final storageRef = FirebaseStorage.instance.ref();
 
-    final soundRef = storageRef.child(voiceName);
-    // String filePath = '${appDocDir.path}/audio.aac';
-    // File file = File(filePath);
+    // final soundRef = storageRef.child(voiceName);
+    // // String filePath = '${appDocDir.path}/audio.aac';
+    // // File file = File(filePath);
 
-    await soundRef.putFile(file);
+    // await soundRef.putFile(file);
 
-    CollectionReference usersHistory =
-        FirebaseFirestore.instance.collection('History');
-    usersHistory
-        .doc(hisID)
-        .update({
-          "sound_2": voiceName,
-          "status": true,
-          "user_2": FirebaseAuth.instance.currentUser!.email,
-        })
-        .then((value) => print("History Updated"))
-        .catchError((error) => print("Failed to update: $error"));
-    ;
+    // CollectionReference usersHistory =
+    //     FirebaseFirestore.instance.collection('History');
+    // usersHistory
+    //     .doc(hisID)
+    //     .update({
+    //       "sound_2": voiceName,
+    //       "status": true,
+    //       "user_2": FirebaseAuth.instance.currentUser!.email,
+    //     })
+    //     .then((value) => print("History Updated"))
+    //     .catchError((error) => print("Failed to update: $error"));
+    // ;
 
-    CollectionReference usersInfo =
-        FirebaseFirestore.instance.collection('UserInfo');
-    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-      "recordAmount": FieldValue.increment(1),
-    });
+    // CollectionReference usersInfo =
+    //     FirebaseFirestore.instance.collection('UserInfo');
+    // usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
+    //   "recordAmount": FieldValue.increment(1),
+    // });
   }
 }

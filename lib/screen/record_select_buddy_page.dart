@@ -81,7 +81,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                       Expanded(
                           flex: 3,
                           child: Text(
-                            "แนะนำสำหรับคุณ",
+                            "คุณอยากจับคู่กับใครล่ะ",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
