@@ -9,18 +9,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../screen/record_page.dart';
+import 'dart:developer';
 
 class RecordButtonDuoCoop extends StatefulWidget {
   final ValueChanged<int> converIndexSetter;
   List conversationList;
   String character;
   String hisID;
-  RecordButtonDuoCoop(this.conversationList, this.hisID, this.character,
+  String soundOver;
+  RecordButtonDuoCoop(
+      this.conversationList, this.hisID, this.character, this.soundOver,
       {required this.converIndexSetter, super.key});
 
   @override
   State<RecordButtonDuoCoop> createState() =>
-      _RecordButtonDuoCoopState(conversationList, hisID, character,
+      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver,
           converIndexSetter: converIndexSetter);
 }
 
@@ -32,15 +35,19 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int StageVoice = 0;
   bool status = false;
   String hisID;
-
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
   late final recorder = SoundRecorder(hisID);
+  AudioPlayer audioPlayer = AudioPlayer();
 
   List conversationList;
   String character;
+  String soundOver;
 
   final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonDuoCoopState(this.conversationList, this.hisID, this.character,
+  _RecordButtonDuoCoopState(
+      this.conversationList, this.hisID, this.character, this.soundOver,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -50,12 +57,26 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     super.initState();
 
     recorder.init();
+
+    // Listen to audio position
+    audioPlayer.onPositionChanged.listen((Duration p) {
+      if (!mounted) return;
+      setState(() => position = p);
+    });
+
+    audioPlayer.onPlayerComplete.listen((event) {
+      if (!mounted) return;
+      setState(() {
+        position = duration;
+      });
+    });
   }
 
   @override
   void dispose() {
+    Record.converIndex = 0;
     recorder.dispose();
-
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -66,6 +87,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
     final text;
+
     if (isPaused) {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
@@ -102,20 +124,29 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
+            onPressed: status || (isStopped && StageVoice != 0)
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
+                    if (StageVoice >= TimeCountDown.length) {
                       await recorder._stop();
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
                         await recorder._record();
+                        await audioPlayer.resume();
+                        playPartner();
                       } else {
                         await recorder._resume();
                         await null;
+                        playPartner();
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      print(StageVoice);
+                      print(TimeCountDown.length);
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
@@ -147,16 +178,47 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
           recorder._stop();
         } else {
           recorder._pause();
+          pause();
         }
 
         // go for next conversation index in record_page
-        Record.converIndex++;
-        converIndexSetter(Record.converIndex);
+        if (Record.converIndex < conversationList.length - 1) {
+          Record.converIndex++;
+          converIndexSetter(Record.converIndex);
+        }
 
         setState(() {});
       }
     });
     status = true;
+  }
+
+  Future play() async {
+    await audioPlayer.resume();
+  }
+
+  Future pause() async {
+    await audioPlayer.pause();
+  }
+
+  Future playPartner() async {
+    final storageRef = await FirebaseStorage.instance.ref();
+    // final soundRefA =
+    //     await storageRef.child(listenList.audioFileName!); // <-- your file name
+    final soundRefBGM = await storageRef.child(soundOver); // <-- your file name
+    // final metaDataA = await soundRefA.getDownloadURL();
+    final metaDataBGM = await soundRefBGM.getDownloadURL();
+    // // log('data: ${metaDataA.toString()}');
+    log('data: ${metaDataBGM.toString()}');
+    // // String urlA = metaDataA.toString();
+    String urlBGM = metaDataBGM.toString();
+    // await audioPlayerA.setSourceUrl(urlA);
+    await audioPlayer.setSourceUrl(urlBGM);
+    // play(urlA, urlBGM);
+    // String url =
+    // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
+    // await audioPlayer.setSourceUrl(url);
+    play();
   }
 }
 
@@ -169,6 +231,7 @@ class SoundRecorder {
   bool get isPaused => _audioRecorder!.isPaused;
   bool get isStopped => _audioRecorder!.isStopped;
   get onProgress => _audioRecorder!.onProgress;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";

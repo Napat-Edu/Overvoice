@@ -54,6 +54,8 @@ class _RecordButtonState extends State<RecordButton> {
   void initState() {
     super.initState();
 
+    print("this is Record button!");
+
     recorder.init();
   }
 
@@ -118,7 +120,11 @@ class _RecordButtonState extends State<RecordButton> {
 
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
 
                       //print(TimeCountDown[StageVoice++]);

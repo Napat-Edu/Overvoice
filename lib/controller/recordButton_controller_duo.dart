@@ -49,6 +49,8 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   void initState() {
     super.initState();
 
+    print("this is Record Duo button!");
+
     recorder.init();
   }
 
@@ -105,8 +107,8 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
-                      await recorder._stop();
+                    if (StageVoice > TimeCountDown.length) {
+                      await recorder._stop(character);
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
@@ -115,7 +117,11 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
                         await recorder._resume();
                         await null;
                       }
-                      countdown(int.parse(TimeCountDown[StageVoice++]),
+                      countdown(
+                          int.parse(TimeCountDown[
+                              StageVoice < TimeCountDown.length
+                                  ? StageVoice++
+                                  : StageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
@@ -144,7 +150,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
         FlutterBeep.beep(false);
         timer.cancel();
         if (n >= m) {
-          recorder._stop();
+          recorder._stop(character);
         } else {
           recorder._pause();
         }
@@ -213,13 +219,13 @@ class SoundRecorder {
     await _audioRecorder!.resumeRecorder();
   }
 
-  Future _stop() async {
+  Future _stop(character) async {
     if (!_isRecordingInitialised) return;
     final filepath = await _audioRecorder!.stopRecorder();
     final file = File(filepath!);
     voiceStart = false;
     //print('Record : $file');
-    _uploadFile(file);
+    _uploadFile(file, character);
   }
 
   Future toggleRecording() async {
@@ -232,7 +238,7 @@ class SoundRecorder {
     }
   }
 
-  Future _uploadFile(file) async {
+  Future _uploadFile(file, character) async {
     // Directory appDocDir = await getApplicationDocumentsDirectory();
 
     // Create a storage reference from our app
@@ -256,6 +262,7 @@ class SoundRecorder {
           'status': false,
           'user_1': FirebaseAuth.instance.currentUser!.email,
           'user_2': "",
+          'characterInit': character,
         })
         .then((value) => print("History Added"))
         .catchError((error) => print("Failed to add user: $error"));

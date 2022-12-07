@@ -9,7 +9,7 @@ String formatTime(Duration duration) {
   final hours = twoDigits(duration.inHours);
   final minutes = twoDigits(duration.inMinutes.remainder(60));
   final seconds = twoDigits(duration.inSeconds.remainder(60));
-  
+
   return [
     if (duration.inHours > 0) hours,
     minutes,
@@ -45,7 +45,7 @@ class _ListenPageState extends State<ListenPage> {
   AudioPlayer audioPlayerA = AudioPlayer();
   // PlayerStateA playerStateA = PlayerStateA.stoppedA;
   // get isPlayingA => playerStateA == PlayerStateA.playingA;
-  
+
   // for the BGM
   AudioPlayer audioPlayerBGM = AudioPlayer();
   // PlayerStateBGM playerStateBGM = PlayerStateBGM.stoppedBGM;
@@ -247,8 +247,8 @@ class _ListenPageState extends State<ListenPage> {
                       final storageRef = await FirebaseStorage.instance.ref();
                       final soundRefA = await storageRef.child(
                           listenList.audioFileName!); // <-- your file name
-                      final soundRefBGM = await storageRef
-                          .child("helloworld2.aac"); // <-- your file name
+                      final soundRefBGM = await storageRef.child(
+                          "2022-12-0702:03:40514373omegyzr.aac"); // <-- your file name
                       final metaDataA = await soundRefA.getDownloadURL();
                       final metaDataBGM = await soundRefBGM.getDownloadURL();
                       log('data: ${metaDataA.toString()}');
