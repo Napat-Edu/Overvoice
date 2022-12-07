@@ -197,12 +197,7 @@ class _RecordState extends State<Record> {
             ),
             // record button all-function here
 
-            detailList["voiceoverAmount"] == 1
-                ? RecordButtonDuo(conversationList, docID, character,
-                    converIndexSetter: _converIndexSetter)
-                : RecordButton(conversationList, docID, (a) => {setup(a)},
-                    (status) => {checkStatus(status)},
-                    converIndexSetter: _converIndexSetter),
+            checkAudioType(),
 
             SizedBox(
               height: screenHeight / 50,
@@ -261,6 +256,17 @@ class _RecordState extends State<Record> {
   Future pause() async {
     await audioPlayer.pause();
     isPlaying = false;
+  }
+
+  Widget checkAudioType() {
+    if (detailList["voiceoverAmount"] == "1") {
+      return RecordButton(conversationList, docID, (a) => {setup(a)},
+          (status) => {checkStatus(status)},
+          converIndexSetter: _converIndexSetter);
+    } else {
+      return RecordButtonDuo(conversationList, docID, character,
+          converIndexSetter: _converIndexSetter);
+    }
   }
 
   Future checkStatus(bool status) async {
