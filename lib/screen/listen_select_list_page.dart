@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'listen_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Listen extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -29,7 +31,7 @@ class _ListenState extends State<Listen> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -78,7 +80,7 @@ class _ListenState extends State<Listen> {
                           flex: 3,
                           child: Text(
                             "แนะนำสำหรับคุณ",
-                            style: TextStyle(
+                            style: GoogleFonts.prompt(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
@@ -119,11 +121,11 @@ class _ListenState extends State<Listen> {
     listenList = await getHistoryList(docID);
     return Future.delayed(const Duration(seconds: 0), () {
       return listenList.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             )
           : ListView.separated(
@@ -155,7 +157,7 @@ class _ListenState extends State<Listen> {
                     ),
                     title: Text(
                       ' ${listenList[index].userName!}',
-                      style: const TextStyle(
+                      style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
@@ -166,7 +168,7 @@ class _ListenState extends State<Listen> {
                       children: <Widget>[
                         Text(
                           " w/ @Gongzu",
-                          style: TextStyle(
+                          style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.black38),
@@ -184,7 +186,7 @@ class _ListenState extends State<Listen> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 16)),
                       onPressed: () {
                         Navigator.push(
                             context,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class NoWifi extends StatefulWidget {
   const NoWifi({super.key});
@@ -33,7 +35,7 @@ class _NoWifiState extends State<NoWifi> {
               Container(
                 child: Text(
                   "โอ้ไม่นะ",
-                  style: TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                       color: Colors.black45),
@@ -44,7 +46,7 @@ class _NoWifiState extends State<NoWifi> {
                     left: screenWidth / 7, right: screenWidth / 7, top: 15),
                 child: Text(
                   "คุณไม่ได้เชื่อมต่ออินเทอร์เน็ต\nโปรดเชื่อมต่อแล้วกลับมาใหม่นะ",
-                  style: TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.black38),
@@ -63,7 +65,7 @@ class _NoWifiState extends State<NoWifi> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: const Color(0xFFFF7200),
                             foregroundColor: Colors.white,
-                            textStyle: const TextStyle(
+                            textStyle: GoogleFonts.prompt(
                                 fontSize: 18, fontWeight: FontWeight.w600)),
                         onPressed: () {
                           Navigator.push(

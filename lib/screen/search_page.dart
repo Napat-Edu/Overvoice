@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/title_detail.dart';
-
 import 'moreInfo_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -54,11 +55,11 @@ class _SearchState extends State<Search> {
         child: Column(children: <Widget>[
       Container(
         margin: const EdgeInsets.only(top: 25, left: 15, right: 15),
-        child: const Align(
+        child: Align(
           alignment: Alignment.topLeft,
           child: Text(
             "ค้นหา",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            style: GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -67,7 +68,7 @@ class _SearchState extends State<Search> {
         child: TextField(
           autofocus: true,
           onChanged: (value) => updateList(value),
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+          style: GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.w500),
           controller: null,
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.search),
@@ -84,10 +85,10 @@ class _SearchState extends State<Search> {
       ),
       Expanded(
           child: displayList.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
                     "ขอโทษนะ ไม่พบเรื่องที่คุณตามหาเลย",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 )
               : ListView.separated(
@@ -111,14 +112,14 @@ class _SearchState extends State<Search> {
                         )),
                     title: Text(
                       displayList[index].titleName!,
-                      style: const TextStyle(
+                      style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
                     subtitle: Text(
                       displayList[index].episode!,
-                      style: const TextStyle(
+                      style: GoogleFonts.prompt(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     trailing: TextButton(
@@ -126,7 +127,7 @@ class _SearchState extends State<Search> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 16)),
                       onPressed: () {
                         Navigator.push(
                             context,

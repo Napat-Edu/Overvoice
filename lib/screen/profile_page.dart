@@ -8,6 +8,8 @@ import '../model/listen_detail.dart';
 import 'listen_page.dart';
 import '../model/title_detail.dart';
 import 'moreInfo_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -66,7 +68,7 @@ class _ProfilePage extends State<ProfilePage>
               SizedBox(
                 height: 30,
               ),
-              Text("กำลังโหลด..."),
+              Text("กำลังโหลด...", style: GoogleFonts.prompt()),
             ],
           );
         }),
@@ -103,9 +105,9 @@ class _ProfilePage extends State<ProfilePage>
           Icons.logout,
           color: Colors.grey,
         ),
-        label: const Text(
+        label: Text(
           "ลงชื่อออก",
-          style: TextStyle(color: Colors.grey),
+          style: GoogleFonts.prompt(color: Colors.grey),
         ),
         onPressed: () {
           Provider.of<LoginController>(context, listen: false).logout();
@@ -150,12 +152,12 @@ class _ProfilePage extends State<ProfilePage>
           children: <Widget>[
             Text(
               '$value',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 13),
             ),
             SizedBox(height: 2),
             Text(
               text,
-              style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
+              style: GoogleFonts.prompt(fontSize: 15,fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -171,9 +173,9 @@ class _ProfilePage extends State<ProfilePage>
                     controller: _tabController,
                     indicatorColor: Colors.white,
                     labelStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
                     unselectedLabelStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        GoogleFonts.prompt(fontSize: 16, fontWeight: FontWeight.w600),
                     tabs: [
                       Tab(
                         text: "ประวัติพากย์",
@@ -200,7 +202,7 @@ class _ProfilePage extends State<ProfilePage>
                     SizedBox(height: 12),
                     Text(
                       'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
-                      style: TextStyle(fontSize: 16),
+                      style: GoogleFonts.prompt(fontSize: 16),
                     ),
                     SizedBox(height: 12),
                     ElevatedButton(
@@ -210,7 +212,7 @@ class _ProfilePage extends State<ProfilePage>
                       ),
                       onPressed: () {},
                       child: Text('เริ่มอัดเสียงแรกกันเถอะ',
-                          style: TextStyle(fontSize: 18)),
+                          style: GoogleFonts.prompt(fontSize: 18)),
                     ),
                   ],
                 )
@@ -236,7 +238,7 @@ class _ProfilePage extends State<ProfilePage>
                             )),
                         title: Text(
                           ' ${audioName[index]}',
-                          style: const TextStyle(
+                          style: GoogleFonts.prompt(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
@@ -257,7 +259,7 @@ class _ProfilePage extends State<ProfilePage>
                               fixedSize: const Size(10, 10),
                               backgroundColor: const Color(0xFFFF7200),
                               foregroundColor: Colors.white,
-                              textStyle: const TextStyle(fontSize: 16)),
+                              textStyle: GoogleFonts.prompt(fontSize: 16)),
                           onPressed: () async {
                             var dataDoc = await FirebaseFirestore.instance
                                 .collection('AudioInfo')
@@ -343,21 +345,21 @@ class _ProfilePage extends State<ProfilePage>
             ),
             Text(
               user.displayName ?? "",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 5,
             ),
             Text(
               user.email ?? "",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ],
         ),
       );
     } else {
-      return const Center(
-        child: Text("กำลังโหลด..."),
+      return Center(
+        child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
       );
     }
   }

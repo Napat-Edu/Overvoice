@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/screen/profile_page.dart';
 import 'package:overvoice_project/screen/home_page.dart';
 import 'package:overvoice_project/screen/search_page.dart';
@@ -30,7 +31,7 @@ class _NavbarState extends State<Navbar> {
     return Scaffold(
       body: Center(child: _widgetOption.elementAt(_selectedIndex)),
       bottomNavigationBar: SizedBox(
-        height: 65,
+        height: 68,
         child: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",),
@@ -40,10 +41,10 @@ class _NavbarState extends State<Navbar> {
           ],
           type: BottomNavigationBarType.fixed,
           iconSize: 35,
-          unselectedFontSize: 13,
-          selectedFontSize: 14,
+          unselectedFontSize: 12,
+          selectedFontSize: 13,
           selectedItemColor: Colors.white,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          selectedLabelStyle: GoogleFonts.prompt(fontWeight: FontWeight.w600),
           backgroundColor: const Color(0xFFFF7200),
           currentIndex: _selectedIndex,
           onTap: _onItemTap,

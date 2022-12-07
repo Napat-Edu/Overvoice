@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_type_page.dart';
 import 'listen_select_list_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class More extends StatefulWidget {
   String docID;
@@ -82,7 +84,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.prompt(fontSize: 22, fontWeight: FontWeight.bold), //GoogleFonts.prompt(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
@@ -92,7 +94,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList['episode'],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -103,7 +105,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -115,7 +117,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['detail']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 15, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -126,7 +128,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['duration']} m",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.prompt(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                       color: Colors.black45),
@@ -144,7 +146,7 @@ class _MoreState extends State<More> {
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
+                          textStyle: GoogleFonts.prompt(
                               fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
@@ -166,7 +168,7 @@ class _MoreState extends State<More> {
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
+                          textStyle: GoogleFonts.prompt(
                               fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         if (detailList['voiceoverAmount'] == '1') {
