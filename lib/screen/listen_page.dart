@@ -43,6 +43,7 @@ class _ListenPageState extends State<ListenPage> {
 
   // for the first voice
   AudioPlayer audioPlayerA = AudioPlayer();
+  AudioPlayer audioPlayerB = AudioPlayer();
   // PlayerStateA playerStateA = PlayerStateA.stoppedA;
   // get isPlayingA => playerStateA == PlayerStateA.playingA;
 
@@ -56,8 +57,7 @@ class _ListenPageState extends State<ListenPage> {
   @override
   void initState() {
     super.initState();
-
-    // Listen to states: playing, paused, stopped
+    audioPlayerBGM.setVolume(0.5); // Listen to states: playing, paused, stopped
     audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
       print('Current player state: $s');
       if (!mounted) return;
@@ -91,6 +91,7 @@ class _ListenPageState extends State<ListenPage> {
   @override
   void dispose() {
     audioPlayerA.dispose();
+    audioPlayerB.dispose();
     audioPlayerBGM.dispose();
     super.dispose();
   }
@@ -211,6 +212,7 @@ class _ListenPageState extends State<ListenPage> {
                 onChanged: (value) async {
                   final currentPosition = Duration(seconds: value.toInt());
                   await audioPlayerA.seek(currentPosition);
+                  await audioPlayerB.seek(currentPosition);
                   await audioPlayerBGM.seek(currentPosition);
                 },
                 activeColor: Colors.orangeAccent,
@@ -247,18 +249,24 @@ class _ListenPageState extends State<ListenPage> {
                       final storageRef = await FirebaseStorage.instance.ref();
                       final soundRefA = await storageRef.child(
                           listenList.audioFileName!); // <-- your file name
-                      final soundRefBGM = await storageRef.child(
-                          "2022-12-0702:03:40514373omegyzr.aac"); // <-- your file name
+                      final soundRefB = await storageRef
+                          .child("2022-12-0702:03:40514373omegyzr.aac");
+                      final soundRefBGM = await storageRef
+                          .child("JoJo_BGM.aac"); // <-- your file name
                       final metaDataA = await soundRefA.getDownloadURL();
+                      final metaDataB = await soundRefB.getDownloadURL();
                       final metaDataBGM = await soundRefBGM.getDownloadURL();
                       log('data: ${metaDataA.toString()}');
+                      log('data: ${metaDataB.toString()}');
                       log('data: ${metaDataBGM.toString()}');
                       String urlA = metaDataA.toString();
+                      String urlB = metaDataB.toString();
                       String urlBGM = metaDataBGM.toString();
                       await audioPlayerA.setSourceUrl(urlA);
+                      await audioPlayerB.setSourceUrl(urlB);
                       await audioPlayerBGM.setSourceUrl(urlBGM);
                       isPlaying = true;
-                      play(urlA, urlBGM);
+                      play(urlA, urlB, urlBGM);
                     } else {
                       isPlaying = false;
                       pause();
@@ -290,8 +298,9 @@ class _ListenPageState extends State<ListenPage> {
     );
   }
 
-  Future play(String urlA, String urlBGM) async {
+  Future play(String urlA, String urlB, String urlBGM) async {
     audioPlayerA.resume();
+    audioPlayerB.resume();
     audioPlayerBGM.resume();
     // setState(() {
     //   playerStateA = PlayerStateA.playingA;
@@ -303,6 +312,7 @@ class _ListenPageState extends State<ListenPage> {
 
   Future pause() async {
     await audioPlayerA.pause();
+    await audioPlayerB.pause();
     // setState(() {
     //   playerStateA = PlayerStateA.pausedA;
     // });
