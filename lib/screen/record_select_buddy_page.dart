@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'listen_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SelectBuddy extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -33,7 +35,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -82,9 +84,9 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           flex: 3,
                           child: Text(
                             "คุณอยากจับคู่กับใครล่ะ",
-                            style: TextStyle(
+                            style: GoogleFonts.prompt(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
                       SizedBox(
@@ -123,14 +125,15 @@ class _SelectBuddyState extends State<SelectBuddy> {
     listenList = await getHistoryList(docID, character);
     return Future.delayed(const Duration(seconds: 0), () {
       return listenList.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             )
           : ListView.separated(
+            padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
@@ -150,19 +153,19 @@ class _SelectBuddyState extends State<SelectBuddy> {
                     ),
                     title: Text(
                       ' ${listenList[index].userName!}',
-                      style: const TextStyle(
+                      style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
+                    // change like count under title to buddy acount name
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Icon(
-                          Icons.favorite,
-                          size: 18,
-                        ),
-                        Text(' ${listenList[index].likeCount!}'),
+                        //   Icons.favorite,
+                        //   size: 18,
+                        // ),
+                        // Text(' ${listenList[index].likeCount!}'),
                       ],
                     ),
                     trailing: TextButton(
@@ -170,7 +173,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 16)),
                       onPressed: () {
                         Navigator.push(
                             context,

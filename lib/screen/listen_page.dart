@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 import 'package:overvoice_project/model/listen_detail.dart';
-import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
   final hours = twoDigits(duration.inHours);
   final minutes = twoDigits(duration.inMinutes.remainder(60));
   final seconds = twoDigits(duration.inSeconds.remainder(60));
-
+  
   return [
     if (duration.inHours > 0) hours,
     minutes,
@@ -97,7 +97,7 @@ class _ListenPageState extends State<ListenPage> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -133,7 +133,7 @@ class _ListenPageState extends State<ListenPage> {
               ),
               Text(
                 "พากย์เสียงโดย ${listenList.userName!}",
-                style: TextStyle(
+                style: GoogleFonts.prompt(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
                     color: Colors.white),
@@ -157,7 +157,7 @@ class _ListenPageState extends State<ListenPage> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             "บทที่ทำการพากย์",
-                            style: TextStyle(
+                            style: GoogleFonts.prompt(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
                             ),
@@ -186,7 +186,7 @@ class _ListenPageState extends State<ListenPage> {
                             itemBuilder: (context, index) => ListTile(
                                   title: Text(
                                     conversationList[index],
-                                    style: TextStyle(
+                                    style: GoogleFonts.prompt(
                                         fontSize: 19,
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -220,11 +220,11 @@ class _ListenPageState extends State<ListenPage> {
                   children: [
                     Text(
                       formatTime(position),
-                      style: TextStyle(color: Colors.white),
+                      style: GoogleFonts.prompt(color: Colors.white),
                     ),
                     Text(
                       formatTime(duration - position),
-                      style: TextStyle(color: Colors.white),
+                      style: GoogleFonts.prompt(color: Colors.white),
                     ),
                   ],
                 ),

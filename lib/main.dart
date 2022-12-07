@@ -8,6 +8,8 @@ import 'package:overvoice_project/nav.dart';
 import 'package:overvoice_project/screen/noInternet_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,8 +49,8 @@ class MyApp extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   color: Colors.white,
-                  child: const Center(
-                    child: Text("กำลังโหลด..."),
+                  child: Center(
+                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
                   ),
                 ),
               );
