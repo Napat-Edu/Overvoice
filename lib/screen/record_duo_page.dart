@@ -256,7 +256,10 @@ class _RecordDuoState extends State<RecordDuo> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      checkTime++;
+
+      if (checkTime < this.currentConverDuration.length - 1) {
+        checkTime++;
+      }
 
       if (checkTime < this.currentConverDuration.length) {
         timeTotal += int.parse(this.currentConverDuration[checkTime]);
