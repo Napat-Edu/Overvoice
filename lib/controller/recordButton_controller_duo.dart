@@ -15,13 +15,16 @@ class RecordButtonDuo extends StatefulWidget {
   List conversationList;
   String character;
   String docID;
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
   RecordButtonDuo(this.conversationList, this.docID, this.character,
+      this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButtonDuo> createState() =>
-      _RecordButtonDuoState(conversationList, docID, character,
-          converIndexSetter: converIndexSetter);
+  State<RecordButtonDuo> createState() => _RecordButtonDuoState(
+      conversationList, docID, character, onCountChanged, onStatusChanged,
+      converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -33,6 +36,8 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   bool status = false;
   String docID;
 
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   late final recorder = SoundRecorder(docID);
 
   List conversationList;
@@ -41,6 +46,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   final ValueChanged<int> converIndexSetter;
 
   _RecordButtonDuoState(this.conversationList, this.docID, this.character,
+      this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -86,6 +92,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
+    onCountChanged(TimeCountDown); // push time number in () to record_page
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -149,6 +156,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
       if (n == 0) {
         FlutterBeep.beep(false);
         timer.cancel();
+        onStatusChanged(false);
         if (n >= m) {
           recorder._stop(character);
         } else {

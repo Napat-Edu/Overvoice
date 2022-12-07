@@ -14,7 +14,8 @@ class RecordDuo extends StatefulWidget {
   ListenDetails yourBuddy;
   String hisID;
 
-  RecordDuo(this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
+  RecordDuo(
+      this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
       {super.key});
 
   static int converIndex = 0;
@@ -32,12 +33,7 @@ class _RecordDuoState extends State<RecordDuo> {
   String hisID;
 
   _RecordDuoState(
-    this.detailList,
-    this.character,
-    this.yourBuddy,
-    this.docID,
-    this.hisID
-  );
+      this.detailList, this.character, this.yourBuddy, this.docID, this.hisID);
 
   late List conversationList = detailList["conversation"].split(",");
   bool isPlaying = false;
@@ -58,7 +54,7 @@ class _RecordDuoState extends State<RecordDuo> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to states: playing, paused, stopped
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
@@ -201,7 +197,14 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            RecordButtonDuoCoop(conversationList, hisID, character, yourBuddy.audioFileName.toString(), converIndexSetter: _converIndexSetter),
+            RecordButtonDuoCoop(
+                conversationList,
+                hisID,
+                character,
+                yourBuddy.audioFileName.toString(),
+                (a) => {setup(a)},
+                (status) => {checkStatus(status)},
+                converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -222,21 +225,6 @@ class _RecordDuoState extends State<RecordDuo> {
                     return;
                   }
                   if (isPlaying == false) {
-                    // -------------------- Old setup song --------------------
-                    // final storageRef = await FirebaseStorage.instance.ref();
-                    // final time = await RecordButton.TimeCountDown.instance();
-                    // final soundRefA = await storageRef
-                    //     .child(listenList.audioFileName!); // <-- your file name
-                    // final soundRefBGM = await storageRef
-                    //     .child("helloworld2.aac"); // <-- your file name
-                    // final metaDataA = await soundRefA.getDownloadURL();
-                    // final metaDataBGM = await soundRefBGM.getDownloadURL();
-                    // String urlBGM =
-                    //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-                    // log('data: ${metaDataA.toString()}');
-                    // log('data: ${metaDataBGM.toString()}');
-                    // await audioPlayer.setSourceUrl(urlBGM);
-                    // isPlaying = true;
                     play();
                   } else {
                     isPlaying = false;
@@ -288,12 +276,13 @@ class _RecordDuoState extends State<RecordDuo> {
       // final time = await RecordButton.TimeCountDown.instance();
       // final soundRefA = await storageRef
       //     .child(listenList.audioFileName!); // <-- your file name
-      // final soundRefBGM =
-      //     await storageRef.child("helloworld2.aac"); // <-- your file name
+      final soundRefBGM = await storageRef
+          .child("2022-12-0714:22:17466043omegyzr.aac"); // <-- your file name
       // final metaDataA = await soundRefA.getDownloadURL();
-      // final metaDataBGM = await soundRefBGM.getDownloadURL();
-      String urlBGM =
-          "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
+      final metaDataBGM = await soundRefBGM.getDownloadURL();
+      String urlBGM = metaDataBGM.toString();
+      // String urlBGM =
+      //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
       // log('data: ${metaDataA.toString()}');
       // log('data: ${metaDataBGM.toString()}');
       await audioPlayer.setSourceUrl(urlBGM);
