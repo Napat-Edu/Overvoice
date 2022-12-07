@@ -80,6 +80,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         position = duration;
       });
     });
+
+    playPartner();
   }
 
   @override
@@ -147,13 +149,14 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
+                        await play();
                         await recorder._record();
                         await audioPlayer.resume();
                         playPartner();
                       } else {
+                        await play();
                         await recorder._resume();
                         await null;
-                        playPartner();
                       }
                       countdown(
                           int.parse(TimeCountDown[
@@ -234,7 +237,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     // String url =
     // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
     // await audioPlayer.setSourceUrl(url);
-    play();
+    //play();
   }
 }
 
@@ -332,7 +335,6 @@ class SoundRecorder {
         })
         .then((value) => print("History Updated"))
         .catchError((error) => print("Failed to update: $error"));
-    ;
 
     CollectionReference usersInfo =
         FirebaseFirestore.instance.collection('UserInfo');
