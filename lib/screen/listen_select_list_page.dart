@@ -127,7 +127,7 @@ class _ListenState extends State<Listen> {
               ),
             )
           : ListView.separated(
-            padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
@@ -142,6 +142,14 @@ class _ListenState extends State<Listen> {
                           radius: 26,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
+                              // for 2 character 
+                         /* child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.amberAccent,
+                            ),
+                          ), */ 
                         ),
                       ),
                     ),
@@ -156,6 +164,14 @@ class _ListenState extends State<Listen> {
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        Text(
+                          " w/ @Gongzu",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black38),
+                        )
+                        // Icon(
                         // Icon(
                         //   Icons.favorite,
                         //   size: 18,

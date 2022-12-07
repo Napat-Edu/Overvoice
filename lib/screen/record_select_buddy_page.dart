@@ -160,8 +160,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                       Text(" w/ @Gongzu",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.black38),)
-                        // Icon(
                         //   Icons.favorite,
                         //   size: 18,
                         // ),
