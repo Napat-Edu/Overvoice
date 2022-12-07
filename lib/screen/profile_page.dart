@@ -10,7 +10,6 @@ import '../model/title_detail.dart';
 import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -18,8 +17,10 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePage();
 }
 
-List<String> docID = [];
-List<String> audioName = [];
+List<String> docIDSolo = [];
+List<String> audioNameSolo = [];
+List<String> docIDDuo = [];
+List<String> audioNameDuo = [];
 
 class _ProfilePage extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
@@ -77,8 +78,10 @@ class _ProfilePage extends State<ProfilePage>
   }
 
   Future<Widget> getData(BuildContext context) async {
-    List<ListenDetails> listenList = [];
-    listenList = await getHistoryData();
+    List<ListenDetails> listenListSoloType = [];
+    List<ListenDetails> listenListDuoType = [];
+    listenListSoloType = await getHistoryData(1);
+    listenListDuoType = await getHistoryData(2);
     String? userEmail = FirebaseAuth.instance.currentUser!.email;
     Map<String, dynamic> userData = await getUserInfo(userEmail!);
     return Column(
@@ -95,7 +98,7 @@ class _ProfilePage extends State<ProfilePage>
           height: 30,
         ),
         buildMiddler(),
-        buildBelow(listenList),
+        buildBelow(listenListSoloType, listenListDuoType),
       ],
     );
   }
@@ -127,6 +130,7 @@ class _ProfilePage extends State<ProfilePage>
     Map<String, dynamic>? fieldMap = dataDoc.data();
     return fieldMap;
   }
+
   // like count under profile
   Widget recLike(BuildContext context, Map<String, dynamic> userData) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -152,12 +156,14 @@ class _ProfilePage extends State<ProfilePage>
           children: <Widget>[
             Text(
               '$value',
-              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 13),
+              style:
+                  GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 13),
             ),
             SizedBox(height: 2),
             Text(
               text,
-              style: GoogleFonts.prompt(fontSize: 15,fontWeight: FontWeight.w500),
+              style:
+                  GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -172,130 +178,164 @@ class _ProfilePage extends State<ProfilePage>
                 child: TabBar(
                     controller: _tabController,
                     indicatorColor: Colors.white,
-                    labelStyle:
-                        GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
-                    unselectedLabelStyle:
-                        GoogleFonts.prompt(fontSize: 16, fontWeight: FontWeight.w600),
+                    labelStyle: GoogleFonts.prompt(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                    unselectedLabelStyle: GoogleFonts.prompt(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                     tabs: [
                       Tab(
-                        text: "ประวัติพากย์",
+                        text: "ประวัติพากย์เดี่ยว",
                       ),
                       Tab(
-                        text: "(กำลังพัฒนา)",
+                        text: "ประวัติพากย์คู่",
                       ),
                     ])),
           ],
         ),
       );
 
-  Widget buildBelow(List<ListenDetails> listenList) => Expanded(
-          child: TabBarView(controller: _tabController, children: <Widget>[
-        Center(
-          //child: Text("ประวัติพากย์"),
-          child: listenList.isEmpty
-              ? Column(
-                  children: [
-                    SizedBox(
-                      height: 100,
-                    ),
-                    Image.asset("assets/image/Recordvoice.png"),
-                    SizedBox(height: 12),
-                    Text(
-                      'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
-                      style: GoogleFonts.prompt(fontSize: 16),
-                    ),
-                    SizedBox(height: 12),
-                    ElevatedButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Color(0xFFFF7200),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {},
-                      child: Text('เริ่มอัดเสียงแรกกันเถอะ',
-                          style: GoogleFonts.prompt(fontSize: 18)),
-                    ),
-                  ],
-                )
-              : ListView.separated(
-                  padding: EdgeInsets.zero,
-                  separatorBuilder: (context, index) => const Divider(
-                        color: Color(0xFFFFAA66),
-                      ),
-                  itemCount: listenList.length,
-                  itemBuilder: (context, index) => ListTile(
-                        leading: SizedBox(
-                            width: 55,
-                            height: 55,
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xFFFFAA66), blurRadius: 5)
-                              ]),
-                              child: Image.network(
-                                listenList[index].imgURL!,
-                                fit: BoxFit.cover,
-                              ),
-                            )),
-                        title: Text(
-                          ' ${audioName[index]}',
-                          style: GoogleFonts.prompt(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        // like count under content
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            // Icon(
-                            //   Icons.favorite,
-                            //   size: 18,
-                            // ),
-                            // Text(' ${listenList[index].likeCount!}'),
-                          ],
-                        ),
-                        trailing: TextButton(
-                          style: TextButton.styleFrom(
-                              fixedSize: const Size(10, 10),
-                              backgroundColor: const Color(0xFFFF7200),
-                              foregroundColor: Colors.white,
-                              textStyle: GoogleFonts.prompt(fontSize: 16)),
-                          onPressed: () async {
-                            var dataDoc = await FirebaseFirestore.instance
-                                .collection('AudioInfo')
-                                .doc(docID[index])
-                                .get();
-                            Map<String, dynamic>? detailList = dataDoc.data();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListenPage(
-                                        detailList!, listenList[index])));
-                          },
-                          child: const Text('เล่น'),
-                        ),
-                      )),
+  Widget buildBelow(List<ListenDetails> listenListSoloType,
+          List<ListenDetails> listenListDuoType) =>
+      Expanded(
+        child: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            displayAudioList(listenListSoloType, 1),
+            displayAudioList(listenListDuoType, 2),
+          ],
         ),
-        Center(
-          child: Text("(กำลังพัฒนา)"),
-        ),
-      ]));
+      );
 
-  Future<List<ListenDetails>> getHistoryData() async {
-    audioName = [];
-    docID = [];
+  displayAudioList(List<ListenDetails> listenList, int audioType) {
+    return Center(
+      //child: Text("ประวัติพากย์"),
+      child: listenList.isEmpty
+          ? Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                ),
+                Image.asset("assets/image/Recordvoice.png"),
+                SizedBox(height: 12),
+                Text(
+                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
+                  style: GoogleFonts.prompt(fontSize: 16),
+                ),
+                SizedBox(height: 12),
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Color(0xFFFF7200),
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {},
+                  child: Text('เริ่มอัดเสียงแรกกันเถอะ',
+                      style: GoogleFonts.prompt(fontSize: 18)),
+                ),
+              ],
+            )
+          : ListView.separated(
+              padding: EdgeInsets.zero,
+              separatorBuilder: (context, index) => const Divider(
+                color: Color(0xFFFFAA66),
+              ),
+              itemCount: listenList.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: SizedBox(
+                    width: 55,
+                    height: 55,
+                    child: Container(
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
+                      ]),
+                      child: Image.network(
+                        listenList[index].imgURL!,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
+                title: Text(
+                  setTextByAudioType(index, audioType),
+                  style: GoogleFonts.prompt(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                // like count under content
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    // Icon(
+                    //   Icons.favorite,
+                    //   size: 18,
+                    // ),
+                    // Text(' ${listenList[index].likeCount!}'),
+                  ],
+                ),
+                trailing: TextButton(
+                  style: TextButton.styleFrom(
+                      fixedSize: const Size(10, 10),
+                      backgroundColor: const Color(0xFFFF7200),
+                      foregroundColor: Colors.white,
+                      textStyle: GoogleFonts.prompt(fontSize: 16)),
+                  onPressed: () async {
+                    var dataDoc = await FirebaseFirestore.instance
+                        .collection('AudioInfo')
+                        .doc(docIDSolo[index])
+                        .get();
+                    Map<String, dynamic>? detailList = dataDoc.data();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ListenPage(detailList!, listenList[index])));
+                  },
+                  child: const Text('เล่น'),
+                ),
+              ),
+            ),
+    );
+  }
+
+  String setTextByAudioType(int index, int audioType) {
+    if(audioType == 1) {
+      return audioNameSolo[index];
+    } else {
+      return audioNameDuo[index];
+    }
+  }
+
+  Future<List<ListenDetails>> getHistoryData(int type) async {
+    List<ListenDetails> listenList = [];
+    if (type == 1) {
+      audioNameSolo = [];
+      docIDSolo = [];
+      listenList = await queryAudioList("user_1");
+    } else {
+      audioNameDuo = [];
+      docIDDuo = [];
+      listenList = await queryAudioList("user_2");
+    }
+
+    return listenList;
+  }
+
+  Future<List<ListenDetails>> queryAudioList(String userNumber) async {
+    List<ListenDetails> listenList = [];
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('status', isEqualTo: true)
-        .where('user_1', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where(userNumber, isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
-    List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic> audioData = await getAudioInfo(doc["audioInfo"]);
-      Map<String, dynamic> userData = await getUserInfo(doc["user_1"]);
-      docID.add(doc["audioInfo"]);
-      audioName.add(audioData["name"]);
+      Map<String, dynamic> userData = await getUserInfo(doc[userNumber]);
+      if (userNumber == "user_1") {
+        docIDSolo.add(doc["audioInfo"]);
+        audioNameSolo.add(audioData["name"]);
+      } else {
+        docIDDuo.add(doc["audioInfo"]);
+        audioNameDuo.add(audioData["name"]);
+      }
       listenList.add(ListenDetails(
         userData["username"],
         doc["likeCount"].toString(),
@@ -304,6 +344,7 @@ class _ProfilePage extends State<ProfilePage>
         doc["sound_2"],
       ));
     });
+
     return listenList;
   }
 
@@ -346,21 +387,26 @@ class _ProfilePage extends State<ProfilePage>
             ),
             Text(
               user.displayName ?? "",
-              style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
+              style:
+                  GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 5,
             ),
             Text(
               user.email ?? "",
-              style: GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
+              style:
+                  GoogleFonts.prompt(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ],
         ),
       );
     } else {
       return Center(
-        child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+        child: Text(
+          "กำลังโหลด...",
+          style: GoogleFonts.prompt(),
+        ),
       );
     }
   }
