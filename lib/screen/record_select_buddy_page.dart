@@ -199,8 +199,10 @@ class _SelectBuddyState extends State<SelectBuddy> {
     await Future.forEach(querySnapshot.docs, (doc) async {
       hisID.add(doc.id);
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+      Map<String, dynamic>? user2Data = await getUserInfo(doc["user_2"]);
       listenList.add(ListenDetails(
         data!["username"],
+        user2Data!["username"],
         doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],
