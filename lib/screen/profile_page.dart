@@ -298,6 +298,7 @@ class _ProfilePage extends State<ProfilePage>
         doc["likeCount"].toString(),
         audioData["img"],
         doc["sound_1"],
+        doc["sound_2"],
       ));
     });
     return listenList;

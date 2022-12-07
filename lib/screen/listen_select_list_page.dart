@@ -195,6 +195,7 @@ class _ListenState extends State<Listen> {
         doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],
+        doc["sound_2"],
       ));
     });
 

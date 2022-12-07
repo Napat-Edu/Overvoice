@@ -201,6 +201,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
         doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],
+        doc["sound_2"],
       ));
     });
 

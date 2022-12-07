@@ -100,7 +100,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                                 builder: (context) =>
                                     (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
                       },
-                      child: const Text('พากย์เดี่ยว'),
+                      child: const Text('เริ่มพากย์ใหม่'),
                     ),
                   )
                 ]),
@@ -145,7 +145,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                                 builder: (context) =>
                                     (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
                       },
-                      child: const Text('พากย์คู่'),
+                      child: const Text('จับคู่พากย์'),
                     ),
                   )
                 ]),

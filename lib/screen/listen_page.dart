@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 import 'package:overvoice_project/model/listen_detail.dart';
+import 'package:provider/provider.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -17,12 +18,7 @@ String formatTime(Duration duration) {
   ].join(':');
 }
 
-// enum PlayerStateA { stoppedA, playingA, pausedA }
-// enum PlayerStateBGM { stoppedBGM, playingBGM, pausedBGM }
-
 class ListenPage extends StatefulWidget {
-  // const ListenPage({super.key, required titleName});
-
   Map<String, dynamic> detailList;
   ListenDetails listenList;
 
@@ -41,23 +37,19 @@ class _ListenPageState extends State<ListenPage> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  // for the first voice
+  // for the voice of user
   AudioPlayer audioPlayerA = AudioPlayer();
   AudioPlayer audioPlayerB = AudioPlayer();
-  // PlayerStateA playerStateA = PlayerStateA.stoppedA;
-  // get isPlayingA => playerStateA == PlayerStateA.playingA;
 
   // for the BGM
   AudioPlayer audioPlayerBGM = AudioPlayer();
-  // PlayerStateBGM playerStateBGM = PlayerStateBGM.stoppedBGM;
-  // get isPlayingBGM => playerStateBGM == PlayerStateBGM.playingBGM;
 
   PlayerState playerState = PlayerState.stopped;
 
   @override
   void initState() {
     super.initState();
-    audioPlayerBGM.setVolume(0.5); // Listen to states: playing, paused, stopped
+    audioPlayerBGM.setVolume(0.4); // Listen to states: playing, paused, stopped
     audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
       print('Current player state: $s');
       if (!mounted) return;
@@ -212,8 +204,10 @@ class _ListenPageState extends State<ListenPage> {
                 onChanged: (value) async {
                   final currentPosition = Duration(seconds: value.toInt());
                   await audioPlayerA.seek(currentPosition);
-                  await audioPlayerB.seek(currentPosition);
                   await audioPlayerBGM.seek(currentPosition);
+                  if (detailList["voiceoverAmount"] == "2") {
+                    await audioPlayerB.seek(currentPosition);
+                  }
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,
@@ -246,27 +240,7 @@ class _ListenPageState extends State<ListenPage> {
                   ),
                   onPressed: () async {
                     if (isPlaying == false) {
-                      final storageRef = await FirebaseStorage.instance.ref();
-                      final soundRefA = await storageRef.child(
-                          listenList.audioFileName!); // <-- your file name
-                      final soundRefB = await storageRef
-                          .child("2022-12-0702:03:40514373omegyzr.aac");
-                      final soundRefBGM = await storageRef
-                          .child("JoJo_BGM.aac"); // <-- your file name
-                      final metaDataA = await soundRefA.getDownloadURL();
-                      final metaDataB = await soundRefB.getDownloadURL();
-                      final metaDataBGM = await soundRefBGM.getDownloadURL();
-                      log('data: ${metaDataA.toString()}');
-                      log('data: ${metaDataB.toString()}');
-                      log('data: ${metaDataBGM.toString()}');
-                      String urlA = metaDataA.toString();
-                      String urlB = metaDataB.toString();
-                      String urlBGM = metaDataBGM.toString();
-                      await audioPlayerA.setSourceUrl(urlA);
-                      await audioPlayerB.setSourceUrl(urlB);
-                      await audioPlayerBGM.setSourceUrl(urlBGM);
-                      isPlaying = true;
-                      play(urlA, urlB, urlBGM);
+                      StartListening();
                     } else {
                       isPlaying = false;
                       pause();
@@ -278,47 +252,57 @@ class _ListenPageState extends State<ListenPage> {
               SizedBox(
                 height: screenHeight / 30,
               ),
-              // SizedBox(
-              //   width: screenWidth / 1.4,
-              //   height: screenHeight / 20,
-              //   child: TextButton(
-              //     style: TextButton.styleFrom(
-              //         shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(5)),
-              //         backgroundColor: Colors.white,
-              //         foregroundColor: Color(0xFFFF7200),
-              //         textStyle: const TextStyle(
-              //             fontSize: 20, fontWeight: FontWeight.w600)),
-              //     onPressed: () {},
-              //     child: const Text('Continue'),
-              //   ),
-              // ),
             ],
           )),
     );
+  }
+
+  Future StartListening() async {
+    final storageRef = await FirebaseStorage.instance.ref();
+    final soundRefA =
+        await storageRef.child(listenList.audioFileName!); // <-- your file name
+    final soundRefBGM =
+        await storageRef.child(detailList["bgmName"]); // <-- your file name
+    final metaDataA = await soundRefA.getDownloadURL();
+    final metaDataBGM = await soundRefBGM.getDownloadURL();
+    log('data: ${metaDataA.toString()}');
+    log('data: ${metaDataBGM.toString()}');
+    String urlA = metaDataA.toString();
+    String urlBGM = metaDataBGM.toString();
+    await audioPlayerA.setSourceUrl(urlA);
+    await audioPlayerBGM.setSourceUrl(urlBGM);
+
+    if (detailList["voiceoverAmount"] == "2") {
+      final soundRefB = await storageRef.child(listenList.audioFileNameBuddy!);
+      final metaDataB = await soundRefB.getDownloadURL();
+      log('data: ${metaDataB.toString()}');
+      String urlB = metaDataB.toString();
+      await audioPlayerB.setSourceUrl(urlB);
+
+      isPlaying = true;
+      play(urlA, urlB, urlBGM);
+    } else {
+      isPlaying = true;
+      playSingleType(urlA, urlBGM);
+    }
   }
 
   Future play(String urlA, String urlB, String urlBGM) async {
     audioPlayerA.resume();
     audioPlayerB.resume();
     audioPlayerBGM.resume();
-    // setState(() {
-    //   playerStateA = PlayerStateA.playingA;
-    // });
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.playingBGM;
-    // });
+  }
+
+  Future playSingleType(String urlA, String urlBGM) async {
+    audioPlayerA.resume();
+    audioPlayerBGM.resume();
   }
 
   Future pause() async {
     await audioPlayerA.pause();
-    await audioPlayerB.pause();
-    // setState(() {
-    //   playerStateA = PlayerStateA.pausedA;
-    // });
     await audioPlayerBGM.pause();
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.pausedBGM;
-    // });
+    if (detailList["voiceoverAmount"] == "2") {
+      await audioPlayerB.pause();
+    }
   }
 }
