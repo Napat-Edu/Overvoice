@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
   String character;
@@ -47,6 +46,8 @@ class _RecordState extends State<Record> {
   Duration position = Duration.zero;
 
   AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayerBGM = AudioPlayer();
+
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
@@ -282,17 +283,17 @@ class _RecordState extends State<Record> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      // final time = await RecordButton.TimeCountDown.instance();
       // final soundRefA = await storageRef
       //     .child(listenList.audioFileName!); // <-- your file name
-      // final soundRefBGM =
-      //     await storageRef.child("helloworld2.aac"); // <-- your file name
+      final soundRefBGM =
+          await storageRef.child(detailList["bgmName"]); // <-- your file name
       // final metaDataA = await soundRefA.getDownloadURL();
-      // final metaDataBGM = await soundRefBGM.getDownloadURL();
-      String urlBGM =
-          "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-      // log('data: ${metaDataA.toString()}');
-      // log('data: ${metaDataBGM.toString()}');
+      final metaDataBGM = await soundRefBGM.getDownloadURL();
+      log('data: ${metaDataBGM.toString()}');
+      // String urlA = metaDataA.toString();
+      String urlBGM = metaDataBGM.toString();
+      // await audioPlayerA.setSourceUrl(urlA);
+      await audioPlayerBGM.setSourceUrl(urlBGM);
       await audioPlayer.setSourceUrl(urlBGM);
       print("Already Set!");
     }
@@ -313,8 +314,8 @@ class _RecordState extends State<Record> {
         itemBuilder: (context, index) => ListTile(
               title: Text(
                 currentText,
-                style:
-                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
+                style: GoogleFonts.prompt(
+                    fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }

@@ -8,7 +8,6 @@ import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class RecordDuo extends StatefulWidget {
   Map<String, dynamic> detailList;
   String character;
@@ -47,7 +46,10 @@ class _RecordDuoState extends State<RecordDuo> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayerA = AudioPlayer();
+  AudioPlayer audioPlayerB = AudioPlayer();
+  AudioPlayer audioPlayerBGM = AudioPlayer();
+
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
@@ -58,32 +60,32 @@ class _RecordDuoState extends State<RecordDuo> {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+    audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
       if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
-    audioPlayer.onDurationChanged.listen((Duration d) {
+    audioPlayerA.onDurationChanged.listen((Duration d) {
       //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
-    audioPlayer.onPositionChanged.listen((Duration p) {
+    audioPlayerA.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
-        audioPlayer.seek(Duration(
+        audioPlayerA.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
-    audioPlayer.onPlayerComplete.listen((event) {
+    audioPlayerA.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
       setState(() {
@@ -95,7 +97,10 @@ class _RecordDuoState extends State<RecordDuo> {
   @override
   void dispose() {
     RecordDuo.converIndex = 0;
-    audioPlayer.dispose();
+    audioPlayerA.dispose();
+    audioPlayerB.dispose();
+    audioPlayerBGM.dispose();
+
     super.dispose();
   }
 
@@ -244,11 +249,15 @@ class _RecordDuoState extends State<RecordDuo> {
   }
 
   Future play() async {
-    audioPlayer.resume();
+    audioPlayerA.resume();
+    audioPlayerB.resume();
+    audioPlayerBGM.resume();
   }
 
   Future pause() async {
-    await audioPlayer.pause();
+    await audioPlayerA.pause();
+    await audioPlayerB.pause();
+    await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
@@ -257,7 +266,7 @@ class _RecordDuoState extends State<RecordDuo> {
       checkButton = true;
     } else {
       print("Status is checked");
-      await audioPlayer.seek(Duration(seconds: timeTotal));
+      await audioPlayerA.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
 
       if (checkTime < this.currentConverDuration.length - 1) {
@@ -279,19 +288,26 @@ class _RecordDuoState extends State<RecordDuo> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      // final time = await RecordButton.TimeCountDown.instance();
       // final soundRefA = await storageRef
       //     .child(listenList.audioFileName!); // <-- your file name
-      final soundRefBGM = await storageRef
+      final soundRefB = await storageRef
           .child("2022-12-0714:22:17466043omegyzr.aac"); // <-- your file name
+      final soundRefBGM =
+          await storageRef.child(detailList["bgmName"]); // <-- your file name
       // final metaDataA = await soundRefA.getDownloadURL();
+      final metaDataB = await soundRefB.getDownloadURL();
       final metaDataBGM = await soundRefBGM.getDownloadURL();
+      // String urlA = metaDataA.toString();
+      String urlB = metaDataB.toString();
       String urlBGM = metaDataBGM.toString();
-      // String urlBGM =
-      //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
+
       // log('data: ${metaDataA.toString()}');
-      // log('data: ${metaDataBGM.toString()}');
-      await audioPlayer.setSourceUrl(urlBGM);
+      log('data: ${metaDataB.toString()}');
+      log('data: ${metaDataBGM.toString()}');
+      // await audioPlayerA.setSourceUrl(urlA);
+      await audioPlayerB.setSourceUrl(urlB);
+      await audioPlayerBGM.setSourceUrl(urlBGM);
+
       print("Already Set!");
     }
   }
@@ -311,8 +327,8 @@ class _RecordDuoState extends State<RecordDuo> {
         itemBuilder: (context, index) => ListTile(
               title: Text(
                 currentText,
-                style:
-                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
+                style: GoogleFonts.prompt(
+                    fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }
