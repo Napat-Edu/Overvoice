@@ -4,6 +4,8 @@ import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -104,7 +106,7 @@ class _RecordState extends State<Record> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -140,7 +142,7 @@ class _RecordState extends State<Record> {
             ),
             Text(
               character,
-              style: TextStyle(
+              style: GoogleFonts.prompt(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
@@ -164,7 +166,7 @@ class _RecordState extends State<Record> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           "บทที่ต้องทำการพากย์",
-                          style: TextStyle(
+                          style: GoogleFonts.prompt(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
@@ -211,7 +213,7 @@ class _RecordState extends State<Record> {
                         borderRadius: BorderRadius.circular(5)),
                     backgroundColor: Color(0xFFFB8C00),
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(
+                    textStyle: GoogleFonts.prompt(
                         fontSize: 20, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
@@ -311,7 +313,7 @@ class _RecordState extends State<Record> {
               title: Text(
                 currentText,
                 style:
-                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w500),
               ),
             ));
   }

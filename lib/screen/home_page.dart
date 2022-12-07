@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/title_detail.dart';
 import 'moreInfo_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,24 +25,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
-      child: Column(children: <Widget>[
-        Container(
-          margin: const EdgeInsets.only(top: 20, right: 15, left: 15),
-          child: Row(
-            children: const <Widget>[
-              Expanded(
-                  flex: 9,
-                  child: Text(
-                    "ยินดีต้อนรับ",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  )),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'ยินดีต้อนรับ',
+          style: GoogleFonts.prompt(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
+      ),
+      body: Column(children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
+          padding: const EdgeInsets.only(
+            left: 15,
+            right: 15,
+            bottom: 15,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -65,10 +65,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             child: TabBar(
                 controller: _tabController,
                 indicatorColor: Colors.white,
-                labelStyle:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                unselectedLabelStyle:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                labelStyle: GoogleFonts.prompt(
+                    fontSize: 18, fontWeight: FontWeight.bold),
+                unselectedLabelStyle: GoogleFonts.prompt(
+                    fontSize: 16, fontWeight: FontWeight.w600),
                 tabs: [
                   Tab(
                     text: "แนะนำ",
@@ -91,13 +91,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return snapshot.data!;
                 }
 
-                return const Text("กำลังโหลด...",textAlign: TextAlign.center,);
+                return Text(
+                  "กำลังโหลด...",
+                  style: GoogleFonts.prompt(),
+                  textAlign: TextAlign.center,
+                );
               }),
           Center(
-            child: Text("เป็นที่นิยม"),
+            child: Text("เป็นที่นิยม", style: GoogleFonts.prompt()),
           ),
           Center(
-            child: Text("กำลังมาแรง"),
+            child: Text("กำลังมาแรง", style: GoogleFonts.prompt()),
           ),
         ])))
       ]),
@@ -109,6 +113,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
+      padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const Divider(
         color: Color(0xFFFFAA66),
       ),
@@ -128,12 +133,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             )),
         title: Text(
           mainTitleList[index].titleName!,
-          style: const TextStyle(
+          style: GoogleFonts.prompt(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         subtitle: Text(
           mainTitleList[index].episode!,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 16),
         ),
         trailing: TextButton(
           style: TextButton.styleFrom(
@@ -149,7 +154,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fullscreenDialog: true,
                 ));
           },
-          child: const Text('เข้าชม'),
+          child: Text('เข้าชม', style: GoogleFonts.prompt()),
         ),
       ),
     );
