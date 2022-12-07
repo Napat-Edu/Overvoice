@@ -80,7 +80,7 @@ class _ListenState extends State<Listen> {
                             "แนะนำสำหรับคุณ",
                             style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
                       SizedBox(
@@ -127,6 +127,7 @@ class _ListenState extends State<Listen> {
               ),
             )
           : ListView.separated(
+            padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
@@ -151,14 +152,15 @@ class _ListenState extends State<Listen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
+                    // like count under title
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Icon(
-                          Icons.favorite,
-                          size: 18,
-                        ),
-                        Text(' ${listenList[index].likeCount!}'),
+                        // Icon(
+                        //   Icons.favorite,
+                        //   size: 18,
+                        // ),
+                        // Text(' ${listenList[index].likeCount!}'),
                       ],
                     ),
                     trailing: TextButton(

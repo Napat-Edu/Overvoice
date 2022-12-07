@@ -84,7 +84,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                             "แนะนำสำหรับคุณ",
                             style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
                       SizedBox(
@@ -131,6 +131,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
               ),
             )
           : ListView.separated(
+            padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
@@ -155,14 +156,16 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
+                    // change like count under title to buddy acount name
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Icon(
-                          Icons.favorite,
-                          size: 18,
-                        ),
-                        Text(' ${listenList[index].likeCount!}'),
+                       Text(" w/ @Gongzu",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.black38),)
+                        // Icon(
+                        //   Icons.favorite,
+                        //   size: 18,
+                        // ),
+                        // Text(' ${listenList[index].likeCount!}'),
                       ],
                     ),
                     trailing: TextButton(

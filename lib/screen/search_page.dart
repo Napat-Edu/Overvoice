@@ -91,6 +91,7 @@ class _SearchState extends State<Search> {
                   ),
                 )
               : ListView.separated(
+                  padding: EdgeInsets.zero,
                   separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),

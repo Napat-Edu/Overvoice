@@ -33,13 +33,15 @@ class _NavbarState extends State<Navbar> {
         height: 65,
         child: BottomNavigationBar(
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: "Profile"),
           ],
           type: BottomNavigationBarType.fixed,
           iconSize: 35,
+          unselectedFontSize: 13,
+          selectedFontSize: 14,
           selectedItemColor: Colors.white,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           backgroundColor: const Color(0xFFFF7200),

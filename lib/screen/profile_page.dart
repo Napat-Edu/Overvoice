@@ -56,7 +56,7 @@ class _ProfilePage extends State<ProfilePage>
           return Column(
             children: [
               SizedBox(
-                height: 120,
+                height: 110,
               ),
               getUserSection(context),
               SizedBox(
@@ -82,11 +82,11 @@ class _ProfilePage extends State<ProfilePage>
     return Column(
       children: [
         SizedBox(
-          height: 120,
+          height: 110,
         ),
         getUserSection(context),
         SizedBox(
-          height: 30,
+          height: 25,
         ),
         recLike(context, userData),
         SizedBox(
@@ -125,14 +125,14 @@ class _ProfilePage extends State<ProfilePage>
     Map<String, dynamic>? fieldMap = dataDoc.data();
     return fieldMap;
   }
-
+  // like count under profile
   Widget recLike(BuildContext context, Map<String, dynamic> userData) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
-          Image.asset("assets/image/LineRL.png"),
-          Image.asset("assets/image/LineRL.png"),
-          buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
+          // Image.asset("assets/image/LineRL.png"),
+          // Image.asset("assets/image/LineRL.png"),
+          // buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
         ],
       );
 
@@ -150,12 +150,12 @@ class _ProfilePage extends State<ProfilePage>
           children: <Widget>[
             Text(
               '$value',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
             ),
             SizedBox(height: 2),
             Text(
               text,
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -215,7 +215,7 @@ class _ProfilePage extends State<ProfilePage>
                   ],
                 )
               : ListView.separated(
-                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
                   separatorBuilder: (context, index) => const Divider(
                         color: Color(0xFFFFAA66),
                       ),
@@ -241,14 +241,15 @@ class _ProfilePage extends State<ProfilePage>
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
                         ),
+                        // like count under content
                         subtitle: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Icon(
-                              Icons.favorite,
-                              size: 18,
-                            ),
-                            Text(' ${listenList[index].likeCount!}'),
+                            // Icon(
+                            //   Icons.favorite,
+                            //   size: 18,
+                            // ),
+                            // Text(' ${listenList[index].likeCount!}'),
                           ],
                         ),
                         trailing: TextButton(

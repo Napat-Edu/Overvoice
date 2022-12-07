@@ -109,6 +109,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return ListView.separated(
+      padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const Divider(
         color: Color(0xFFFFAA66),
       ),
