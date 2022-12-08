@@ -65,7 +65,6 @@ class _ProfilePage extends State<ProfilePage>
               SizedBox(
                 height: 30,
               ),
-              //Text("กำลังโหลด..."),
               SizedBox(
                 height: 30,
               ),
@@ -263,11 +262,7 @@ class _ProfilePage extends State<ProfilePage>
                 subtitle: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    // Icon(
-                    //   Icons.favorite,
-                    //   size: 18,
-                    // ),
-                    // Text(' ${listenList[index].likeCount!}'),
+                    displaySubtitleText(index, listenList, audioType),
                   ],
                 ),
                 trailing: TextButton(
@@ -277,22 +272,52 @@ class _ProfilePage extends State<ProfilePage>
                       foregroundColor: Colors.white,
                       textStyle: GoogleFonts.prompt(fontSize: 15)),
                   onPressed: () async {
-                    var dataDoc = await FirebaseFirestore.instance
-                        .collection('AudioInfo')
-                        .doc(docIDSolo[index])
-                        .get();
-                    Map<String, dynamic>? detailList = dataDoc.data();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ListenPage(detailList!, listenList[index])));
+                    toListenPage(listenList, index, audioType);
                   },
                   child: const Text('เล่น'),
                 ),
               ),
             ),
     );
+  }
+
+  Future<void> toListenPage(
+      List<ListenDetails> listenList, int index, int audioType) async {
+    String docID = "";
+    if (audioType == 1) {
+      docID = docIDSolo[index];
+    } else {
+      docID = docIDDuo[index];
+    }
+
+    var dataDoc = await FirebaseFirestore.instance
+        .collection('AudioInfo')
+        .doc(docID)
+        .get();
+
+    Map<String, dynamic>? detailList = dataDoc.data();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListenPage(detailList!, listenList[index]),
+      ),
+    );
+  }
+
+  Widget displaySubtitleText(
+      int index, List<ListenDetails> listenList, int audioType) {
+    if (audioType == 2) {
+      print(listenList[index].userName);
+      print(listenList[index].userNameBuddy);
+      if (listenList[index].userNameBuddy ==
+          FirebaseAuth.instance.currentUser?.displayName) {
+        return Text("คู่กับ ${listenList[index].userName}");
+      }
+      return Text("คู่กับ ${listenList[index].userNameBuddy}");
+    } else {
+      return Text("ผลงานพากย์เดี่ยวของคุณ");
+    }
   }
 
   String setTextByAudioType(int index, int audioType) {
@@ -308,17 +333,18 @@ class _ProfilePage extends State<ProfilePage>
     if (type == 1) {
       audioNameSolo = [];
       docIDSolo = [];
-      listenList = await queryAudioList("user_1");
+      listenList = await queryAudioList("user_1", "user_2");
     } else {
       audioNameDuo = [];
       docIDDuo = [];
-      listenList = await queryAudioList("user_2");
+      listenList = await queryAudioList("user_2", "user_1");
     }
 
     return listenList;
   }
 
-  Future<List<ListenDetails>> queryAudioList(String userNumber) async {
+  Future<List<ListenDetails>> queryAudioList(
+      String userNumber, String userNumberBuddy) async {
     List<ListenDetails> listenList = [];
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
@@ -326,9 +352,15 @@ class _ProfilePage extends State<ProfilePage>
         .where(userNumber, isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
+    String buddyName = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic> audioData = await getAudioInfo(doc["audioInfo"]);
       Map<String, dynamic> userData = await getUserInfo(doc[userNumber]);
+      if (audioData["voiceoverAmount"] == "2") {
+        Map<String, dynamic> user2Data =
+            await getUserInfo(doc[userNumberBuddy]);
+        buddyName = user2Data["username"];
+      }
       if (userNumber == "user_1") {
         docIDSolo.add(doc["audioInfo"]);
         audioNameSolo.add(audioData["name"]);
@@ -338,6 +370,7 @@ class _ProfilePage extends State<ProfilePage>
       }
       listenList.add(ListenDetails(
         userData["username"],
+        buddyName,
         doc["likeCount"].toString(),
         audioData["img"],
         doc["sound_1"],

@@ -240,10 +240,12 @@ class _RecordState extends State<Record> {
 
   Future play() async {
     audioPlayer.resume();
+    audioPlayerBGM.resume();
   }
 
   Future pause() async {
     await audioPlayer.pause();
+    await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
@@ -266,7 +268,10 @@ class _RecordState extends State<Record> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      checkTime++;
+      
+      if (checkTime < this.currentConverDuration.length - 1) {
+        checkTime++;
+      }
 
       if (checkTime < this.currentConverDuration.length) {
         timeTotal += int.parse(this.currentConverDuration[checkTime]);
@@ -283,18 +288,19 @@ class _RecordState extends State<Record> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      // final soundRefA = await storageRef
-      //     .child(listenList.audioFileName!); // <-- your file name
+      final soundRefAssist =
+          await storageRef.child(detailList["assistanceVoiceName"]); // <-- your file name
       final soundRefBGM =
           await storageRef.child(detailList["bgmName"]); // <-- your file name
-      // final metaDataA = await soundRefA.getDownloadURL();
+      final metaDataAssist = await soundRefAssist.getDownloadURL();
       final metaDataBGM = await soundRefBGM.getDownloadURL();
+      log('data: ${metaDataAssist.toString()}');
       log('data: ${metaDataBGM.toString()}');
-      // String urlA = metaDataA.toString();
+      String urlAssist = metaDataAssist.toString();
       String urlBGM = metaDataBGM.toString();
       // await audioPlayerA.setSourceUrl(urlA);
       await audioPlayerBGM.setSourceUrl(urlBGM);
-      await audioPlayer.setSourceUrl(urlBGM);
+      await audioPlayer.setSourceUrl(urlAssist);
       print("Already Set!");
     }
   }

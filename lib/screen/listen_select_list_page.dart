@@ -79,7 +79,7 @@ class _ListenState extends State<Listen> {
                       Expanded(
                           flex: 3,
                           child: Text(
-                            "แนะนำสำหรับคุณ",
+                            "เลือกฟังได้เลย",
                             style: GoogleFonts.prompt(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -118,7 +118,7 @@ class _ListenState extends State<Listen> {
   }
 
   Future<Widget> getDataUI(String docID) async {
-    listenList = await getHistoryList(docID);
+    listenList = await getHistoryList(docID, detailList);
     return Future.delayed(const Duration(seconds: 0), () {
       return listenList.isEmpty
           ? Center(
@@ -167,18 +167,12 @@ class _ListenState extends State<Listen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          " w/ @Gongzu",
+                          displaySubtitleText(detailList, index),
                           style: GoogleFonts.prompt(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Colors.black38),
                         )
-                        // Icon(
-                        // Icon(
-                        //   Icons.favorite,
-                        //   size: 18,
-                        // ),
-                        // Text(' ${listenList[index].likeCount!}'),
                       ],
                     ),
                     trailing: TextButton(
@@ -200,7 +194,14 @@ class _ListenState extends State<Listen> {
     });
   }
 
-  Future<List<ListenDetails>> getHistoryList(String docID) async {
+  String displaySubtitleText(Map<String, dynamic> detailList, int index) {
+    if(detailList["voiceoverAmount"] == "2") {
+      return "พากย์คู่กับ ${listenList[index].userNameBuddy}";
+    }
+    return "ผลงานพากย์เดี่ยว";
+  }
+
+  Future<List<ListenDetails>> getHistoryList(String docID, Map<String, dynamic> detailList) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('audioInfo', isEqualTo: docID)
@@ -208,10 +209,16 @@ class _ListenState extends State<Listen> {
         .get();
 
     List<ListenDetails> listenList = [];
+    String buddyName = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+      if(detailList["voiceoverAmount"] == "2") {
+        Map<String, dynamic>? user2Data = await getUserInfo(doc["user_2"]);
+        buddyName = user2Data!["username"];
+      }
       listenList.add(ListenDetails(
         data!["username"],
+        buddyName,
         doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],

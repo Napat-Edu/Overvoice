@@ -64,7 +64,7 @@ class _SearchState extends State<Search> {
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: TextField(
-              // autofocus: true,
+              autofocus: true,
               onChanged: (value) => updateList(value),
               style:
                   GoogleFonts.prompt(fontSize: 24, fontWeight: FontWeight.w500),
@@ -144,7 +144,7 @@ class _SearchState extends State<Search> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    More(mainTitleList[index].docID!),
+                                    More(displayList[index].docID!),
                                 fullscreenDialog: true,
                               ));
                         },

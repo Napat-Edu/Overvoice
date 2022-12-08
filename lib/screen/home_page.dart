@@ -156,7 +156,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               fixedSize: const Size(10, 10),
               backgroundColor: const Color(0xFFFF7200),
               foregroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 15,)),
+              textStyle: const TextStyle(
+                fontSize: 15,
+              )),
           onPressed: () {
             Navigator.push(
                 context,
@@ -169,11 +171,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         onTap: () {
           Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => More(mainTitleList[index].docID!),
-                  fullscreenDialog: true,
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => More(mainTitleList[index].docID!),
+                fullscreenDialog: true,
+              ));
         },
       ),
     );

@@ -112,6 +112,7 @@ class _RecordButtonState extends State<RecordButton> {
                 : () async {
                     if (StageVoice == TimeCountDown.length) {
                       await recorder._stop();
+                      showAlertDialog4(context);
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
@@ -136,7 +137,7 @@ class _RecordButtonState extends State<RecordButton> {
               StageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
             ),
           ),
-        )
+        ),
       ],
     ));
   }
@@ -276,3 +277,49 @@ class SoundRecorder {
     });
   }
 }
+
+//showAlertDialog4(context);
+void showAlertDialog4(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/image/CorrectIcon.png"),
+              SizedBox(height: 12),
+              Text(
+                'เสร็จสิ้น',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              SizedBox(height: 12),
+              Text(
+                'ขอบคุณสำหรับการพากย์เสียงของคุณ',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 12),
+              ElevatedButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Color(0xFFFF7200),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  int count = 0;
+                  Navigator.popUntil(context, ((route) {
+                    return count++ == 2;
+                  }));
+                },
+                child: Text('ตกลง'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );

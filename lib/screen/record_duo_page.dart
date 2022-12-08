@@ -46,8 +46,7 @@ class _RecordDuoState extends State<RecordDuo> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  AudioPlayer audioPlayerA = AudioPlayer();
-  AudioPlayer audioPlayerB = AudioPlayer();
+  AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
 
   PlayerState playerState = PlayerState.stopped;
@@ -60,32 +59,32 @@ class _RecordDuoState extends State<RecordDuo> {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
+    audioPlayerAssist.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
       if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
-    audioPlayerA.onDurationChanged.listen((Duration d) {
+    audioPlayerAssist.onDurationChanged.listen((Duration d) {
       //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
-    audioPlayerA.onPositionChanged.listen((Duration p) {
+    audioPlayerAssist.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
-        audioPlayerA.seek(Duration(
+        audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
-    audioPlayerA.onPlayerComplete.listen((event) {
+    audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
       setState(() {
@@ -97,8 +96,7 @@ class _RecordDuoState extends State<RecordDuo> {
   @override
   void dispose() {
     RecordDuo.converIndex = 0;
-    audioPlayerA.dispose();
-    audioPlayerB.dispose();
+    audioPlayerAssist.dispose();
     audioPlayerBGM.dispose();
 
     super.dispose();
@@ -249,14 +247,12 @@ class _RecordDuoState extends State<RecordDuo> {
   }
 
   Future play() async {
-    audioPlayerA.resume();
-    audioPlayerB.resume();
+    audioPlayerAssist.resume();
     audioPlayerBGM.resume();
   }
 
   Future pause() async {
-    await audioPlayerA.pause();
-    await audioPlayerB.pause();
+    await audioPlayerAssist.pause();
     await audioPlayerBGM.pause();
     isPlaying = false;
   }
@@ -266,7 +262,7 @@ class _RecordDuoState extends State<RecordDuo> {
       checkButton = true;
     } else {
       print("Status is checked");
-      await audioPlayerA.seek(Duration(seconds: timeTotal));
+      await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
 
       if (checkTime < this.currentConverDuration.length - 1) {
@@ -288,24 +284,22 @@ class _RecordDuoState extends State<RecordDuo> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      // final soundRefA = await storageRef
-      //     .child(listenList.audioFileName!); // <-- your file name
-      final soundRefB = await storageRef
-          .child("2022-12-0714:22:17466043omegyzr.aac"); // <-- your file name
+      final soundRefAssist = await storageRef
+          .child(detailList["assistanceVoiceName"]); // <-- your file name
       final soundRefBGM =
           await storageRef.child(detailList["bgmName"]); // <-- your file name
       // final metaDataA = await soundRefA.getDownloadURL();
-      final metaDataB = await soundRefB.getDownloadURL();
+      final metaDataAssist = await soundRefAssist.getDownloadURL();
       final metaDataBGM = await soundRefBGM.getDownloadURL();
       // String urlA = metaDataA.toString();
-      String urlB = metaDataB.toString();
+      String urlAssist = metaDataAssist.toString();
       String urlBGM = metaDataBGM.toString();
 
       // log('data: ${metaDataA.toString()}');
-      log('data: ${metaDataB.toString()}');
+      log('data: ${metaDataAssist.toString()}');
       log('data: ${metaDataBGM.toString()}');
       // await audioPlayerA.setSourceUrl(urlA);
-      await audioPlayerB.setSourceUrl(urlB);
+      await audioPlayerAssist.setSourceUrl(urlAssist);
       await audioPlayerBGM.setSourceUrl(urlBGM);
 
       print("Already Set!");

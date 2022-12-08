@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'listen_page.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class SelectBuddy extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -14,7 +14,8 @@ class SelectBuddy extends StatefulWidget {
   SelectBuddy(this.detailList, this.docID, this.character, {super.key});
 
   @override
-  State<SelectBuddy> createState() => _SelectBuddyState(detailList, docID, character);
+  State<SelectBuddy> createState() =>
+      _SelectBuddyState(detailList, docID, character);
 }
 
 class _SelectBuddyState extends State<SelectBuddy> {
@@ -129,11 +130,12 @@ class _SelectBuddyState extends State<SelectBuddy> {
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
+                style: GoogleFonts.prompt(
+                    fontSize: 17, fontWeight: FontWeight.w600),
               ),
             )
           : ListView.separated(
-            padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
@@ -178,8 +180,12 @@ class _SelectBuddyState extends State<SelectBuddy> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    RecordDuo(detailList, character, listenList[index], docID, hisID[index])));
+                                builder: (context) => RecordDuo(
+                                    detailList,
+                                    character,
+                                    listenList[index],
+                                    docID,
+                                    hisID[index])));
                       },
                       child: const Text('เล่น'),
                     ),
@@ -187,25 +193,30 @@ class _SelectBuddyState extends State<SelectBuddy> {
     });
   }
 
-  Future<List<ListenDetails>> getHistoryList(String docID, String character) async {
+  Future<List<ListenDetails>> getHistoryList(
+      String docID, String character) async {
+    String yourID = FirebaseAuth.instance.currentUser!.email!;
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("History")
         .where("audioInfo", isEqualTo: docID)
-        .where("status", isEqualTo: false)
         .where("characterInit", isNotEqualTo: character)
+        .where("status", isEqualTo: false)
         .get();
 
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
-      hisID.add(doc.id);
-      Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
-      listenList.add(ListenDetails(
-        data!["username"],
-        doc["likeCount"].toString(),
-        data["photoURL"],
-        doc["sound_1"],
-        doc["sound_2"],
-      ));
+      if (doc["user_1"] != yourID) {
+        hisID.add(doc.id);
+        Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+        listenList.add(ListenDetails(
+          data!["username"],
+          "คุณ",
+          doc["likeCount"].toString(),
+          data["photoURL"],
+          doc["sound_1"],
+          doc["sound_2"],
+        ));
+      }
     });
 
     return listenList;
