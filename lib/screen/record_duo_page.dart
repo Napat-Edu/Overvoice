@@ -53,6 +53,7 @@ class _RecordDuoState extends State<RecordDuo> {
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
@@ -311,8 +312,14 @@ class _RecordDuoState extends State<RecordDuo> {
       int i;
       String fullConversation = "";
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail;
+        conversationWithDetail =
+            conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+          return '(มีเวลาพากย์ ${m[1]} วินาที:';
+        });
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1}: " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
@@ -330,7 +337,7 @@ class _RecordDuoState extends State<RecordDuo> {
   // use for change conversation text
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

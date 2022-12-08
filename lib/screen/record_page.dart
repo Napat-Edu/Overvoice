@@ -52,6 +52,7 @@ class _RecordState extends State<Record> {
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
@@ -191,7 +192,7 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
-                      child: displayConversation(),
+                      child: displayConversation(detailList),
                       //ConversationController(conversationList),
                     ))
               ],
@@ -268,7 +269,7 @@ class _RecordState extends State<Record> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      
+
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -288,8 +289,8 @@ class _RecordState extends State<Record> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      final soundRefAssist =
-          await storageRef.child(detailList["assistanceVoiceName"]); // <-- your file name
+      final soundRefAssist = await storageRef
+          .child(detailList["assistanceVoiceName"]); // <-- your file name
       final soundRefBGM =
           await storageRef.child(detailList["bgmName"]); // <-- your file name
       final metaDataAssist = await soundRefAssist.getDownloadURL();
@@ -305,13 +306,26 @@ class _RecordState extends State<Record> {
     }
   }
 
-  Widget displayConversation() {
+  Widget displayConversation(Map<String, dynamic> detailList) {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail;
+        if (detailList["voiceoverAmount"] == "1") {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\)'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที)';
+          });
+        } else {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที:';
+          });
+        }
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
@@ -329,7 +343,7 @@ class _RecordState extends State<Record> {
   // use for change conversation text
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }
