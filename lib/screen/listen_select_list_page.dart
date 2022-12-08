@@ -219,7 +219,7 @@ class _ListenState extends State<Listen> {
       listenList.add(ListenDetails(
         data!["username"],
         buddyName,
-        doc["likeCount"].toString(),
+        "",
         data["photoURL"],
         doc["sound_1"],
         doc["sound_2"],
