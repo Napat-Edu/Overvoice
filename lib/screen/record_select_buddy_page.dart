@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
@@ -193,6 +194,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
         .where("audioInfo", isEqualTo: docID)
         .where("status", isEqualTo: false)
         .where("characterInit", isNotEqualTo: character)
+        .where("user_1" , isNotEqualTo: FirebaseAuth.instance.currentUser!.displayName)
         .get();
 
     List<ListenDetails> listenList = [];
