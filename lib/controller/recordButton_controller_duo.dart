@@ -266,7 +266,6 @@ class SoundRecorder {
         .doc()
         .set({
           'audioInfo': docID,
-          'likeCount': 0,
           'sound_1': voiceName,
           'sound_2': "",
           'status': false,
