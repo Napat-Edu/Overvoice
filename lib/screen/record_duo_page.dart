@@ -6,6 +6,8 @@ import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class RecordDuo extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -14,7 +16,8 @@ class RecordDuo extends StatefulWidget {
   ListenDetails yourBuddy;
   String hisID;
 
-  RecordDuo(this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
+  RecordDuo(
+      this.detailList, this.character, this.yourBuddy, this.docID, this.hisID,
       {super.key});
 
   static int converIndex = 0;
@@ -32,12 +35,7 @@ class _RecordDuoState extends State<RecordDuo> {
   String hisID;
 
   _RecordDuoState(
-    this.detailList,
-    this.character,
-    this.yourBuddy,
-    this.docID,
-    this.hisID
-  );
+      this.detailList, this.character, this.yourBuddy, this.docID, this.hisID);
 
   late List conversationList = detailList["conversation"].split(",");
   bool isPlaying = false;
@@ -58,7 +56,7 @@ class _RecordDuoState extends State<RecordDuo> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to states: playing, paused, stopped
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
@@ -109,7 +107,7 @@ class _RecordDuoState extends State<RecordDuo> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -130,12 +128,12 @@ class _RecordDuoState extends State<RecordDuo> {
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: screenWidth / 7.3,
+              radius: 52,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: screenWidth / 7.9,
+                  radius: 48,
                   backgroundImage: NetworkImage(yourBuddy.imgURL.toString()),
                 ),
               ),
@@ -144,9 +142,10 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 80,
             ),
             Text(
-              "คุณกำลังพากย์คู่กับ ${yourBuddy.userName}",
-              style: TextStyle(
-                  fontSize: 17,
+              "คุณพากย์คู่กับ ${yourBuddy.userName}",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.prompt(
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
             ),
@@ -169,9 +168,9 @@ class _RecordDuoState extends State<RecordDuo> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           "บทที่ต้องทำการพากย์",
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                          style: GoogleFonts.prompt(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -201,7 +200,14 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 30,
             ),
             // record button all-function here
-            RecordButtonDuoCoop(conversationList, hisID, character, yourBuddy.audioFileName.toString(), converIndexSetter: _converIndexSetter),
+            RecordButtonDuoCoop(
+                conversationList,
+                hisID,
+                character,
+                yourBuddy.audioFileName.toString(),
+                (a) => {setup(a)},
+                (status) => {checkStatus(status)},
+                converIndexSetter: _converIndexSetter),
             SizedBox(
               height: screenHeight / 50,
             ),
@@ -212,31 +218,16 @@ class _RecordDuoState extends State<RecordDuo> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
+                    textStyle: GoogleFonts.prompt(
+                        fontSize: 18, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
                     return;
                   }
                   if (isPlaying == false) {
-                    // -------------------- Old setup song --------------------
-                    // final storageRef = await FirebaseStorage.instance.ref();
-                    // final time = await RecordButton.TimeCountDown.instance();
-                    // final soundRefA = await storageRef
-                    //     .child(listenList.audioFileName!); // <-- your file name
-                    // final soundRefBGM = await storageRef
-                    //     .child("helloworld2.aac"); // <-- your file name
-                    // final metaDataA = await soundRefA.getDownloadURL();
-                    // final metaDataBGM = await soundRefBGM.getDownloadURL();
-                    // String urlBGM =
-                    //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-                    // log('data: ${metaDataA.toString()}');
-                    // log('data: ${metaDataBGM.toString()}');
-                    // await audioPlayer.setSourceUrl(urlBGM);
-                    // isPlaying = true;
                     play();
                   } else {
                     isPlaying = false;
@@ -268,7 +259,10 @@ class _RecordDuoState extends State<RecordDuo> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      checkTime++;
+
+      if (checkTime < this.currentConverDuration.length - 1) {
+        checkTime++;
+      }
 
       if (checkTime < this.currentConverDuration.length) {
         timeTotal += int.parse(this.currentConverDuration[checkTime]);
@@ -288,12 +282,13 @@ class _RecordDuoState extends State<RecordDuo> {
       // final time = await RecordButton.TimeCountDown.instance();
       // final soundRefA = await storageRef
       //     .child(listenList.audioFileName!); // <-- your file name
-      // final soundRefBGM =
-      //     await storageRef.child("helloworld2.aac"); // <-- your file name
+      final soundRefBGM = await storageRef
+          .child("2022-12-0714:22:17466043omegyzr.aac"); // <-- your file name
       // final metaDataA = await soundRefA.getDownloadURL();
-      // final metaDataBGM = await soundRefBGM.getDownloadURL();
-      String urlBGM =
-          "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
+      final metaDataBGM = await soundRefBGM.getDownloadURL();
+      String urlBGM = metaDataBGM.toString();
+      // String urlBGM =
+      //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
       // log('data: ${metaDataA.toString()}');
       // log('data: ${metaDataBGM.toString()}');
       await audioPlayer.setSourceUrl(urlBGM);
@@ -307,7 +302,7 @@ class _RecordDuoState extends State<RecordDuo> {
       String fullConversation = "";
       for (i = 0; i < conversationList.length; i++) {
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1}: " + conversationList[i] + "\n\n";
       }
       currentText = fullConversation;
     }
@@ -317,7 +312,7 @@ class _RecordDuoState extends State<RecordDuo> {
               title: Text(
                 currentText,
                 style:
-                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }

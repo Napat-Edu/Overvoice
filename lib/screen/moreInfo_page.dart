@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_type_page.dart';
 import 'listen_select_list_page.dart';
@@ -43,8 +44,8 @@ class _MoreState extends State<More> {
               return snapshot.data!;
             }
 
-            return const Center(
-              child: Text("กำลังโหลด..."),
+            return Center(
+              child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
             );
           }),
         ),
@@ -82,7 +83,7 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.prompt(fontSize: 21, fontWeight: FontWeight.w600),
                 ),
               ),
               SizedBox(
@@ -92,8 +93,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList['episode'],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.prompt(
+                      fontSize: 17, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(
@@ -103,8 +104,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.prompt(
+                      fontSize: 15, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(
@@ -115,8 +116,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['detail']}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w400),
+                  style: GoogleFonts.prompt(
+                      fontSize: 14, fontWeight: FontWeight.w400),
                 ),
               ),
               SizedBox(
@@ -126,8 +127,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   "${detailList['duration']} m",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 14,
+                  style: GoogleFonts.prompt(
+                      fontSize: 13,
                       fontWeight: FontWeight.w300,
                       color: Colors.black45),
                 ),
@@ -144,8 +145,8 @@ class _MoreState extends State<More> {
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -166,8 +167,8 @@ class _MoreState extends State<More> {
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 17, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         if (detailList['voiceoverAmount'] == '1') {
                           Navigator.push(

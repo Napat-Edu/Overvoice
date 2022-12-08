@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 import 'package:overvoice_project/model/listen_detail.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
   final hours = twoDigits(duration.inHours);
   final minutes = twoDigits(duration.inMinutes.remainder(60));
   final seconds = twoDigits(duration.inSeconds.remainder(60));
-
+  
   return [
     if (duration.inHours > 0) hours,
     minutes,
@@ -17,12 +18,7 @@ String formatTime(Duration duration) {
   ].join(':');
 }
 
-// enum PlayerStateA { stoppedA, playingA, pausedA }
-// enum PlayerStateBGM { stoppedBGM, playingBGM, pausedBGM }
-
 class ListenPage extends StatefulWidget {
-  // const ListenPage({super.key, required titleName});
-
   Map<String, dynamic> detailList;
   ListenDetails listenList;
 
@@ -41,23 +37,19 @@ class _ListenPageState extends State<ListenPage> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  // for the first voice
+  // for the voice of user
   AudioPlayer audioPlayerA = AudioPlayer();
-  // PlayerStateA playerStateA = PlayerStateA.stoppedA;
-  // get isPlayingA => playerStateA == PlayerStateA.playingA;
+  AudioPlayer audioPlayerB = AudioPlayer();
 
   // for the BGM
   AudioPlayer audioPlayerBGM = AudioPlayer();
-  // PlayerStateBGM playerStateBGM = PlayerStateBGM.stoppedBGM;
-  // get isPlayingBGM => playerStateBGM == PlayerStateBGM.playingBGM;
 
   PlayerState playerState = PlayerState.stopped;
 
   @override
   void initState() {
     super.initState();
-
-    // Listen to states: playing, paused, stopped
+    audioPlayerBGM.setVolume(0.4); // Listen to states: playing, paused, stopped
     audioPlayerA.onPlayerStateChanged.listen((PlayerState s) {
       print('Current player state: $s');
       if (!mounted) return;
@@ -91,6 +83,7 @@ class _ListenPageState extends State<ListenPage> {
   @override
   void dispose() {
     audioPlayerA.dispose();
+    audioPlayerB.dispose();
     audioPlayerBGM.dispose();
     super.dispose();
   }
@@ -104,7 +97,7 @@ class _ListenPageState extends State<ListenPage> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -125,12 +118,12 @@ class _ListenPageState extends State<ListenPage> {
           child: Column(
             children: <Widget>[
               CircleAvatar(
-                radius: screenWidth / 7.3,
+                radius: 52,
                 backgroundColor: Colors.white,
                 child: Align(
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    radius: screenWidth / 7.9,
+                    radius: 48,
                     backgroundImage: NetworkImage(detailList["coverimg"]),
                   ),
                 ),
@@ -140,8 +133,8 @@ class _ListenPageState extends State<ListenPage> {
               ),
               Text(
                 "พากย์เสียงโดย ${listenList.userName!}",
-                style: TextStyle(
-                    fontSize: 17,
+                style: GoogleFonts.prompt(
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white),
               ),
@@ -164,9 +157,9 @@ class _ListenPageState extends State<ListenPage> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             "บทที่ทำการพากย์",
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.prompt(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -193,8 +186,8 @@ class _ListenPageState extends State<ListenPage> {
                             itemBuilder: (context, index) => ListTile(
                                   title: Text(
                                     conversationList[index],
-                                    style: TextStyle(
-                                        fontSize: 19,
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w500),
                                   ),
                                 )),
@@ -212,6 +205,9 @@ class _ListenPageState extends State<ListenPage> {
                   final currentPosition = Duration(seconds: value.toInt());
                   await audioPlayerA.seek(currentPosition);
                   await audioPlayerBGM.seek(currentPosition);
+                  if (detailList["voiceoverAmount"] == "2") {
+                    await audioPlayerB.seek(currentPosition);
+                  }
                 },
                 activeColor: Colors.orangeAccent,
                 inactiveColor: Colors.white,
@@ -224,11 +220,11 @@ class _ListenPageState extends State<ListenPage> {
                   children: [
                     Text(
                       formatTime(position),
-                      style: TextStyle(color: Colors.white),
+                      style: GoogleFonts.prompt(color: Colors.white),
                     ),
                     Text(
                       formatTime(duration - position),
-                      style: TextStyle(color: Colors.white),
+                      style: GoogleFonts.prompt(color: Colors.white),
                     ),
                   ],
                 ),
@@ -244,21 +240,7 @@ class _ListenPageState extends State<ListenPage> {
                   ),
                   onPressed: () async {
                     if (isPlaying == false) {
-                      final storageRef = await FirebaseStorage.instance.ref();
-                      final soundRefA = await storageRef.child(
-                          listenList.audioFileName!); // <-- your file name
-                      final soundRefBGM = await storageRef.child(
-                          "2022-12-0702:03:40514373omegyzr.aac"); // <-- your file name
-                      final metaDataA = await soundRefA.getDownloadURL();
-                      final metaDataBGM = await soundRefBGM.getDownloadURL();
-                      log('data: ${metaDataA.toString()}');
-                      log('data: ${metaDataBGM.toString()}');
-                      String urlA = metaDataA.toString();
-                      String urlBGM = metaDataBGM.toString();
-                      await audioPlayerA.setSourceUrl(urlA);
-                      await audioPlayerBGM.setSourceUrl(urlBGM);
-                      isPlaying = true;
-                      play(urlA, urlBGM);
+                      StartListening();
                     } else {
                       isPlaying = false;
                       pause();
@@ -270,45 +252,57 @@ class _ListenPageState extends State<ListenPage> {
               SizedBox(
                 height: screenHeight / 30,
               ),
-              // SizedBox(
-              //   width: screenWidth / 1.4,
-              //   height: screenHeight / 20,
-              //   child: TextButton(
-              //     style: TextButton.styleFrom(
-              //         shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(5)),
-              //         backgroundColor: Colors.white,
-              //         foregroundColor: Color(0xFFFF7200),
-              //         textStyle: const TextStyle(
-              //             fontSize: 20, fontWeight: FontWeight.w600)),
-              //     onPressed: () {},
-              //     child: const Text('Continue'),
-              //   ),
-              // ),
             ],
           )),
     );
   }
 
-  Future play(String urlA, String urlBGM) async {
+  Future StartListening() async {
+    final storageRef = await FirebaseStorage.instance.ref();
+    final soundRefA =
+        await storageRef.child(listenList.audioFileName!); // <-- your file name
+    final soundRefBGM =
+        await storageRef.child(detailList["bgmName"]); // <-- your file name
+    final metaDataA = await soundRefA.getDownloadURL();
+    final metaDataBGM = await soundRefBGM.getDownloadURL();
+    log('data: ${metaDataA.toString()}');
+    log('data: ${metaDataBGM.toString()}');
+    String urlA = metaDataA.toString();
+    String urlBGM = metaDataBGM.toString();
+    await audioPlayerA.setSourceUrl(urlA);
+    await audioPlayerBGM.setSourceUrl(urlBGM);
+
+    if (detailList["voiceoverAmount"] == "2") {
+      final soundRefB = await storageRef.child(listenList.audioFileNameBuddy!);
+      final metaDataB = await soundRefB.getDownloadURL();
+      log('data: ${metaDataB.toString()}');
+      String urlB = metaDataB.toString();
+      await audioPlayerB.setSourceUrl(urlB);
+
+      isPlaying = true;
+      play(urlA, urlB, urlBGM);
+    } else {
+      isPlaying = true;
+      playSingleType(urlA, urlBGM);
+    }
+  }
+
+  Future play(String urlA, String urlB, String urlBGM) async {
+    audioPlayerA.resume();
+    audioPlayerB.resume();
+    audioPlayerBGM.resume();
+  }
+
+  Future playSingleType(String urlA, String urlBGM) async {
     audioPlayerA.resume();
     audioPlayerBGM.resume();
-    // setState(() {
-    //   playerStateA = PlayerStateA.playingA;
-    // });
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.playingBGM;
-    // });
   }
 
   Future pause() async {
     await audioPlayerA.pause();
-    // setState(() {
-    //   playerStateA = PlayerStateA.pausedA;
-    // });
     await audioPlayerBGM.pause();
-    // setState(() {
-    //   playerStateBGM = PlayerStateBGM.pausedBGM;
-    // });
+    if (detailList["voiceoverAmount"] == "2") {
+      await audioPlayerB.pause();
+    }
   }
 }

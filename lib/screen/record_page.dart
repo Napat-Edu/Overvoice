@@ -4,6 +4,8 @@ import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -104,7 +106,7 @@ class _RecordState extends State<Record> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -125,12 +127,12 @@ class _RecordState extends State<Record> {
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: screenWidth / 7.3,
+              radius: 52,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: screenWidth / 7.9,
+                  radius: 48,
                   backgroundImage: NetworkImage(characterimgURL),
                 ),
               ),
@@ -140,8 +142,9 @@ class _RecordState extends State<Record> {
             ),
             Text(
               character,
-              style: TextStyle(
-                  fontSize: 17,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.prompt(
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
             ),
@@ -164,9 +167,9 @@ class _RecordState extends State<Record> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           "บทที่ต้องทำการพากย์",
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                          style: GoogleFonts.prompt(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -197,12 +200,7 @@ class _RecordState extends State<Record> {
             ),
             // record button all-function here
 
-            detailList["voiceoverAmount"] == 1
-                ? RecordButtonDuo(conversationList, docID, character,
-                    converIndexSetter: _converIndexSetter)
-                : RecordButton(conversationList, docID, (a) => {setup(a)},
-                    (status) => {checkStatus(status)},
-                    converIndexSetter: _converIndexSetter),
+            checkAudioType(),
 
             SizedBox(
               height: screenHeight / 50,
@@ -214,31 +212,16 @@ class _RecordState extends State<Record> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
+                    textStyle: GoogleFonts.prompt(
+                        fontSize: 19, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
                     return;
                   }
                   if (isPlaying == false) {
-                    // -------------------- Old setup song --------------------
-                    // final storageRef = await FirebaseStorage.instance.ref();
-                    // final time = await RecordButton.TimeCountDown.instance();
-                    // final soundRefA = await storageRef
-                    //     .child(listenList.audioFileName!); // <-- your file name
-                    // final soundRefBGM = await storageRef
-                    //     .child("helloworld2.aac"); // <-- your file name
-                    // final metaDataA = await soundRefA.getDownloadURL();
-                    // final metaDataBGM = await soundRefBGM.getDownloadURL();
-                    // String urlBGM =
-                    //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-                    // log('data: ${metaDataA.toString()}');
-                    // log('data: ${metaDataBGM.toString()}');
-                    // await audioPlayer.setSourceUrl(urlBGM);
-                    // isPlaying = true;
                     play();
                   } else {
                     isPlaying = false;
@@ -263,6 +246,18 @@ class _RecordState extends State<Record> {
     isPlaying = false;
   }
 
+  Widget checkAudioType() {
+    if (detailList["voiceoverAmount"] == "1") {
+      return RecordButton(conversationList, docID, (a) => {setup(a)},
+          (status) => {checkStatus(status)},
+          converIndexSetter: _converIndexSetter);
+    } else {
+      return RecordButtonDuo(conversationList, docID, character,
+          (a) => {setup(a)}, (status) => {checkStatus(status)},
+          converIndexSetter: _converIndexSetter);
+    }
+  }
+
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
@@ -270,7 +265,10 @@ class _RecordState extends State<Record> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      checkTime++;
+      
+      if (checkTime < this.currentConverDuration.length - 1) {
+        checkTime++;
+      }
 
       if (checkTime < this.currentConverDuration.length) {
         timeTotal += int.parse(this.currentConverDuration[checkTime]);
@@ -319,7 +317,7 @@ class _RecordState extends State<Record> {
               title: Text(
                 currentText,
                 style:
-                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -105,7 +106,7 @@ class _RecordButtonState extends State<RecordButton> {
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w600)),
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
@@ -312,7 +313,7 @@ void showAlertDialog4(BuildContext context) => showDialog(
                 onPressed: () {
                   int count = 0;
                   Navigator.popUntil(context, ((route) {
-                    return count++ == 3;
+                    return count++ == 2;
                   }));
                 },
                 child: Text('ตกลง'),

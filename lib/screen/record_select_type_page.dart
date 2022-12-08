@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SelectDuoRecordType extends StatefulWidget {
   Map<String, dynamic> detaillMap;
@@ -28,7 +30,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
       appBar: AppBar(
         title: Text(
           detaillMap["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -54,7 +56,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
             child: Text(
               "เลือกรูปแบบการพากย์ของคุณ",
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
           SizedBox(
@@ -84,15 +86,15 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -100,7 +102,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                                 builder: (context) =>
                                     (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
                       },
-                      child: const Text('พากย์เดี่ยว'),
+                      child: const Text('เริ่มพากย์ใหม่'),
                     ),
                   )
                 ]),
@@ -129,15 +131,15 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -145,7 +147,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                                 builder: (context) =>
                                     (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
                       },
-                      child: const Text('พากย์คู่'),
+                      child: const Text('จับคู่พากย์'),
                     ),
                   )
                 ]),

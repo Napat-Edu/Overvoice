@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'listen_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Listen extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -29,7 +31,7 @@ class _ListenState extends State<Listen> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -77,10 +79,10 @@ class _ListenState extends State<Listen> {
                       Expanded(
                           flex: 3,
                           child: Text(
-                            "แนะนำสำหรับคุณ",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                            "เลือกฟังได้เลย",
+                            style: GoogleFonts.prompt(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
                       SizedBox(
@@ -103,8 +105,8 @@ class _ListenState extends State<Listen> {
                     return snapshot.data!;
                   }
 
-                  return const Center(
-                    child: Text("กำลังโหลด..."),
+                  return Center(
+                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
                   );
                 }),
               ),
@@ -116,49 +118,61 @@ class _ListenState extends State<Listen> {
   }
 
   Future<Widget> getDataUI(String docID) async {
-    listenList = await getHistoryList(docID);
+    listenList = await getHistoryList(docID, detailList);
     return Future.delayed(const Duration(seconds: 0), () {
       return listenList.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
               ),
             )
           : ListView.separated(
+              padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
                     color: Color(0xFFFFAA66),
                   ),
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
                     leading: CircleAvatar(
-                      radius: 28,
+                      radius: 27,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 26,
+                          radius: 25,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
+                              // for 2 character 
+                         /* child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.amberAccent,
+                            ),
+                          ), */ 
                         ),
                       ),
                     ),
                     title: Text(
                       ' ${listenList[index].userName!}',
-                      style: const TextStyle(
+                      style: GoogleFonts.prompt(
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17),
                     ),
+                    // like count under title
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Icon(
-                          Icons.favorite,
-                          size: 18,
-                        ),
-                        Text(' ${listenList[index].likeCount!}'),
+                        Text(
+                          displaySubtitleText(detailList, index),
+                          style: GoogleFonts.prompt(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black38),
+                        )
                       ],
                     ),
                     trailing: TextButton(
@@ -166,7 +180,7 @@ class _ListenState extends State<Listen> {
                           fixedSize: const Size(10, 10),
                           backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16)),
+                          textStyle: GoogleFonts.prompt(fontSize: 15)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -180,7 +194,14 @@ class _ListenState extends State<Listen> {
     });
   }
 
-  Future<List<ListenDetails>> getHistoryList(String docID) async {
+  String displaySubtitleText(Map<String, dynamic> detailList, int index) {
+    if(detailList["voiceoverAmount"] == "2") {
+      return "พากย์คู่กับ ${listenList[index].userNameBuddy}";
+    }
+    return "ผลงานพากย์เดี่ยว";
+  }
+
+  Future<List<ListenDetails>> getHistoryList(String docID, Map<String, dynamic> detailList) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('audioInfo', isEqualTo: docID)
@@ -188,13 +209,20 @@ class _ListenState extends State<Listen> {
         .get();
 
     List<ListenDetails> listenList = [];
+    String buddyName = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+      if(detailList["voiceoverAmount"] == "2") {
+        Map<String, dynamic>? user2Data = await getUserInfo(doc["user_2"]);
+        buddyName = user2Data!["username"];
+      }
       listenList.add(ListenDetails(
         data!["username"],
+        buddyName,
         doc["likeCount"].toString(),
         data["photoURL"],
         doc["sound_1"],
+        doc["sound_2"],
       ));
     });
 

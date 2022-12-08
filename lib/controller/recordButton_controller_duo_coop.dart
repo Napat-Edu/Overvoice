@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -17,14 +18,21 @@ class RecordButtonDuoCoop extends StatefulWidget {
   String character;
   String hisID;
   String soundOver;
-  RecordButtonDuoCoop(
-      this.conversationList, this.hisID, this.character, this.soundOver,
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
+  RecordButtonDuoCoop(this.conversationList, this.hisID, this.character,
+      this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButtonDuoCoop> createState() =>
-      _RecordButtonDuoCoopState(conversationList, hisID, character, soundOver,
-          converIndexSetter: converIndexSetter);
+  State<RecordButtonDuoCoop> createState() => _RecordButtonDuoCoopState(
+      conversationList,
+      hisID,
+      character,
+      soundOver,
+      onCountChanged,
+      onStatusChanged,
+      converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -37,6 +45,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   String hisID;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   late final recorder = SoundRecorder(hisID);
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -46,8 +56,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   final ValueChanged<int> converIndexSetter;
 
-  _RecordButtonDuoCoopState(
-      this.conversationList, this.hisID, this.character, this.soundOver,
+  _RecordButtonDuoCoopState(this.conversationList, this.hisID, this.character,
+      this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -70,6 +80,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         position = duration;
       });
     });
+
+    playPartner();
   }
 
   @override
@@ -88,8 +100,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final isStopped = recorder.isStopped;
     final text;
 
+    if(isRecording) {
+      status = true;
+    }
+
     if (isPaused) {
-      text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
+      text = 'อ่านบทแล้ว พร้อมพากย์';
     } else if (isRecording) {
       text = 'พากย์เลย';
     } else if (isStopped && StageVoice != 0) {
@@ -106,6 +122,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
+    onCountChanged(TimeCountDown); // push time number in () to record_page
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -123,8 +140,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || (isStopped && StageVoice != 0)
+                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600)),
+            onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
                     if (StageVoice >= TimeCountDown.length) {
@@ -133,16 +150,15 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
+                        await play();
                         await recorder._record();
                         await audioPlayer.resume();
                         playPartner();
                       } else {
+                        await play();
                         await recorder._resume();
                         await null;
-                        playPartner();
                       }
-                      print(StageVoice);
-                      print(TimeCountDown.length);
                       countdown(
                           int.parse(TimeCountDown[
                               StageVoice < TimeCountDown.length
@@ -175,6 +191,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       if (n == 0) {
         FlutterBeep.beep(false);
         timer.cancel();
+        onStatusChanged(false);
         if (n >= m) {
           recorder._stop();
         } else {
@@ -188,10 +205,12 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
           converIndexSetter(Record.converIndex);
         }
 
-        setState(() {});
+        setState(() {
+          status = true;
+        });
       }
+      status = false;
     });
-    status = true;
   }
 
   Future play() async {
@@ -219,7 +238,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     // String url =
     // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
     // await audioPlayer.setSourceUrl(url);
-    play();
+    //play();
   }
 }
 
@@ -317,7 +336,6 @@ class SoundRecorder {
         })
         .then((value) => print("History Updated"))
         .catchError((error) => print("Failed to update: $error"));
-    ;
 
     CollectionReference usersInfo =
         FirebaseFirestore.instance.collection('UserInfo');
@@ -361,7 +379,7 @@ void showAlertDialog4(BuildContext context) => showDialog(
                 onPressed: () {
                   int count = 0;
                   Navigator.popUntil(context, ((route) {
-                    return count++ == 3;
+                    return count++ == 5;
                   }));
                 },
                 child: Text('ตกลง'),

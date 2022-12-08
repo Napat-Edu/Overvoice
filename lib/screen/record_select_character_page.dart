@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_buddy_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SelectCharacter extends StatefulWidget {
   Map<String, dynamic> detaillMap;
@@ -33,7 +35,7 @@ class _SelectCharacterState extends State<SelectCharacter> {
       appBar: AppBar(
         title: Text(
           detaillMap["name"],
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -59,7 +61,7 @@ class _SelectCharacterState extends State<SelectCharacter> {
             child: Text(
               "เลือกตัวละครที่คุณต้องการพากย์",
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
           SizedBox(
@@ -75,12 +77,12 @@ class _SelectCharacterState extends State<SelectCharacter> {
                       checkAudioAmount(characterA, detaillMap["characterImageA"]);
                     },
                     child: CircleAvatar(
-                      radius: 54,
+                      radius: 52,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 50,
+                          radius: 48,
                           backgroundImage:
                               NetworkImage(detaillMap["characterImageA"]),
                         ),
@@ -92,15 +94,15 @@ class _SelectCharacterState extends State<SelectCharacter> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         checkAudioAmount(characterA, detaillMap["characterImageA"]);
                       },
@@ -119,12 +121,12 @@ class _SelectCharacterState extends State<SelectCharacter> {
                       checkAudioAmount(characterB, detaillMap["characterImageB"]);
                     },
                     child: CircleAvatar(
-                      radius: 54,
+                      radius: 52,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 50,
+                          radius: 48,
                           backgroundImage:
                               NetworkImage(detaillMap["characterImageB"]),
                         ),
@@ -136,15 +138,15 @@ class _SelectCharacterState extends State<SelectCharacter> {
                   ),
                   SizedBox(
                     width: screenWidth / 3.4,
-                    height: screenHeight / 20.5,
+                    height: screenHeight / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           backgroundColor: Color(0xFFFF7200),
                           foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
                         checkAudioAmount(characterB, detaillMap["characterImageB"]);
                       },

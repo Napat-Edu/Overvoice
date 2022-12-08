@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -15,13 +16,16 @@ class RecordButtonDuo extends StatefulWidget {
   List conversationList;
   String character;
   String docID;
+  late Function(List) onCountChanged; // intial function for push next page
+  late Function(bool) onStatusChanged; // intial function for push next page
   RecordButtonDuo(this.conversationList, this.docID, this.character,
+      this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter, super.key});
 
   @override
-  State<RecordButtonDuo> createState() =>
-      _RecordButtonDuoState(conversationList, docID, character,
-          converIndexSetter: converIndexSetter);
+  State<RecordButtonDuo> createState() => _RecordButtonDuoState(
+      conversationList, docID, character, onCountChanged, onStatusChanged,
+      converIndexSetter: converIndexSetter);
 }
 
 bool voiceStart = false;
@@ -33,6 +37,8 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   bool status = false;
   String docID;
 
+  late final Function(List) onCountChanged;
+  late final Function(bool) onStatusChanged;
   late final recorder = SoundRecorder(docID);
 
   List conversationList;
@@ -41,6 +47,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
   final ValueChanged<int> converIndexSetter;
 
   _RecordButtonDuoState(this.conversationList, this.docID, this.character,
+      this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
   Object? get TimeCountDown => null;
@@ -86,6 +93,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
+    onCountChanged(TimeCountDown); // push time number in () to record_page
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -103,11 +111,11 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w600)),
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice > TimeCountDown.length) {
+                    if (StageVoice >= TimeCountDown.length) {
                       await recorder._stop(character);
                       showAlertDialog4(context);
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
@@ -150,6 +158,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
       if (n == 0) {
         FlutterBeep.beep(false);
         timer.cancel();
+        onStatusChanged(false);
         if (n >= m) {
           recorder._stop(character);
         } else {
@@ -310,7 +319,7 @@ void showAlertDialog4(BuildContext context) => showDialog(
                 onPressed: () {
                   int count = 0;
                   Navigator.popUntil(context, ((route) {
-                    return count++ == 3;
+                    return count++ == 4;
                   }));
                 },
                 child: Text('ตกลง'),
