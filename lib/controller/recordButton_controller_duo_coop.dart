@@ -40,7 +40,7 @@ bool voiceStart = false;
 class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
 
-  int StageVoice = 0;
+  int stageVoice = 0;
   bool status = false;
   String hisID;
   Duration duration = Duration.zero;
@@ -60,7 +60,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
-  Object? get TimeCountDown => null;
+  Object? get timeCountDown => null;
 
   @override
   void initState() {
@@ -108,7 +108,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       text = 'อ่านบทแล้ว พร้อมพากย์';
     } else if (isRecording) {
       text = 'พากย์เลย';
-    } else if (isStopped && StageVoice != 0) {
+    } else if (isStopped && stageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
       text = 'เริ่มพากย์';
@@ -127,6 +127,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     print(characterList + TimeCountDown); // Debug
+    print(status);
     return Container(
         child: Column(
       children: <Widget>[
@@ -141,14 +142,14 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
                     GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
+            onPressed: status || isStopped && stageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice >= TimeCountDown.length) {
+                    if (stageVoice >= TimeCountDown.length) {
                       await recorder._stop();
                       showAlertDialog4(context);
-                    } else if (TimeCountDown[StageVoice].isNotEmpty) {
-                      if (StageVoice == 0) {
+                    } else if (TimeCountDown[stageVoice].isNotEmpty) {
+                      if (stageVoice == 0) {
                         converIndexSetter(Record.converIndex);
                         await play();
                         await recorder._record();
@@ -161,18 +162,18 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                       }
                       countdown(
                           int.parse(TimeCountDown[
-                              StageVoice < TimeCountDown.length
-                                  ? StageVoice++
-                                  : StageVoice]),
+                              stageVoice < TimeCountDown.length
+                                  ? stageVoice++
+                                  : stageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
                     setState(() {});
                   },
             child: Text(
-              StageVoice >= TimeCountDown.length
+              stageVoice >= TimeCountDown.length
                   ? 'เสร็จสิ้น'
-                  : character == characterList[StageVoice]
+                  : character == characterList[stageVoice]
                       ? text
                       : 'บทของคู่คุณ',
             ),
@@ -184,8 +185,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   void countdown(int n, int m) {
     print(n);
+    FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      status = false;
+      status = true;
       print(timer.tick);
       n--;
       if (n == 0) {
@@ -206,10 +208,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         }
 
         setState(() {
-          status = true;
+          status = false;
         });
       }
-      status = false;
     });
   }
 

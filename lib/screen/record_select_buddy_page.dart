@@ -202,7 +202,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
         .where("characterInit", isNotEqualTo: character)
         .where("status", isEqualTo: false)
         .get();
-
+        
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       if (doc["user_1"] != yourID) {
@@ -211,7 +211,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
         listenList.add(ListenDetails(
           data!["username"],
           "คุณ",
-          doc["likeCount"].toString(),
+          "",
           data["photoURL"],
           doc["sound_1"],
           doc["sound_2"],

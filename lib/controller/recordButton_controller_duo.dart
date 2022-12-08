@@ -151,6 +151,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
 
   void countdown(int n, int m) {
     print(n);
+    FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
       print(timer.tick);

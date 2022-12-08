@@ -143,6 +143,7 @@ class _RecordButtonState extends State<RecordButton> {
   }
 
   void countdown(int n, int m) {
+    FlutterBeep.beep(false);
     onStatusChanged(true); // check status of buttons
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
