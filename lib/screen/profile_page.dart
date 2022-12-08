@@ -371,7 +371,7 @@ class _ProfilePage extends State<ProfilePage>
       listenList.add(ListenDetails(
         userData["username"],
         buddyName,
-        doc["likeCount"].toString(),
+        "",
         audioData["img"],
         doc["sound_1"],
         doc["sound_2"],

@@ -245,12 +245,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         }
       });
 
-      topHitMap.remove(mostPopularKey);
+      if(topHitMap.length == 1) {
+        break;
+      } else {
+        topHitMap.remove(mostPopularKey);
+      }
       mostPopularKey = topHitMap.keys.first;
       mostPopularCount = topHitMap.values.first;
       dataCount++;
     }
-
     return list;
   }
 }
