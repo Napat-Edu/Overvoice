@@ -116,7 +116,7 @@ class _RecordState extends State<Record> {
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            popCancelRecord(context);
           },
         ),
       ),
@@ -268,7 +268,7 @@ class _RecordState extends State<Record> {
       print("Status is checked");
       await audioPlayer.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      
+
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -288,8 +288,8 @@ class _RecordState extends State<Record> {
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
       final storageRef = await FirebaseStorage.instance.ref();
-      final soundRefAssist =
-          await storageRef.child(detailList["assistanceVoiceName"]); // <-- your file name
+      final soundRefAssist = await storageRef
+          .child(detailList["assistanceVoiceName"]); // <-- your file name
       final soundRefBGM =
           await storageRef.child(detailList["bgmName"]); // <-- your file name
       final metaDataAssist = await soundRefAssist.getDownloadURL();
@@ -333,3 +333,46 @@ class _RecordState extends State<Record> {
     setState(() {});
   }
 }
+
+//popCancelRecord(context);
+void popCancelRecord(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'ยกเลิกการพากย์เสียง',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        content: Text(
+          'คุณต้องการยกเลิกการพากย์เสียงสำหรับคุณหรือไม่',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 15),
+        ),
+        actions: [
+          OutlinedButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Color(0xFFFF7200),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(' ทำการพากย์ต่อไป '),
+          ),
+          ElevatedButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFF7200),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              int count = 0;
+              Navigator.popUntil(context, ((route) {
+                return count++ == 3;
+              }));
+            },
+            child: Text('ยกเลิกการพากย์เสียง'),
+          ),
+        ],
+      ),
+    );

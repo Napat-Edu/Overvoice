@@ -32,7 +32,7 @@ class _MoreState extends State<More> {
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            popBackToHomepage(context);
           },
         ),
       ),
@@ -45,7 +45,10 @@ class _MoreState extends State<More> {
             }
 
             return Center(
-              child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+              child: Text(
+                "กำลังโหลด...",
+                style: GoogleFonts.prompt(),
+              ),
             );
           }),
         ),
@@ -83,7 +86,8 @@ class _MoreState extends State<More> {
                 child: Text(
                   detailList["name"],
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(fontSize: 21, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.prompt(
+                      fontSize: 21, fontWeight: FontWeight.w600),
                 ),
               ),
               SizedBox(
@@ -218,3 +222,46 @@ class MoreDetail {
 
   MoreDetail(this.name, this.episode, this.character, this.imgURL, this.detail);
 }
+
+//popBackToHomepage(context);
+void popBackToHomepage(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'กลับหน้าหลัก',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        content: Text(
+          'คุณต้องการกลับไปยังหน้าหลักหรือไม่',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 15),
+        ),
+        actions: [
+          OutlinedButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Color(0xFFFF7200),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('ต้องการอยู่ต่อ'),
+          ),
+          ElevatedButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFF7200),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              int count = 0;
+              Navigator.popUntil(context, ((route) {
+                return count++ == 2;
+              }));
+            },
+            child: Text('ต้องการกลับหน้าหลัก'),
+          ),
+        ],
+      ),
+    );

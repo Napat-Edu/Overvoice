@@ -105,14 +105,14 @@ class _RecordButtonState extends State<RecordButton> {
                     borderRadius: BorderRadius.circular(5)),
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
-                textStyle:
-                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w600)),
+                textStyle: GoogleFonts.prompt(
+                    fontSize: 19, fontWeight: FontWeight.w600)),
             onPressed: status || isStopped && StageVoice != 0
                 ? null
                 : () async {
                     if (StageVoice == TimeCountDown.length) {
                       await recorder._stop();
-                      showAlertDialog4(context);
+                      popRecordComplete(context);
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
@@ -278,8 +278,8 @@ class SoundRecorder {
   }
 }
 
-//showAlertDialog4(context);
-void showAlertDialog4(BuildContext context) => showDialog(
+//popRecordComplete(context);
+void popRecordComplete(BuildContext context) => showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => Dialog(
@@ -313,7 +313,7 @@ void showAlertDialog4(BuildContext context) => showDialog(
                 onPressed: () {
                   int count = 0;
                   Navigator.popUntil(context, ((route) {
-                    return count++ == 2;
+                    return count++ == 3;
                   }));
                 },
                 child: Text('ตกลง'),
