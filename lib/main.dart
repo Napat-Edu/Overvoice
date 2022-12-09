@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -50,7 +49,10 @@ class MyApp extends StatelessWidget {
                   height: MediaQuery.of(context).size.height,
                   color: Colors.white,
                   child: Center(
-                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+                    child: Text(
+                      "กำลังโหลด...",
+                      style: GoogleFonts.prompt(),
+                    ),
                   ),
                 ),
               );
