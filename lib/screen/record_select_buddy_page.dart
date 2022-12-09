@@ -82,7 +82,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                         color: Colors.white,
                       )),
                       Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Text(
                             "คุณอยากจับคู่กับใครล่ะ",
                             style: GoogleFonts.prompt(
@@ -91,7 +91,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                                 color: Colors.white),
                           )),
                       SizedBox(
-                        width: 180,
+                        width: screenWidth / 3,
                       )
                     ]),
                   ),
@@ -150,11 +150,12 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           radius: 26,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
+                              child: Align(alignment: Alignment.topLeft,child: CircleAvatar(radius: 13,backgroundColor: Colors.black,),),
                         ),
                       ),
                     ),
                     title: Text(
-                      ' ${listenList[index].userName!}',
+                      '${listenList[index].userName!}',
                       style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,

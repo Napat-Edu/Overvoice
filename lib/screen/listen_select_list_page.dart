@@ -5,7 +5,6 @@ import 'package:overvoice_project/model/listen_detail.dart';
 import 'listen_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class Listen extends StatefulWidget {
   Map<String, dynamic> detailList;
   String docID;
@@ -77,7 +76,7 @@ class _ListenState extends State<Listen> {
                         color: Colors.white,
                       )),
                       Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Text(
                             "เลือกฟังได้เลย",
                             style: GoogleFonts.prompt(
@@ -86,7 +85,7 @@ class _ListenState extends State<Listen> {
                                 color: Colors.white),
                           )),
                       SizedBox(
-                        width: 180,
+                        width: screenWidth / 3,
                       )
                     ]),
                   ),
@@ -106,7 +105,10 @@ class _ListenState extends State<Listen> {
                   }
 
                   return Center(
-                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+                    child: Text(
+                      "กำลังโหลด...",
+                      style: GoogleFonts.prompt(),
+                    ),
                   );
                 }),
               ),
@@ -125,7 +127,8 @@ class _ListenState extends State<Listen> {
               child: Text(
                 "ยังไม่เคยมีใครพากย์เลย\nคุณคงต้องเป็นคนแรกแล้วล่ะ",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
+                style: GoogleFonts.prompt(
+                    fontSize: 17, fontWeight: FontWeight.w600),
               ),
             )
           : ListView.separated(
@@ -144,19 +147,26 @@ class _ListenState extends State<Listen> {
                           radius: 25,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
-                              // for 2 character 
-                         /* child: Align(
+                          // for 2 character
+                          child: Align(
                             alignment: Alignment.bottomRight,
                             child: CircleAvatar(
                               radius: 12,
-                              backgroundColor: Colors.amberAccent,
+                              backgroundColor: Color(0xFFFF9900),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: CircleAvatar(
+                                  radius: 11,
+                                  backgroundImage: NetworkImage("https://i.pinimg.com/originals/58/97/76/589776616a3c9ea92cdfba22e0df3c2b.jpg"),
+                                ),
+                              ),
                             ),
-                          ), */ 
+                          ),
                         ),
                       ),
                     ),
                     title: Text(
-                      ' ${listenList[index].userName!}',
+                      '${listenList[index].userName!}',
                       style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -195,13 +205,14 @@ class _ListenState extends State<Listen> {
   }
 
   String displaySubtitleText(Map<String, dynamic> detailList, int index) {
-    if(detailList["voiceoverAmount"] == "2") {
+    if (detailList["voiceoverAmount"] == "2") {
       return "พากย์คู่กับ ${listenList[index].userNameBuddy}";
     }
     return "ผลงานพากย์เดี่ยว";
   }
 
-  Future<List<ListenDetails>> getHistoryList(String docID, Map<String, dynamic> detailList) async {
+  Future<List<ListenDetails>> getHistoryList(
+      String docID, Map<String, dynamic> detailList) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('audioInfo', isEqualTo: docID)
@@ -212,7 +223,7 @@ class _ListenState extends State<Listen> {
     String buddyName = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
-      if(detailList["voiceoverAmount"] == "2") {
+      if (detailList["voiceoverAmount"] == "2") {
         Map<String, dynamic>? user2Data = await getUserInfo(doc["user_2"]);
         buddyName = user2Data!["username"];
       }
