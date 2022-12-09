@@ -157,13 +157,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           radius: 26,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
-                          child: const Align(
-                            alignment: Alignment.topLeft,
-                            child: CircleAvatar(
-                              radius: 13,
-                              backgroundColor: Colors.black,
-                            ),
-                          ),
                         ),
                       ),
                     ),
@@ -205,13 +198,15 @@ class _SelectBuddyState extends State<SelectBuddy> {
   Future<List<ListenDetails>> getBuddyList(
       String docID, String character) async {
     String yourID = FirebaseAuth.instance.currentUser!.email!;
-    QuerySnapshot querySnapshot = await databaseQuery.getHistoryBuddyList(docID, character);
+    QuerySnapshot querySnapshot =
+        await databaseQuery.getHistoryBuddyList(docID, character);
 
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       if (doc["user_1"] != yourID) {
         hisID.add(doc.id);
-        Map<String, dynamic>? data = await databaseQuery.getUserInfoDocumentbyID(doc["user_1"]);
+        Map<String, dynamic>? data =
+            await databaseQuery.getUserInfoDocumentbyID(doc["user_1"]);
         listenList.add(ListenDetails(
           data["username"],
           "คุณ",
