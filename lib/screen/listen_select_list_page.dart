@@ -148,20 +148,8 @@ class _ListenState extends State<Listen> {
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
                           // for 2 character
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Color(0xFFFF9900),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: CircleAvatar(
-                                  radius: 11,
-                                  backgroundImage: NetworkImage("https://i.pinimg.com/originals/58/97/76/589776616a3c9ea92cdfba22e0df3c2b.jpg"),
-                                ),
-                              ),
-                            ),
-                          ),
+                          child:
+                              getDuoProfileImage(detailList, listenList[index]),
                         ),
                       ),
                     ),
@@ -204,6 +192,28 @@ class _ListenState extends State<Listen> {
     });
   }
 
+  Widget? getDuoProfileImage(
+      Map<String, dynamic> detailList, ListenDetails listenList) {
+    if (detailList["voiceoverAmount"] == "2") {
+      return Align(
+        alignment: Alignment.bottomRight,
+        child: CircleAvatar(
+          radius: 12,
+          backgroundColor: const Color(0xFFFF9900),
+          child: Align(
+            alignment: Alignment.center,
+            child: CircleAvatar(
+              radius: 11,
+              backgroundImage: NetworkImage(listenList.imgURLBuddy!),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return null;
+    }
+  }
+
   String displaySubtitleText(Map<String, dynamic> detailList, int index) {
     if (detailList["voiceoverAmount"] == "2") {
       return "พากย์คู่กับ ${listenList[index].userNameBuddy}";
@@ -221,16 +231,18 @@ class _ListenState extends State<Listen> {
 
     List<ListenDetails> listenList = [];
     String buddyName = "";
+    String buddyImage = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
       Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
       if (detailList["voiceoverAmount"] == "2") {
         Map<String, dynamic>? user2Data = await getUserInfo(doc["user_2"]);
         buddyName = user2Data!["username"];
+        buddyImage = user2Data["photoURL"];
       }
       listenList.add(ListenDetails(
         data!["username"],
         buddyName,
-        "",
+        buddyImage,
         data["photoURL"],
         doc["sound_1"],
         doc["sound_2"],

@@ -26,6 +26,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
       // Header
       appBar: AppBar(
