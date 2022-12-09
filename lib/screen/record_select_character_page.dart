@@ -3,13 +3,13 @@ import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_buddy_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class SelectCharacter extends StatefulWidget {
   Map<String, dynamic> detaillMap;
   String docID;
   bool isPairBuddyMode;
 
-  SelectCharacter(this.detaillMap, this.docID, this.isPairBuddyMode, {super.key});
+  SelectCharacter(this.detaillMap, this.docID, this.isPairBuddyMode,
+      {super.key});
 
   @override
   State<SelectCharacter> createState() =>
@@ -22,6 +22,7 @@ class _SelectCharacterState extends State<SelectCharacter> {
   bool isPairBuddyMode;
   _SelectCharacterState(this.detaillMap, this.docID, this.isPairBuddyMode);
 
+  // seperate character name
   late final splitChar = detaillMap["character"].split(",");
   late final characterA = splitChar[0];
   late final characterB = splitChar[1];
@@ -31,6 +32,7 @@ class _SelectCharacterState extends State<SelectCharacter> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -38,9 +40,9 @@ class _SelectCharacterState extends State<SelectCharacter> {
           style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFFFF7200),
+        backgroundColor: const Color(0xFFFF7200),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
@@ -49,7 +51,7 @@ class _SelectCharacterState extends State<SelectCharacter> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 40, left: 40, right: 40),
+        padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
         height: screenHeight / 1.6,
         width: double.infinity,
         child: Container(
@@ -61,7 +63,8 @@ class _SelectCharacterState extends State<SelectCharacter> {
             child: Text(
               "เลือกตัวละครที่คุณต้องการพากย์",
               textAlign: TextAlign.center,
-              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
+              style:
+                  GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
           SizedBox(
@@ -74,7 +77,8 @@ class _SelectCharacterState extends State<SelectCharacter> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      checkAudioAmount(characterA, detaillMap["characterImageA"]);
+                      checkAudioAmount(
+                          characterA, detaillMap["characterImageA"]);
                     },
                     child: CircleAvatar(
                       radius: 52,
@@ -104,7 +108,8 @@ class _SelectCharacterState extends State<SelectCharacter> {
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        checkAudioAmount(characterA, detaillMap["characterImageA"]);
+                        checkAudioAmount(
+                            characterA, detaillMap["characterImageA"]);
                       },
                       child: Text(characterA),
                     ),
@@ -118,7 +123,8 @@ class _SelectCharacterState extends State<SelectCharacter> {
                 child: Column(children: [
                   GestureDetector(
                     onTap: () {
-                      checkAudioAmount(characterB, detaillMap["characterImageB"]);
+                      checkAudioAmount(
+                          characterB, detaillMap["characterImageB"]);
                     },
                     child: CircleAvatar(
                       radius: 52,
@@ -148,7 +154,8 @@ class _SelectCharacterState extends State<SelectCharacter> {
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        checkAudioAmount(characterB, detaillMap["characterImageB"]);
+                        checkAudioAmount(
+                            characterB, detaillMap["characterImageB"]);
                       },
                       child: Text(characterB),
                     ),
@@ -162,27 +169,31 @@ class _SelectCharacterState extends State<SelectCharacter> {
     );
   }
 
+  // use for check this audio to see that is 1 or 2 characer type
   checkAudioAmount(String character, String characterImageURL) {
-    if(detaillMap["voiceoverAmount"] == "1" || isPairBuddyMode == false) {
+    if (detaillMap["voiceoverAmount"] == "1" || isPairBuddyMode == false) {
+      // 1 character
       toRecordPage(character, characterImageURL);
     } else {
+      // 2 character
       toSelectBuddyPage(character);
     }
   }
 
+  // go to record page
   toRecordPage(String character, String characterImageURL) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Record(
-                detaillMap, character, characterImageURL, docID)));
+            builder: (context) =>
+                Record(detaillMap, character, characterImageURL, docID)));
   }
 
+  // go to select buddy page
   toSelectBuddyPage(String character) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SelectBuddy(
-                detaillMap, docID, character)));
+            builder: (context) => SelectBuddy(detaillMap, docID, character)));
   }
 }

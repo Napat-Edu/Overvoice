@@ -3,25 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_type_page.dart';
+import '../controller/database_query_controller.dart';
 import 'listen_select_list_page.dart';
 
-class More extends StatefulWidget {
+class MoreInfo extends StatefulWidget {
   String docID;
-  More(this.docID, {super.key});
+  MoreInfo(this.docID, {super.key});
 
   @override
-  State<More> createState() => _MoreState(docID);
+  State<MoreInfo> createState() => _MoreInfoState(docID);
 }
 
-class _MoreState extends State<More> {
+class _MoreInfoState extends State<MoreInfo> {
   String docID;
-  _MoreState(this.docID);
+  _MoreInfoState(this.docID);
+
+  DatabaseQuery databaseQuery = DatabaseQuery();
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -38,6 +42,7 @@ class _MoreState extends State<More> {
       ),
       body: Container(
         child: FutureBuilder<Widget>(
+          // generate UI and waiting for data rom database
           future: getData(),
           builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
             if (snapshot.hasData) {
@@ -45,7 +50,10 @@ class _MoreState extends State<More> {
             }
 
             return Center(
-              child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+              child: Text(
+                "กำลังโหลด...",
+                style: GoogleFonts.prompt(),
+              ),
             );
           }),
         ),
@@ -53,12 +61,16 @@ class _MoreState extends State<More> {
     );
   }
 
+  // use for read data from database and waiting for data
   Future<Widget> getData() async {
-    Map<String, dynamic>? detailList = await queryData();
+    // read data and collect in list
+    Map<String, dynamic>? detailList =
+        await databaseQuery.getAudioDocumentbyID(docID);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // return UI with data in list
     return Future.delayed(const Duration(seconds: 0), () {
       return Column(
         children: <Widget>[
@@ -69,7 +81,7 @@ class _MoreState extends State<More> {
             child: Container(
               width: double.infinity,
               height: screenHeight / 3.56,
-              child: Image.network(detailList!["coverimg"],
+              child: Image.network(detailList["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
                   colorBlendMode: BlendMode.darken),
@@ -78,143 +90,138 @@ class _MoreState extends State<More> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 40, right: 40),
             height: screenHeight / 1.6,
-            child: Column(children: <Widget>[
-              Container(
-                child: Text(
-                  detailList["name"],
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(fontSize: 21, fontWeight: FontWeight.w600),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 100,
-              ),
-              Container(
-                child: Text(
-                  detailList['episode'],
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(
-                      fontSize: 17, fontWeight: FontWeight.w500),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 99,
-              ),
-              Container(
-                child: Text(
-                  "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(
-                      fontSize: 15, fontWeight: FontWeight.w500),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 50,
-              ),
-              Container(
-                height: screenHeight / 4.5,
-                child: Text(
-                  "${detailList['detail']}",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(
-                      fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 100,
-              ),
-              Container(
-                child: Text(
-                  "${detailList['duration']} m",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.prompt(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black45),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 7,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: const Color(0xFFFF7200),
-                          foregroundColor: Colors.white,
-                          textStyle: GoogleFonts.prompt(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Listen(detailList, docID)));
-                      },
-                      child: const Text('ไปฟังเสียง'),
-                    ),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    // audio name
+                    detailList["name"],
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.prompt(
+                        fontSize: 21, fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(
-                    width: screenWidth / 41,
+                ),
+                SizedBox(
+                  height: screenHeight / 100,
+                ),
+                Container(
+                  child: Text(
+                    // caption of audio episode
+                    detailList['episode'],
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.prompt(
+                        fontSize: 17, fontWeight: FontWeight.w500),
                   ),
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: const Color(0xFFFF7200),
-                          foregroundColor: Colors.white,
-                          textStyle: GoogleFonts.prompt(
-                              fontSize: 17, fontWeight: FontWeight.w600)),
-                      onPressed: () {
-                        if (detailList['voiceoverAmount'] == '1') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Record(
-                                      detailList,
-                                      detailList["character"],
-                                      detailList["characterImage"],
-                                      docID)));
-                        } else {
+                ),
+                SizedBox(
+                  height: screenHeight / 99,
+                ),
+                Container(
+                  // character of audio
+                  child: Text(
+                    "${detailList['voiceoverAmount']} ตัวละคร : ${detailList['character']}",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.prompt(
+                        fontSize: 15, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight / 50,
+                ),
+                Container(
+                  height: screenHeight / 4.5,
+                  // description of audio
+                  child: Text(
+                    "${detailList['detail']}",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.prompt(
+                        fontSize: 14, fontWeight: FontWeight.w400),
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight / 100,
+                ),
+                Container(
+                  // duration time of audio
+                  child: Text(
+                    "${detailList['duration']} m",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.prompt(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black45),
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight / 7,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: const Color(0xFFFF7200),
+                            foregroundColor: Colors.white,
+                            textStyle: GoogleFonts.prompt(
+                                fontSize: 17, fontWeight: FontWeight.w600)),
+                        onPressed: () {
+                          // go to select people list to listen dubbing voice
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SelectDuoRecordType(detailList, docID)));
-                        }
-                      },
-                      child: const Text('ไปพากย์เสียง'),
+                                      ListenSelectList(detailList, docID)));
+                        },
+                        child: const Text('ไปฟังเสียง'),
+                      ),
                     ),
-                  )
-                ],
-              )
-            ]),
+                    SizedBox(
+                      width: screenWidth / 41,
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: const Color(0xFFFF7200),
+                            foregroundColor: Colors.white,
+                            textStyle: GoogleFonts.prompt(
+                                fontSize: 17, fontWeight: FontWeight.w600)),
+                        onPressed: () {
+                          toDubbingPage(detailList);
+                        },
+                        child: const Text('ไปพากย์เสียง'),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           )
         ],
       );
     });
   }
 
-  Future<Map<String, dynamic>?> queryData() async {
-    var dataDoc = await FirebaseFirestore.instance
-        .collection('AudioInfo')
-        .doc(docID)
-        .get();
-    Map<String, dynamic>? fieldMap = dataDoc.data();
-    return fieldMap;
+  // use for going to dubbing page
+  toDubbingPage(Map<String, dynamic>? detailList) {
+    // for 1 character audio type
+    if (detailList!['voiceoverAmount'] == '1') {
+      // go to dubbing page
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Record(detailList, detailList["character"],
+                  detailList["characterImage"], docID)));
+    } else {
+      // for 2 character audio type
+      // go to select type of dubbing page
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SelectDuoRecordType(detailList, docID)));
+    }
   }
-}
-
-class MoreDetail {
-  String? name;
-  String? episode;
-  String? character;
-  String? imgURL;
-  String? detail;
-
-  MoreDetail(this.name, this.episode, this.character, this.imgURL, this.detail);
 }

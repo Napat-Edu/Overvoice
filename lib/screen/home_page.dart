@@ -103,7 +103,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // using for generate content in tab bar
   Widget tabBarData(int tabBarIndex) {
     return FutureBuilder<Widget>(
-      future: getData(tabBarIndex),
+      future: getDataUI(tabBarIndex),
       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!;
@@ -120,7 +120,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   // using for get data from database
-  Future<Widget> getData(int index) async {
+  Future<Widget> getDataUI(int index) async {
     List<TitleDetails> mainTitleList = [];
 
     if (index == 1) {
@@ -175,7 +175,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => More(mainTitleList[index].docID!),
+                  builder: (context) => MoreInfo(mainTitleList[index].docID!),
                   fullscreenDialog: true,
                 ));
           },
@@ -185,7 +185,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => More(mainTitleList[index].docID!),
+                builder: (context) => MoreInfo(mainTitleList[index].docID!),
                 fullscreenDialog: true,
               ));
         },

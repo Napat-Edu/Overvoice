@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
     }
 
     // return page that user does not connected the internet
-    return const NoWifi();
+    return const NoInternet();
   }
 
   // use for check internet connection of user
