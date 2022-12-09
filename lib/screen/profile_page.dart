@@ -50,7 +50,7 @@ class _ProfilePage extends State<ProfilePage>
         ],
       ),
       body: FutureBuilder<Widget>(
-        future: getData(context),
+        future: getData(context, screenHeight, screenWidth),
         builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!;
@@ -59,14 +59,14 @@ class _ProfilePage extends State<ProfilePage>
           return Column(
             children: [
               SizedBox(
-                height: 110,
+                height: screenHeight / 8,
               ),
-              getUserSection(context),
+              getUserSection(context, screenHeight, screenWidth),
               SizedBox(
-                height: 30,
+                height: screenHeight / 29,
               ),
               SizedBox(
-                height: 30,
+                height: screenHeight / 29,
               ),
               Text("กำลังโหลด...", style: GoogleFonts.prompt()),
             ],
@@ -76,7 +76,8 @@ class _ProfilePage extends State<ProfilePage>
     );
   }
 
-  Future<Widget> getData(BuildContext context) async {
+  Future<Widget> getData(
+      BuildContext context, double screenHeight, double screenWidth) async {
     List<ListenDetails> listenListSoloType = [];
     List<ListenDetails> listenListDuoType = [];
     listenListSoloType = await getHistoryData(1);
@@ -86,18 +87,15 @@ class _ProfilePage extends State<ProfilePage>
     return Column(
       children: [
         SizedBox(
-          height: 110,
+          height: screenHeight / 8,
         ),
-        getUserSection(context),
-        SizedBox(
-          height: 25,
-        ),
+        getUserSection(context, screenHeight, screenWidth),
+        SizedBox(height: screenHeight / 29),
         recLike(context, userData),
-        SizedBox(
-          height: 30,
-        ),
+        SizedBox(height: screenHeight / 29),
         buildMiddler(),
-        buildBelow(listenListSoloType, listenListDuoType),
+        buildBelow(
+            listenListSoloType, listenListDuoType, screenHeight, screenWidth),
       ],
     );
   }
@@ -172,15 +170,15 @@ class _ProfilePage extends State<ProfilePage>
         child: Column(
           children: <Widget>[
             Container(
-                height: 45,
+                height: 43,
                 color: Color(0xFFFF7200),
                 child: TabBar(
                     controller: _tabController,
-                    indicatorColor: Colors.white,
                     labelStyle: GoogleFonts.prompt(
                         fontSize: 17, fontWeight: FontWeight.w600),
                     unselectedLabelStyle: GoogleFonts.prompt(
                         fontSize: 15, fontWeight: FontWeight.w500),
+                        indicator: BoxDecoration(color: Color(0xFFFF4700)),
                     tabs: [
                       Tab(
                         text: "ประวัติพากย์เดี่ยว",
@@ -193,34 +191,38 @@ class _ProfilePage extends State<ProfilePage>
         ),
       );
 
-  Widget buildBelow(List<ListenDetails> listenListSoloType,
-          List<ListenDetails> listenListDuoType) =>
+  Widget buildBelow(
+          List<ListenDetails> listenListSoloType,
+          List<ListenDetails> listenListDuoType,
+          double screenHeight,
+          double screenWidth) =>
       Expanded(
         child: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            displayAudioList(listenListSoloType, 1),
-            displayAudioList(listenListDuoType, 2),
+            displayAudioList(listenListSoloType, 1, screenHeight, screenWidth),
+            displayAudioList(listenListDuoType, 2, screenHeight, screenWidth),
           ],
         ),
       );
 
-  displayAudioList(List<ListenDetails> listenList, int audioType) {
+  displayAudioList(List<ListenDetails> listenList, int audioType,
+      double screenHeight, double screenWidth) {
     return Center(
       //child: Text("ประวัติพากย์"),
       child: listenList.isEmpty
           ? Column(
               children: [
                 SizedBox(
-                  height: 100,
+                  height: screenHeight / 12,
                 ),
                 Image.asset("assets/image/Recordvoice.png"),
-                SizedBox(height: 12),
+                SizedBox(height: screenHeight / 74),
                 Text(
-                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง',
+                  'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง?',
                   style: GoogleFonts.prompt(fontSize: 15),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: screenHeight / 74),
                 ElevatedButton(
                   style: TextButton.styleFrom(
                     backgroundColor: Color(0xFFFF7200),
@@ -240,8 +242,8 @@ class _ProfilePage extends State<ProfilePage>
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
                 leading: SizedBox(
-                    width: 55,
-                    height: 55,
+                    width: 53,
+                    height: 53,
                     child: Container(
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
@@ -255,8 +257,8 @@ class _ProfilePage extends State<ProfilePage>
                   setTextByAudioType(index, audioType),
                   style: GoogleFonts.prompt(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17),
                 ),
                 // like count under content
                 subtitle: Row(
@@ -393,7 +395,8 @@ class _ProfilePage extends State<ProfilePage>
     return docSnapshot.data();
   }
 
-  Widget getUserSection(BuildContext context) {
+  Widget getUserSection(
+      BuildContext context, double screenHeight, double screenWidth) {
     if (FirebaseAuth.instance.currentUser != null) {
       final user = FirebaseAuth.instance.currentUser;
       return Center(
@@ -416,20 +419,20 @@ class _ProfilePage extends State<ProfilePage>
               ),
             ),
             SizedBox(
-              height: 10,
+              height: screenHeight / 89,
             ),
             Text(
               user.displayName ?? "",
               style:
-                  GoogleFonts.prompt(fontSize: 17, fontWeight: FontWeight.w600),
+                  GoogleFonts.prompt(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             SizedBox(
-              height: 5,
+              height: screenHeight / 175,
             ),
             Text(
               user.email ?? "",
               style:
-                  GoogleFonts.prompt(fontSize: 14, fontWeight: FontWeight.w500),
+                  GoogleFonts.prompt(fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ],
         ),

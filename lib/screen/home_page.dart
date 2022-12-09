@@ -60,15 +60,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ),
         Container(
-            height: 45,
+            height: 43,
             color: Color(0xFFFF7200),
             child: TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.white,
                 labelStyle: GoogleFonts.prompt(
                     fontSize: 17, fontWeight: FontWeight.w600),
                 unselectedLabelStyle: GoogleFonts.prompt(
                     fontSize: 15, fontWeight: FontWeight.w500),
+                    indicator: BoxDecoration(color: Color(0xFFFF4700)),
                 tabs: [
                   Tab(
                     text: "แนะนำ",
