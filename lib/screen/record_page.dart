@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class Record extends StatefulWidget {
   Map<String, dynamic> detailList;
   String character;
@@ -46,43 +45,47 @@ class _RecordState extends State<Record> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayerAssist = AudioPlayer();
+  AudioPlayer audioPlayerBGM = AudioPlayer();
+
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+    audioPlayerAssist.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
       if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
-    audioPlayer.onDurationChanged.listen((Duration d) {
+    audioPlayerAssist.onDurationChanged.listen((Duration d) {
       //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
-    audioPlayer.onPositionChanged.listen((Duration p) {
+    audioPlayerAssist.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
-        audioPlayer.seek(Duration(
+        audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
-    audioPlayer.onPlayerComplete.listen((event) {
+    // Listen to audio when it completed
+    audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
       setState(() {
@@ -94,7 +97,8 @@ class _RecordState extends State<Record> {
   @override
   void dispose() {
     Record.converIndex = 0;
-    audioPlayer.dispose();
+    audioPlayerAssist.dispose();
+    audioPlayerBGM.dispose();
     super.dispose();
   }
 
@@ -106,7 +110,7 @@ class _RecordState extends State<Record> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -127,12 +131,12 @@ class _RecordState extends State<Record> {
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: screenWidth / 7.3,
+              radius: 52,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: screenWidth / 7.9,
+                  radius: 48,
                   backgroundImage: NetworkImage(characterimgURL),
                 ),
               ),
@@ -142,8 +146,9 @@ class _RecordState extends State<Record> {
             ),
             Text(
               character,
+              textAlign: TextAlign.center,
               style: GoogleFonts.prompt(
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
             ),
@@ -167,8 +172,8 @@ class _RecordState extends State<Record> {
                         child: Text(
                           "บทที่ต้องทำการพากย์",
                           style: GoogleFonts.prompt(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -189,7 +194,7 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
-                      child: displayConversation(),
+                      child: displayConversation(detailList),
                       //ConversationController(conversationList),
                     ))
               ],
@@ -211,10 +216,10 @@ class _RecordState extends State<Record> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
                     textStyle: GoogleFonts.prompt(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
+                        fontSize: 19, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
@@ -236,12 +241,16 @@ class _RecordState extends State<Record> {
     );
   }
 
+  // play & resume audio
   Future play() async {
-    audioPlayer.resume();
+    audioPlayerAssist.resume();
+    audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
-    await audioPlayer.pause();
+    await audioPlayerAssist.pause();
+    await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
@@ -257,14 +266,19 @@ class _RecordState extends State<Record> {
     }
   }
 
+    // use for check status of button
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
     } else {
       print("Status is checked");
-      await audioPlayer.seek(Duration(seconds: timeTotal));
+      await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      checkTime++;
+
+      //condition for avoid out of bound case
+      if (checkTime < this.currentConverDuration.length - 1) {
+        checkTime++;
+      }
 
       if (checkTime < this.currentConverDuration.length) {
         timeTotal += int.parse(this.currentConverDuration[checkTime]);
@@ -276,44 +290,66 @@ class _RecordState extends State<Record> {
     }
   }
 
+  // set up audio before user start
   Future setup(List times) async {
     this.currentConverDuration = times;
+
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
+
       final storageRef = await FirebaseStorage.instance.ref();
-      // final time = await RecordButton.TimeCountDown.instance();
-      // final soundRefA = await storageRef
-      //     .child(listenList.audioFileName!); // <-- your file name
-      // final soundRefBGM =
-      //     await storageRef.child("helloworld2.aac"); // <-- your file name
-      // final metaDataA = await soundRefA.getDownloadURL();
-      // final metaDataBGM = await soundRefBGM.getDownloadURL();
-      String urlBGM =
-          "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-      // log('data: ${metaDataA.toString()}');
-      // log('data: ${metaDataBGM.toString()}');
-      await audioPlayer.setSourceUrl(urlBGM);
-      print("Already Set!");
+      String urlAssist =
+          await getAudioURL(storageRef, detailList["assistanceVoiceName"]);
+      String urlBGM = await getAudioURL(storageRef, detailList["bgmName"]);
+
+      await audioPlayerAssist.setSourceUrl(urlAssist);
+      await audioPlayerBGM.setSourceUrl(urlBGM);
+      print("Everything Set!");
     }
   }
 
-  Widget displayConversation() {
+  // get url of audio by name of it
+  getAudioURL(final storageRef, String audioName) async {
+    final soundRef = await storageRef.child(audioName);
+    final metaData = await soundRef.getDownloadURL();
+    String url = metaData.toString();
+    log('data: ${metaData.toString()}');
+    return url;
+  }
+
+  // use for generate display conversation
+  Widget displayConversation(Map<String, dynamic> detailList) {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
+      // replace a duration text for more information
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail;
+        if (detailList["voiceoverAmount"] == "1") {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\)'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที)';
+          });
+        } else {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที:';
+          });
+        }
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
+    // return a conversation text
     return ListView.builder(
         itemCount: 1,
         itemBuilder: (context, index) => ListTile(
               title: Text(
                 currentText,
-                style:
-                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w500),
+                style: GoogleFonts.prompt(
+                    fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ));
   }
@@ -321,7 +357,7 @@ class _RecordState extends State<Record> {
   // use for change conversation text
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

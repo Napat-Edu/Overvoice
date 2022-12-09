@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -37,7 +38,7 @@ class RecordButtonDuoCoop extends StatefulWidget {
 class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
 
-  int StageVoice = 0;
+  int stageVoice = 0;
   bool status = false;
   String hisID;
   Duration duration = Duration.zero;
@@ -57,7 +58,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
-  Object? get TimeCountDown => null;
+  Object? get timeCountDown => null;
 
   @override
   void initState() {
@@ -77,6 +78,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         position = duration;
       });
     });
+
+    playPartner();
   }
 
   @override
@@ -103,7 +106,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       text = 'อ่านบทแล้ว พร้อมพากย์';
     } else if (isRecording) {
       text = 'พากย์เลย';
-    } else if (isStopped && StageVoice != 0) {
+    } else if (isStopped && stageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
       text = 'เริ่มพากย์';
@@ -122,6 +125,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     print(characterList + TimeCountDown); // Debug
+    print(status);
     return Container(
         child: Column(
       children: <Widget>[
@@ -135,37 +139,39 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
                 textStyle:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
+                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600)),
+            onPressed: status || isStopped && stageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice >= TimeCountDown.length) {
+                    if (stageVoice >= TimeCountDown.length) {
                       await recorder._stop();
-                    } else if (TimeCountDown[StageVoice].isNotEmpty) {
-                      if (StageVoice == 0) {
+                      showAlertDialog4(context);
+                    } else if (TimeCountDown[stageVoice].isNotEmpty) {
+                      if (stageVoice == 0) {
                         converIndexSetter(Record.converIndex);
+                        await play();
                         await recorder._record();
                         await audioPlayer.resume();
                         playPartner();
                       } else {
+                        await play();
                         await recorder._resume();
                         await null;
-                        playPartner();
                       }
                       countdown(
                           int.parse(TimeCountDown[
-                              StageVoice < TimeCountDown.length
-                                  ? StageVoice++
-                                  : StageVoice]),
+                              stageVoice < TimeCountDown.length
+                                  ? stageVoice++
+                                  : stageVoice]),
                           TimeCountDown.length);
                       //print(TimeCountDown[StageVoice++]);
                     }
                     setState(() {});
                   },
             child: Text(
-              StageVoice >= TimeCountDown.length
+              stageVoice >= TimeCountDown.length
                   ? 'เสร็จสิ้น'
-                  : character == characterList[StageVoice]
+                  : character == characterList[stageVoice]
                       ? text
                       : 'บทของคู่คุณ',
             ),
@@ -177,8 +183,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
 
   void countdown(int n, int m) {
     print(n);
+    FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      status = false;
+      status = true;
       print(timer.tick);
       n--;
       if (n == 0) {
@@ -195,10 +202,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         }
 
         setState(() {
-          status = true;
+          status = false;
         });
       }
-      status = false;
     });
   }
 
@@ -227,7 +233,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     // String url =
     // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
     // await audioPlayer.setSourceUrl(url);
-    play();
+    //play();
   }
 }
 
@@ -323,7 +329,6 @@ class SoundRecorder {
         })
         .then((value) => print("History Updated"))
         .catchError((error) => print("Failed to update: $error"));
-    ;
 
     CollectionReference usersInfo =
         FirebaseFirestore.instance.collection('UserInfo');
@@ -332,3 +337,48 @@ class SoundRecorder {
     });
   }
 }
+
+void showAlertDialog4(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/image/CorrectIcon.png"),
+              SizedBox(height: 12),
+              Text(
+                'เสร็จสิ้น',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              SizedBox(height: 12),
+              Text(
+                'ขอบคุณสำหรับการพากย์เสียงของคุณ',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 12),
+              ElevatedButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Color(0xFFFF7200),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  int count = 0;
+                  Navigator.popUntil(context, ((route) {
+                    return count++ == 5;
+                  }));
+                },
+                child: Text('ตกลง'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );

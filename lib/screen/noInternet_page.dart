@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-class NoWifi extends StatefulWidget {
-  const NoWifi({super.key});
+class NoInternet extends StatefulWidget {
+  const NoInternet({super.key});
 
   @override
-  State<NoWifi> createState() => _NoWifiState();
+  State<NoInternet> createState() => _NoInternetState();
 }
 
-class _NoWifiState extends State<NoWifi> {
+class _NoInternetState extends State<NoInternet> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Material(
       child: Container(
         height: screenHeight,
@@ -36,7 +34,7 @@ class _NoWifiState extends State<NoWifi> {
                 child: Text(
                   "โอ้ไม่นะ",
                   style: GoogleFonts.prompt(
-                      fontSize: 30,
+                      fontSize: 29,
                       fontWeight: FontWeight.bold,
                       color: Colors.black45),
                 ),
@@ -47,36 +45,35 @@ class _NoWifiState extends State<NoWifi> {
                 child: Text(
                   "คุณไม่ได้เชื่อมต่ออินเทอร์เน็ต\nโปรดเชื่อมต่อแล้วกลับมาใหม่นะ",
                   style: GoogleFonts.prompt(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: Colors.black38),
                   textAlign: TextAlign.center,
                 ),
               ),
               Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  child: SizedBox(
-                    width: screenWidth / 2,
-                    height: screenHeight / 20,
-                    child: Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: const Color(0xFFFF7200),
-                            foregroundColor: Colors.white,
-                            textStyle: GoogleFonts.prompt(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NoWifi()));
-                        },
-                        child: Text("ลองอีกครั้ง"),
-                      ),
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: SizedBox(
+                  width: screenWidth / 2,
+                  height: screenHeight / 20,
+                  child: Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          backgroundColor: const Color(0xFFFF7200),
+                          foregroundColor: Colors.white,
+                          textStyle: GoogleFonts.prompt(
+                              fontSize: 18, fontWeight: FontWeight.w600)),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => const NoInternet()));
+                      },
+                      child: const Text("ลองอีกครั้ง"),
                     ),
-                  ))
+                  ),
+                ),
+              ),
             ],
           ),
         ),

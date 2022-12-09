@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -50,7 +49,10 @@ class MyApp extends StatelessWidget {
                   height: MediaQuery.of(context).size.height,
                   color: Colors.white,
                   child: Center(
-                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
+                    child: Text(
+                      "กำลังโหลด...",
+                      style: GoogleFonts.prompt(),
+                    ),
                   ),
                 ),
               );
@@ -64,16 +66,16 @@ class MyApp extends StatelessWidget {
     bool internetStatus = await checkInternetStatus();
     if (internetStatus == true) {
       if (FirebaseAuth.instance.currentUser != null) {
-        // already login
+        // already login, go to 
         return const Navbar();
       } else {
-        // doesn't login before
+        // user doesn't login before and go to Login Page
         return const LoginPage();
       }
     }
 
-    // user does not connected the internet
-    return const NoWifi();
+    // return page that user does not connected the internet
+    return const NoInternet();
   }
 
   // use for check internet connection of user

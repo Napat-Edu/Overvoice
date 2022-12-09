@@ -13,10 +13,12 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
+
+  // each page will get called by _selectedIndex (0-2)
   final List<Widget> _widgetOption = <Widget>[
     const Home(),
     const Search(),
-    ProfilePage(),
+    const ProfilePage(),
   ];
 
   // use for update a screen index from the user
@@ -34,7 +36,10 @@ class _NavbarState extends State<Navbar> {
         height: 68,
         child: BottomNavigationBar(
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: "Profile"),

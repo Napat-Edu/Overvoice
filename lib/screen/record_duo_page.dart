@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/controller/recordButton_controller.dart';
-import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class RecordDuo extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -47,43 +44,47 @@ class _RecordDuoState extends State<RecordDuo> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayerAssist = AudioPlayer();
+  AudioPlayer audioPlayerBGM = AudioPlayer();
+
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+    audioPlayerAssist.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
       if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
-    audioPlayer.onDurationChanged.listen((Duration d) {
+    audioPlayerAssist.onDurationChanged.listen((Duration d) {
       //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
-    audioPlayer.onPositionChanged.listen((Duration p) {
+    audioPlayerAssist.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
-        audioPlayer.seek(Duration(
+        audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
-    audioPlayer.onPlayerComplete.listen((event) {
+    // Listen to audio when it completed
+    audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
       setState(() {
@@ -95,7 +96,9 @@ class _RecordDuoState extends State<RecordDuo> {
   @override
   void dispose() {
     RecordDuo.converIndex = 0;
-    audioPlayer.dispose();
+    audioPlayerAssist.dispose();
+    audioPlayerBGM.dispose();
+
     super.dispose();
   }
 
@@ -103,11 +106,13 @@ class _RecordDuoState extends State<RecordDuo> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
@@ -128,12 +133,12 @@ class _RecordDuoState extends State<RecordDuo> {
         child: Column(
           children: <Widget>[
             CircleAvatar(
-              radius: screenWidth / 7.3,
+              radius: 52,
               backgroundColor: Colors.white,
               child: Align(
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  radius: screenWidth / 7.9,
+                  radius: 48,
                   backgroundImage: NetworkImage(yourBuddy.imgURL.toString()),
                 ),
               ),
@@ -142,9 +147,10 @@ class _RecordDuoState extends State<RecordDuo> {
               height: screenHeight / 80,
             ),
             Text(
-              "คุณกำลังพากย์คู่กับ ${yourBuddy.userName}",
+              "คุณพากย์คู่กับ ${yourBuddy.userName}",
+              textAlign: TextAlign.center,
               style: GoogleFonts.prompt(
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white),
             ),
@@ -168,8 +174,8 @@ class _RecordDuoState extends State<RecordDuo> {
                         child: Text(
                           "บทที่ต้องทำการพากย์",
                           style: GoogleFonts.prompt(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -185,13 +191,12 @@ class _RecordDuoState extends State<RecordDuo> {
                     height: screenHeight / 2.52,
                     width: screenWidth / 1.17, // บท
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xFFFFD4B2),
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
                       child: displayConversation(),
-                      //ConversationController(conversationList),
                     ))
               ],
             ),
@@ -217,10 +222,10 @@ class _RecordDuoState extends State<RecordDuo> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    backgroundColor: Color(0xFFFB8C00),
+                    backgroundColor: Color(0xFFFF9900),
                     foregroundColor: Colors.white,
                     textStyle: GoogleFonts.prompt(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
+                        fontSize: 18, fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   // condition for check button (ถ้าปุ่มถูกกดอยู่จะ return)
                   if (checkButton == true) {
@@ -242,23 +247,29 @@ class _RecordDuoState extends State<RecordDuo> {
     );
   }
 
+  // play & resume audio
   Future play() async {
-    audioPlayer.resume();
+    audioPlayerAssist.resume();
+    audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
-    await audioPlayer.pause();
+    await audioPlayerAssist.pause();
+    await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
+  // use for check status of button
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
     } else {
       print("Status is checked");
-      await audioPlayer.seek(Duration(seconds: timeTotal));
+      await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
 
+      //condition for avoid out of bound case
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -273,53 +284,67 @@ class _RecordDuoState extends State<RecordDuo> {
     }
   }
 
+  // set up audio before user start
   Future setup(List times) async {
     this.currentConverDuration = times;
+
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
+
       final storageRef = await FirebaseStorage.instance.ref();
-      // final time = await RecordButton.TimeCountDown.instance();
-      // final soundRefA = await storageRef
-      //     .child(listenList.audioFileName!); // <-- your file name
-      final soundRefBGM = await storageRef
-          .child("2022-12-0714:22:17466043omegyzr.aac"); // <-- your file name
-      // final metaDataA = await soundRefA.getDownloadURL();
-      final metaDataBGM = await soundRefBGM.getDownloadURL();
-      String urlBGM = metaDataBGM.toString();
-      // String urlBGM =
-      //     "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-      // log('data: ${metaDataA.toString()}');
-      // log('data: ${metaDataBGM.toString()}');
-      await audioPlayer.setSourceUrl(urlBGM);
-      print("Already Set!");
+      String urlAssist =
+          await getAudioURL(storageRef, detailList["assistanceVoiceName"]);
+      String urlBGM = await getAudioURL(storageRef, detailList["bgmName"]);
+
+      await audioPlayerAssist.setSourceUrl(urlAssist);
+      await audioPlayerBGM.setSourceUrl(urlBGM);
+      print("Everything Set!");
     }
   }
 
+  // get url of audio by name of it
+  getAudioURL(final storageRef, String audioName) async {
+    final soundRef = await storageRef.child(audioName);
+    final metaData = await soundRef.getDownloadURL();
+    String url = metaData.toString();
+    log('data: ${metaData.toString()}');
+    return url;
+  }
+
+  // use for generate display conversation
   Widget displayConversation() {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
+
+      // replace a duration text for more information
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail =
+            conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+          return '(มีเวลาพากย์ ${m[1]} วินาที:';
+        });
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
+    // return a conversation text
     return ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) => ListTile(
-              title: Text(
-                currentText,
-                style:
-                    GoogleFonts.prompt(fontSize: 19, fontWeight: FontWeight.w500),
-              ),
-            ));
+      itemCount: 1,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(
+          currentText,
+          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
   }
 
-  // use for change conversation text
+  // use for change conversation text by index change
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

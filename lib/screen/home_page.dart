@@ -16,7 +16,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _tabController = new TabController(length: 3, vsync: this);
+    // initialize a tab bar to have 2 tabs
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -25,14 +26,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
+      // Header
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
           'ยินดีต้อนรับ',
           style: GoogleFonts.prompt(
-              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
       body: Column(children: <Widget>[
@@ -46,6 +49,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Semantics(
+                // Banner Image
                 label: "้ลองค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
                 child: SizedBox(
                     width: screenWidth,
@@ -60,58 +64,77 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ),
         Container(
-            height: 45,
-            color: Color(0xFFFF7200),
+          // Tab bar section
+            height: 43,
+            color: const Color(0xFFFF7200),
             child: TabBar(
+                // using a tab bar by _tabController
                 controller: _tabController,
-                indicatorColor: Colors.white,
                 labelStyle: GoogleFonts.prompt(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                    fontSize: 17, fontWeight: FontWeight.w600),
                 unselectedLabelStyle: GoogleFonts.prompt(
-                    fontSize: 16, fontWeight: FontWeight.w600),
-                tabs: [
+                    fontSize: 15, fontWeight: FontWeight.w500),
+                indicator: const BoxDecoration(color: Color(0xFFFF4700)),
+                // define a name of each tabs
+                tabs: const [
                   Tab(
                     text: "แนะนำ",
                   ),
                   Tab(
                     text: "เป็นที่นิยม",
                   ),
-                  Tab(
-                    text: "กำลังมาแรง",
-                  )
                 ])),
         Expanded(
-            child: Container(
-                child:
-                    TabBarView(controller: _tabController, children: <Widget>[
-          FutureBuilder<Widget>(
-              future: getData(),
-              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data!;
-                }
-
-                return Text(
-                  "กำลังโหลด...",
-                  style: GoogleFonts.prompt(),
-                  textAlign: TextAlign.center,
-                );
-              }),
-          Center(
-            child: Text("เป็นที่นิยม", style: GoogleFonts.prompt()),
+          child: Container(
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                // a content in each tab bars
+                tabBarData(1),
+                tabBarData(2),
+              ],
+            ),
           ),
-          Center(
-            child: Text("กำลังมาแรง", style: GoogleFonts.prompt()),
-          ),
-        ])))
+        ),
       ]),
     );
   }
 
-  Future<Widget> getData() async {
-    List<TitleDetails> mainTitleList = await getRecommendAudioInfo();
+  // using for generate content in tab bar
+  Widget tabBarData(int tabBarIndex) {
+    return FutureBuilder<Widget>(
+      future: getDataUI(tabBarIndex),
+      builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!;
+        }
+
+        // return text loading while getData
+        return Text(
+          "กำลังโหลด...",
+          style: GoogleFonts.prompt(),
+          textAlign: TextAlign.center,
+        );
+      },
+    );
+  }
+
+  // using for get data from database
+  Future<Widget> getDataUI(int index) async {
+    List<TitleDetails> mainTitleList = [];
+
+    if (index == 1) {
+      // read news audio from database (Tab bar #1)
+      mainTitleList = await getNewsAudio();
+    } else if (index == 2) {
+      // read popular audio from database (Tab bar #2)
+      mainTitleList = await getTopHitAudio();
+    }
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    // return UI with data that already read
     return ListView.separated(
       padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const Divider(
@@ -120,10 +143,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       itemCount: mainTitleList.length,
       itemBuilder: (context, index) => ListTile(
         leading: SizedBox(
-            width: 55,
-            height: 55,
+            width: 53,
+            height: 53,
             child: Container(
-              decoration: BoxDecoration(boxShadow: [
+              decoration: const BoxDecoration(boxShadow: [
                 BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
               ]),
               child: Image.network(
@@ -134,41 +157,54 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         title: Text(
           mainTitleList[index].titleName!,
           style: GoogleFonts.prompt(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
         ),
         subtitle: Text(
           mainTitleList[index].episode!,
-          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 16),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 15),
         ),
         trailing: TextButton(
           style: TextButton.styleFrom(
               fixedSize: const Size(10, 10),
               backgroundColor: const Color(0xFFFF7200),
               foregroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 16)),
+              textStyle: const TextStyle(
+                fontSize: 15,
+              )),
           onPressed: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => More(mainTitleList[index].docID!),
+                  builder: (context) => MoreInfo(mainTitleList[index].docID!),
                   fullscreenDialog: true,
                 ));
           },
           child: Text('เข้าชม', style: GoogleFonts.prompt()),
         ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MoreInfo(mainTitleList[index].docID!),
+                fullscreenDialog: true,
+              ));
+        },
       ),
     );
   }
 
-  Future<List<TitleDetails>> getRecommendAudioInfo() async {
+  // using for read news audio from database (firebase)
+  Future<List<TitleDetails>> getNewsAudio() async {
     List<TitleDetails> list = [];
 
+    // get the first 5 news audio from firebase
     await FirebaseFirestore.instance
         .collection('AudioInfo')
-        .limit(6)
+        .limit(5)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
+        // collect in list (TitleDetails Model Type)
         list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
             doc["duration"], doc["img"], doc.id));
       });
@@ -176,47 +212,71 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     return list;
   }
-}
 
-// Container(
-//               height: 40,
-//               child: Row(children: <Widget>[
-//                 Expanded(
-//                     flex: 1,
-//                     child: Icon(
-//                       Icons.menu,
-//                       color: Colors.white,
-//                     )),
-//                 SizedBox(width: screenWidth / 41.1),
-//                 Expanded(
-//                     flex: 1,
-//                     child: Text(
-//                       "แนะนำ",
-//                       style: TextStyle(
-//                         fontSize: 15,
-//                         fontWeight: FontWeight.bold,
-//                         color: Colors.white,
-//                       ),
-//                     )),
-//                 SizedBox(width: screenWidth / 41.1),
-//                 Expanded(
-//                   flex: 1,
-//                     child: Text(
-//                   "ที่นิยม",
-//                   style: TextStyle(
-//                       fontSize: 15,
-//                       fontWeight: FontWeight.w500,
-//                       color: Colors.white),
-//                 )),
-//                 SizedBox(width: screenWidth / 41.1),
-//                 Expanded(
-//                     flex: 1,
-//                     child: Text(
-//                       "กำลังมาแรง",
-//                       style: TextStyle(
-//                           fontSize: 15,
-//                           fontWeight: FontWeight.w500,
-//                           color: Colors.white),
-//                     )),
-//               ]),
-//             )
+  // using for read popular audio from database (firebase)
+  Future<List<TitleDetails>> getTopHitAudio() async {
+    var topHitMap = Map();
+
+    // counting popularity for each audio and keep it in topHitMap
+    await FirebaseFirestore.instance
+        .collection("History")
+        .get()
+        .then((snapshot) {
+      snapshot.docs.map((element) {
+        if (!topHitMap.containsKey(element.data()['audioInfo'])) {
+          topHitMap[element.data()['audioInfo']] = 1;
+        } else {
+          topHitMap[element.data()['audioInfo']] += 1;
+        }
+      }).toList();
+    });
+
+    List<TitleDetails> list = [];
+    int dataCount = 0;
+    var mostPopularKey = topHitMap.keys.first;
+    int mostPopularCount = topHitMap.values.first;
+
+    // finding the top 5 popular audio or less than 5 if there is no more audio
+    while (topHitMap.isNotEmpty && dataCount != 5) {
+
+      // find most popular for each loop by linear search
+      topHitMap.forEach(
+        (key, value) {
+          if (value > mostPopularCount) {
+            mostPopularKey = key;
+            mostPopularCount = value;
+          }
+        },
+      );
+
+      // collect it in list of TitleDetails model type
+      await FirebaseFirestore.instance
+          .collection('AudioInfo')
+          .doc(mostPopularKey)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          list.add(TitleDetails(
+              documentSnapshot["name"],
+              documentSnapshot["enName"],
+              documentSnapshot["episode"],
+              documentSnapshot["duration"],
+              documentSnapshot["img"],
+              documentSnapshot.id));
+        }
+      });
+
+      // break the loop if there is just 1 audio left, to avoid the null map
+      if (topHitMap.length == 1) {
+        break;
+      } else {
+        // remove the current popular audio
+        topHitMap.remove(mostPopularKey);
+      }
+      mostPopularKey = topHitMap.keys.first;
+      mostPopularCount = topHitMap.values.first;
+      dataCount++;
+    }
+    return list;
+  }
+}
