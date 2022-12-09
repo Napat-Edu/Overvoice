@@ -66,15 +66,15 @@ class MyApp extends StatelessWidget {
     bool internetStatus = await checkInternetStatus();
     if (internetStatus == true) {
       if (FirebaseAuth.instance.currentUser != null) {
-        // already login
+        // already login, go to 
         return const Navbar();
       } else {
-        // doesn't login before
+        // user doesn't login before and go to Login Page
         return const LoginPage();
       }
     }
 
-    // user does not connected the internet
+    // return page that user does not connected the internet
     return const NoWifi();
   }
 
