@@ -27,8 +27,6 @@ class RecordButtonDuo extends StatefulWidget {
       converIndexSetter: converIndexSetter);
 }
 
-bool voiceStart = false;
-
 class _RecordButtonDuoState extends State<RecordButtonDuo> {
   int number = 0;
 
@@ -157,11 +155,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
         FlutterBeep.beep(false);
         timer.cancel();
         onStatusChanged(false);
-        if (n >= m) {
-          recorder._stop(character);
-        } else {
-          recorder._pause();
-        }
+        recorder._pause();
 
         // go for next conversation index in record_page
         if (Record.converIndex < conversationList.length - 1) {
@@ -211,7 +205,6 @@ class SoundRecorder {
 
   Future _record() async {
     if (!_isRecordingInitialised) return;
-    voiceStart = true;
     await _audioRecorder
         ?.setSubscriptionDuration(const Duration(milliseconds: 50));
     await _audioRecorder!.startRecorder(toFile: voiceName);
@@ -231,7 +224,6 @@ class SoundRecorder {
     if (!_isRecordingInitialised) return;
     final filepath = await _audioRecorder!.stopRecorder();
     final file = File(filepath!);
-    voiceStart = false;
     //print('Record : $file');
     _uploadFile(file, character);
   }
