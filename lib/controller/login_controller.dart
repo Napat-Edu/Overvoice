@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:overvoice_project/model/user_detail.dart';
 
+import '../main.dart';
+
 class LoginController with ChangeNotifier {
   // object for login
   final _googleSignIn = GoogleSignIn();
@@ -13,7 +15,7 @@ class LoginController with ChangeNotifier {
   User? user;
 
   // google log-in function
-  googleLogin() async {
+  googleLogin(context) async {
     googleSignInAccount = await _googleSignIn.signIn();
 
     final GoogleSignInAuthentication? googleAuth =
@@ -26,6 +28,8 @@ class LoginController with ChangeNotifier {
     await checkUserInfo();
 
     notifyListeners();
+
+    toHomePage(context);
   }
 
   // logout function
@@ -61,5 +65,13 @@ class LoginController with ChangeNotifier {
             .catchError((error) => print("Failed to add user: $error"));
       }
     });
+  }
+
+  // go to home page after login
+  toHomePage(context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/controller/login_controller.dart';
-import 'package:overvoice_project/main.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -14,7 +12,10 @@ class LoginPage extends StatelessWidget {
     // core UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("Overvoice",style: GoogleFonts.prompt(fontWeight: FontWeight.w600),),
+        title: Text(
+          "Overvoice",
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFFF7200),
@@ -47,11 +48,7 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   // function login from LoginController
                   Provider.of<LoginController>(context, listen: false)
-                      .googleLogin();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                      .googleLogin(context);
                 },
               ),
             ),
