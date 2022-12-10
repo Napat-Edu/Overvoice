@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'database_query_controller.dart';
 
@@ -15,6 +18,7 @@ class SoundRecorder {
   get onProgress => _audioRecorder!.onProgress;
 
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";

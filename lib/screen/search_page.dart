@@ -105,8 +105,8 @@ class _SearchState extends State<Search> {
                     itemCount: displayList.length,
                     itemBuilder: (context, index) => ListTile(
                       leading: SizedBox(
-                          width: 55,
-                          height: 55,
+                          width: 53,
+                          height: 53,
                           child: Container(
                             decoration: const BoxDecoration(boxShadow: [
                               BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)

@@ -6,6 +6,7 @@ import 'package:overvoice_project/controller/recordButton_master_controller.dart
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../screen/record_page.dart';
 import 'dart:developer';
 
@@ -49,6 +50,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   String character;
   String soundOver;
   PopupControl popupControl = PopupControl();
+  ConstantValue constantValue = ConstantValue();
 
   final ValueChanged<int> converIndexSetter;
 
@@ -94,7 +96,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final onProgress = recorder.onProgress;
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
-    final text;
+    final String text;
 
     if (isRecording) {
       status = true;
@@ -110,25 +112,23 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       text = 'เริ่มพากย์';
     }
 
-    List<String> TimeCountDown = [];
+    List<String> timeCountDown = [];
     List<String> characterList = [];
     for (int i = 0; i < conversationList.length; i++) {
-      TimeCountDown.add(
+      timeCountDown.add(
           conversationList[i].toString().split('(')[1].split(':')[0]);
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
-    onCountChanged(TimeCountDown); // push time number in () to record_page
+    onCountChanged(timeCountDown); // push time number in () to record_page
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    print(characterList + TimeCountDown); // Debug
+    print(characterList + timeCountDown); // Debug
     return Container(
       child: Column(
         children: <Widget>[
           SizedBox(
-            width: screenWidth / 1.4,
-            height: screenHeight / 20,
+            width: constantValue.getScreenWidth(context) / 1.4,
+            height: constantValue.getScreenHeight(context) / 20,
             child: TextButton(
               style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -140,10 +140,10 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
               onPressed: status || isStopped && stageVoice != 0
                   ? null
                   : () async {
-                      if (stageVoice >= TimeCountDown.length) {
+                      if (stageVoice >= timeCountDown.length) {
                         await recorder.stop();
                         popupControl.finishAlertDialog(context, 5);
-                      } else if (TimeCountDown[stageVoice].isNotEmpty) {
+                      } else if (timeCountDown[stageVoice].isNotEmpty) {
                         if (stageVoice == 0) {
                           converIndexSetter(Record.converIndex);
                           await play();
@@ -156,17 +156,17 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                           await null;
                         }
                         countdown(
-                            int.parse(TimeCountDown[
-                                stageVoice < TimeCountDown.length
+                            int.parse(timeCountDown[
+                                stageVoice < timeCountDown.length
                                     ? stageVoice++
                                     : stageVoice]),
-                            TimeCountDown.length);
+                            timeCountDown.length);
                         //print(TimeCountDown[StageVoice++]);
                       }
                       setState(() {});
                     },
               child: Text(
-                stageVoice >= TimeCountDown.length
+                stageVoice >= timeCountDown.length
                     ? 'เสร็จสิ้น'
                     : character == characterList[stageVoice]
                         ? text
@@ -179,8 +179,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     );
   }
 
+  // countdown a time for dubbing
   void countdown(int n, int m) {
-    print(n);
     FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = true;
@@ -214,6 +214,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     await audioPlayer.pause();
   }
 
+  // play a voice from your buddy
   Future playPartner() async {
     final storageRef = FirebaseStorage.instance.ref();
     final soundRefBGM = storageRef.child(soundOver);

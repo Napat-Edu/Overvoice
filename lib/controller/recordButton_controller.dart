@@ -74,11 +74,11 @@ class _RecordButtonState extends State<RecordButton> {
 
     List<String> timeCountDown = [];
     for (int i = 0; i < conversationList.length; i++) {
-      timeCountDown.add(
-          conversationList[i].toString().split('(')[1].split(')')[0]);
+      timeCountDown
+          .add(conversationList[i].toString().split('(')[1].split(')')[0]);
     }
     onCountChanged(timeCountDown); // push time number in () to record_page
-    
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -87,12 +87,13 @@ class _RecordButtonState extends State<RecordButton> {
             height: constantValue.getScreenHeight(context) / 20,
             child: TextButton(
               style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFFFF7200),
-                  textStyle: GoogleFonts.prompt(
-                      fontSize: 19, fontWeight: FontWeight.w600)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFFFF7200),
+                textStyle: GoogleFonts.prompt(
+                    fontSize: 19, fontWeight: FontWeight.w600),
+              ),
               onPressed: status || isStopped && stageVoice != 0
                   ? null
                   : () async {
@@ -114,8 +115,6 @@ class _RecordButtonState extends State<RecordButton> {
                                     ? stageVoice++
                                     : stageVoice]),
                             timeCountDown.length);
-
-                        //print(TimeCountDown[StageVoice++]);
                       }
                       setState(() {});
                     },
@@ -129,7 +128,8 @@ class _RecordButtonState extends State<RecordButton> {
     );
   }
 
-  void countdown(int n, int m) {
+  // countdown a time for dubbing
+  countdown(int n, int m) async {
     FlutterBeep.beep(false);
     onStatusChanged(true); // check status of buttons
     Timer.periodic(const Duration(seconds: 1), (timer) {

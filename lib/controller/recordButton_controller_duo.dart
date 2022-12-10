@@ -135,6 +135,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
     ));
   }
 
+  // countdown a time for dubbing
   void countdown(int n, int m) {
     FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
