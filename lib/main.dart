@@ -9,13 +9,14 @@ import 'package:overvoice_project/screen/noInternet_page.dart';
 import 'package:provider/provider.dart';
 import 'controller/login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  runApp(
-    const MyApp(),
-  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
     bool internetStatus = await checkInternetStatus();
     if (internetStatus == true) {
       if (FirebaseAuth.instance.currentUser != null) {
-        // already login, go to 
+        // already login, go to
         return const Navbar();
       } else {
         // user doesn't login before and go to Login Page
