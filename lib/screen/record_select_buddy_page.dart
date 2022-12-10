@@ -149,12 +149,12 @@ class _SelectBuddyState extends State<SelectBuddy> {
               itemCount: listenList.length,
               itemBuilder: (context, index) => ListTile(
                     leading: CircleAvatar(
-                      radius: 28,
+                      radius: 27,
                       backgroundColor: Color(0xFFFFAA66),
                       child: Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: 26,
+                          radius: 25,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
                         ),

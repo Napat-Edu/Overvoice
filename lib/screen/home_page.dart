@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/controller/titlecardlist.dart';
 import '../model/title_detail.dart';
 import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,7 +65,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ),
         Container(
-          // Tab bar section
+            // Tab bar section
             height: 43,
             color: const Color(0xFFFF7200),
             child: TabBar(
@@ -136,12 +137,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     // return UI with data that already read
     return ListView.separated(
-      padding: EdgeInsets.zero,
-      separatorBuilder: (context, index) => const Divider(
-        color: Color(0xFFFFAA66),
-      ),
-      itemCount: mainTitleList.length,
-      itemBuilder: (context, index) => ListTile(
+        padding: EdgeInsets.zero,
+        separatorBuilder: (context, index) => const Divider(
+              color: Color(0xFFFFAA66),
+            ),
+        itemCount: mainTitleList.length,
+        itemBuilder: (context, index) => TitleCardList(
+            imgURL: mainTitleList[index].imgURL!,
+            titleName: mainTitleList[index].titleName!,
+            episode: mainTitleList[index].episode!,
+            docID: mainTitleList[index]
+                .docID!) /*ListTile(
         leading: SizedBox(
             width: 53,
             height: 53,
@@ -189,8 +195,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 fullscreenDialog: true,
               ));
         },
-      ),
-    );
+      ),*/
+        );
   }
 
   // using for read news audio from database (firebase)
@@ -238,7 +244,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     // finding the top 5 popular audio or less than 5 if there is no more audio
     while (topHitMap.isNotEmpty && dataCount != 5) {
-
       // find most popular for each loop by linear search
       topHitMap.forEach(
         (key, value) {

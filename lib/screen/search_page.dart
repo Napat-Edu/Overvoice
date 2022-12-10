@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/controller/titlecardlist.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 import '../controller/database_query_controller.dart';
 import 'moreInfo_page.dart';
@@ -100,13 +101,18 @@ class _SearchState extends State<Search> {
                 : ListView.separated(
                     padding: EdgeInsets.zero,
                     separatorBuilder: (context, index) => const Divider(
-                      color: Color(0xFFFFAA66),
-                    ),
+                          color: Color(0xFFFFAA66),
+                        ),
                     itemCount: displayList.length,
-                    itemBuilder: (context, index) => ListTile(
+                    itemBuilder: (context, index) => TitleCardList(
+                        imgURL: displayList[index].imgURL!,
+                        titleName: displayList[index].titleName!,
+                        episode: displayList[index].episode!,
+                        docID: displayList[index]
+                            .docID!) /*ListTile(
                       leading: SizedBox(
-                          width: 55,
-                          height: 55,
+                          width: 53,
+                          height: 53,
                           child: Container(
                             decoration: const BoxDecoration(boxShadow: [
                               BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
@@ -154,8 +160,8 @@ class _SearchState extends State<Search> {
                           ),
                         );
                       },
+                    ),*/
                     ),
-                  ),
           ),
         ],
       ),
