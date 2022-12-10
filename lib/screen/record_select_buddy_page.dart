@@ -4,8 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
-import 'listen_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../controller/database_query_controller.dart';
 
 class SelectBuddy extends StatefulWidget {
   Map<String, dynamic> detailList;
@@ -26,12 +27,14 @@ class _SelectBuddyState extends State<SelectBuddy> {
 
   List<ListenDetails> listenList = [];
   List<String> hisID = [];
+  DatabaseQuery databaseQuery = DatabaseQuery();
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,9 +42,9 @@ class _SelectBuddyState extends State<SelectBuddy> {
           style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFFFF7200),
+        backgroundColor: const Color(0xFFFF7200),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
@@ -53,7 +56,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               child: SizedBox(
                 width: screenWidth,
                 height: screenHeight / 4,
@@ -69,35 +72,38 @@ class _SelectBuddyState extends State<SelectBuddy> {
               ),
             ),
             Container(
-                child: Column(
-              children: <Widget>[
-                Container(
-                  color: Color(0xFFFF7200),
-                  child: Container(
-                    height: 40,
-                    child: Row(children: <Widget>[
-                      Expanded(
-                          child: Icon(
-                        Icons.thumb_up_alt_sharp,
-                        color: Colors.white,
-                      )),
-                      Expanded(
-                          flex: 4,
-                          child: Text(
-                            "คุณอยากจับคู่กับใครล่ะ",
-                            style: GoogleFonts.prompt(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    color: Color(0xFFFF7200),
+                    child: Container(
+                      height: 40,
+                      child: Row(
+                        children: <Widget>[
+                          const Expanded(
+                              child: Icon(
+                            Icons.thumb_up_alt_sharp,
+                            color: Colors.white,
                           )),
-                      SizedBox(
-                        width: screenWidth / 3,
-                      )
-                    ]),
-                  ),
-                )
-              ],
-            )),
+                          Expanded(
+                              flex: 4,
+                              child: Text(
+                                "คุณอยากจับคู่กับใครล่ะ",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              )),
+                          SizedBox(
+                            width: screenWidth / 3,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
             SizedBox(
               height: screenHeight / 200,
             ),
@@ -122,8 +128,9 @@ class _SelectBuddyState extends State<SelectBuddy> {
     );
   }
 
+  // generate UI and waiting for data
   Future<Widget> getDataUI(String docID) async {
-    listenList = await getHistoryList(docID, character);
+    listenList = await getBuddyList(docID, character);
     return Future.delayed(const Duration(seconds: 0), () {
       return listenList.isEmpty
           ? Center(
@@ -154,7 +161,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                       ),
                     ),
                     title: Text(
-                      '${listenList[index].userName!}',
+                      listenList[index].userName!,
                       style: GoogleFonts.prompt(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -163,12 +170,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                     // change like count under title to buddy acount name
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        //   Icons.favorite,
-                        //   size: 18,
-                        // ),
-                        // Text(' ${listenList[index].likeCount!}'),
-                      ],
                     ),
                     trailing: TextButton(
                       style: TextButton.styleFrom(
@@ -193,23 +194,21 @@ class _SelectBuddyState extends State<SelectBuddy> {
     });
   }
 
-  Future<List<ListenDetails>> getHistoryList(
+  // use for read data from history to get list of buddy that can pair up with
+  Future<List<ListenDetails>> getBuddyList(
       String docID, String character) async {
     String yourID = FirebaseAuth.instance.currentUser!.email!;
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection("History")
-        .where("audioInfo", isEqualTo: docID)
-        .where("characterInit", isNotEqualTo: character)
-        .where("status", isEqualTo: false)
-        .get();
-        
+    QuerySnapshot querySnapshot =
+        await databaseQuery.getHistoryBuddyList(docID, character);
+
     List<ListenDetails> listenList = [];
     await Future.forEach(querySnapshot.docs, (doc) async {
       if (doc["user_1"] != yourID) {
         hisID.add(doc.id);
-        Map<String, dynamic>? data = await getUserInfo(doc["user_1"]);
+        Map<String, dynamic>? data =
+            await databaseQuery.getUserInfoDocumentbyID(doc["user_1"]);
         listenList.add(ListenDetails(
-          data!["username"],
+          data["username"],
           "คุณ",
           "",
           data["photoURL"],
@@ -220,11 +219,5 @@ class _SelectBuddyState extends State<SelectBuddy> {
     });
 
     return listenList;
-  }
-
-  getUserInfo(String userDocID) async {
-    var collection = FirebaseFirestore.instance.collection('UserInfo');
-    var docSnapshot = await collection.doc(userDocID).get();
-    return docSnapshot.data();
   }
 }

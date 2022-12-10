@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/controller/recordButton_controller.dart';
-import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -53,6 +51,7 @@ class _RecordDuoState extends State<RecordDuo> {
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
@@ -84,6 +83,7 @@ class _RecordDuoState extends State<RecordDuo> {
       }
     });
 
+    // Listen to audio when it completed
     audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
@@ -106,6 +106,8 @@ class _RecordDuoState extends State<RecordDuo> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -189,13 +191,12 @@ class _RecordDuoState extends State<RecordDuo> {
                     height: screenHeight / 2.52,
                     width: screenWidth / 1.17, // บท
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xFFFFD4B2),
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
                       child: displayConversation(),
-                      //ConversationController(conversationList),
                     ))
               ],
             ),
@@ -246,17 +247,20 @@ class _RecordDuoState extends State<RecordDuo> {
     );
   }
 
+  // play & resume audio
   Future play() async {
     audioPlayerAssist.resume();
     audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
     await audioPlayerAssist.pause();
     await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
+  // use for check status of button
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
@@ -265,6 +269,7 @@ class _RecordDuoState extends State<RecordDuo> {
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
 
+      //condition for avoid out of bound case
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -279,58 +284,67 @@ class _RecordDuoState extends State<RecordDuo> {
     }
   }
 
+  // set up audio before user start
   Future setup(List times) async {
     this.currentConverDuration = times;
+
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
-      final storageRef = await FirebaseStorage.instance.ref();
-      final soundRefAssist = await storageRef
-          .child(detailList["assistanceVoiceName"]); // <-- your file name
-      final soundRefBGM =
-          await storageRef.child(detailList["bgmName"]); // <-- your file name
-      // final metaDataA = await soundRefA.getDownloadURL();
-      final metaDataAssist = await soundRefAssist.getDownloadURL();
-      final metaDataBGM = await soundRefBGM.getDownloadURL();
-      // String urlA = metaDataA.toString();
-      String urlAssist = metaDataAssist.toString();
-      String urlBGM = metaDataBGM.toString();
 
-      // log('data: ${metaDataA.toString()}');
-      log('data: ${metaDataAssist.toString()}');
-      log('data: ${metaDataBGM.toString()}');
-      // await audioPlayerA.setSourceUrl(urlA);
+      final storageRef = await FirebaseStorage.instance.ref();
+      String urlAssist =
+          await getAudioURL(storageRef, detailList["assistanceVoiceName"]);
+      String urlBGM = await getAudioURL(storageRef, detailList["bgmName"]);
+
       await audioPlayerAssist.setSourceUrl(urlAssist);
       await audioPlayerBGM.setSourceUrl(urlBGM);
-
-      print("Already Set!");
+      print("Everything Set!");
     }
   }
 
+  // get url of audio by name of it
+  getAudioURL(final storageRef, String audioName) async {
+    final soundRef = await storageRef.child(audioName);
+    final metaData = await soundRef.getDownloadURL();
+    String url = metaData.toString();
+    log('data: ${metaData.toString()}');
+    return url;
+  }
+
+  // use for generate display conversation
   Widget displayConversation() {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
+
+      // replace a duration text for more information
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail =
+            conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+          return '(มีเวลาพากย์ ${m[1]} วินาที:';
+        });
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1}: " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
+    // return a conversation text
     return ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) => ListTile(
-              title: Text(
-                currentText,
-                style: GoogleFonts.prompt(
-                    fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ));
+      itemCount: 1,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(
+          currentText,
+          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
   }
 
-  // use for change conversation text
+  // use for change conversation text by index change
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

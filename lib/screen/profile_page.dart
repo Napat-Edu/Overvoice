@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../controller/database_query_controller.dart';
 import '../controller/login_controller.dart';
 import '../main.dart';
 import '../model/listen_detail.dart';
 import 'listen_page.dart';
-import '../model/title_detail.dart';
-import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -26,9 +25,12 @@ class _ProfilePage extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  DatabaseQuery databaseQuery = DatabaseQuery();
+  String? userEmail = FirebaseAuth.instance.currentUser!.email;
+
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -43,19 +45,21 @@ class _ProfilePage extends State<ProfilePage>
         backgroundColor: const Color(0xFFFF7200),
         elevation: 0,
         actions: [
-          LogoutAvatar(context),
-          SizedBox(
+          logoutAvatar(context),
+          const SizedBox(
             width: 10,
           ),
         ],
       ),
       body: FutureBuilder<Widget>(
+        // read data from database and waiting for data
         future: getData(context, screenHeight, screenWidth),
         builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!;
           }
 
+          // display loading text while waiting for data
           return Column(
             children: [
               SizedBox(
@@ -76,14 +80,20 @@ class _ProfilePage extends State<ProfilePage>
     );
   }
 
+  // use for read data from database and waiting for data
   Future<Widget> getData(
       BuildContext context, double screenHeight, double screenWidth) async {
     List<ListenDetails> listenListSoloType = [];
     List<ListenDetails> listenListDuoType = [];
+
+    // read data from database and collect in list
     listenListSoloType = await getHistoryData(1);
     listenListDuoType = await getHistoryData(2);
-    String? userEmail = FirebaseAuth.instance.currentUser!.email;
-    Map<String, dynamic> userData = await getUserInfo(userEmail!);
+
+    Map<String, dynamic> userData =
+        await databaseQuery.getUserInfoDocumentbyID(userEmail!);
+
+    // return UI with data
     return Column(
       children: [
         SizedBox(
@@ -91,16 +101,17 @@ class _ProfilePage extends State<ProfilePage>
         ),
         getUserSection(context, screenHeight, screenWidth),
         SizedBox(height: screenHeight / 29),
-        recLike(context, userData),
+        userStaticSection(context, userData),
         SizedBox(height: screenHeight / 29),
-        buildMiddler(),
-        buildBelow(
+        headerContent(),
+        contentSection(
             listenListSoloType, listenListDuoType, screenHeight, screenWidth),
       ],
     );
   }
 
-  Widget LogoutAvatar(BuildContext context) => ActionChip(
+  // use for generate logout button function
+  Widget logoutAvatar(BuildContext context) => ActionChip(
         avatar: const Icon(
           Icons.logout,
           color: Colors.grey,
@@ -110,6 +121,7 @@ class _ProfilePage extends State<ProfilePage>
           style: GoogleFonts.prompt(color: Colors.grey),
         ),
         onPressed: () {
+          // logout and go to login page
           Provider.of<LoginController>(context, listen: false).logout();
           Navigator.pushReplacement(
             context,
@@ -119,32 +131,25 @@ class _ProfilePage extends State<ProfilePage>
         backgroundColor: Colors.white,
       );
 
-  Future<Map<String, dynamic>?> queryData() async {
-    var dataDoc = await FirebaseFirestore.instance
-        .collection('UserInfo')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .get();
-    Map<String, dynamic>? fieldMap = dataDoc.data();
-    return fieldMap;
-  }
-
-  // like count under profile
-  Widget recLike(BuildContext context, Map<String, dynamic> userData) => Row(
+  // use for constrol statistic section of user (can add another things in the future)
+  Widget userStaticSection(
+          BuildContext context, Map<String, dynamic> userData) =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          buildRecLike(text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
-          // Image.asset("assets/image/LineRL.png"),
-          // Image.asset("assets/image/LineRL.png"),
-          // buildRecLike(text: 'ถูกใจทั้งหมด', value: userData["likeAmount"]),
+          // create section UI with data
+          buildStaticSection(
+              text: 'บันทึกเสียงรวม', value: userData["recordAmount"]),
         ],
       );
 
-  Widget buildRecLike({
+  // use for generate UI statistic data of user with data
+  Widget buildStaticSection({
     required String text,
     required int value,
   }) =>
       MaterialButton(
-        padding: EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         onPressed: () {},
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Column(
@@ -156,7 +161,7 @@ class _ProfilePage extends State<ProfilePage>
               style:
                   GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 13),
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             Text(
               text,
               style:
@@ -166,32 +171,36 @@ class _ProfilePage extends State<ProfilePage>
         ),
       );
 
-  Widget buildMiddler() => Container(
+  // use for create header of content (can add or delete tabs here)
+  Widget headerContent() => Container(
         child: Column(
           children: <Widget>[
             Container(
-                height: 43,
-                color: Color(0xFFFF7200),
-                child: TabBar(
-                    controller: _tabController,
-                    labelStyle: GoogleFonts.prompt(
-                        fontSize: 17, fontWeight: FontWeight.w600),
-                    unselectedLabelStyle: GoogleFonts.prompt(
-                        fontSize: 15, fontWeight: FontWeight.w500),
-                        indicator: BoxDecoration(color: Color(0xFFFF4700)),
-                    tabs: [
-                      Tab(
-                        text: "ประวัติพากย์เดี่ยว",
-                      ),
-                      Tab(
-                        text: "ประวัติพากย์คู่",
-                      ),
-                    ])),
+              height: 43,
+              color: const Color(0xFFFF7200),
+              child: TabBar(
+                controller: _tabController,
+                labelStyle: GoogleFonts.prompt(
+                    fontSize: 17, fontWeight: FontWeight.w600),
+                unselectedLabelStyle: GoogleFonts.prompt(
+                    fontSize: 15, fontWeight: FontWeight.w500),
+                indicator: const BoxDecoration(color: Color(0xFFFF4700)),
+                tabs: const [
+                  Tab(
+                    text: "ประวัติพากย์เดี่ยว",
+                  ),
+                  Tab(
+                    text: "ประวัติพากย์คู่",
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
 
-  Widget buildBelow(
+  //use for control content section (add or delete here)
+  Widget contentSection(
           List<ListenDetails> listenListSoloType,
           List<ListenDetails> listenListDuoType,
           double screenHeight,
@@ -200,16 +209,18 @@ class _ProfilePage extends State<ProfilePage>
         child: TabBarView(
           controller: _tabController,
           children: <Widget>[
+            // create content section UI
             displayAudioList(listenListSoloType, 1, screenHeight, screenWidth),
             displayAudioList(listenListDuoType, 2, screenHeight, screenWidth),
           ],
         ),
       );
 
+  // use for generate content section UI with data
   displayAudioList(List<ListenDetails> listenList, int audioType,
       double screenHeight, double screenWidth) {
     return Center(
-      //child: Text("ประวัติพากย์"),
+      // if there is no history data
       child: listenList.isEmpty
           ? Column(
               children: [
@@ -234,6 +245,7 @@ class _ProfilePage extends State<ProfilePage>
                 ),
               ],
             )
+          // if user have history dubbing once
           : ListView.separated(
               padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => const Divider(
@@ -245,7 +257,7 @@ class _ProfilePage extends State<ProfilePage>
                     width: 53,
                     height: 53,
                     child: Container(
-                      decoration: BoxDecoration(boxShadow: [
+                      decoration: const BoxDecoration(boxShadow: [
                         BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
                       ]),
                       child: Image.network(
@@ -260,7 +272,6 @@ class _ProfilePage extends State<ProfilePage>
                       fontWeight: FontWeight.w600,
                       fontSize: 17),
                 ),
-                // like count under content
                 subtitle: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
@@ -283,6 +294,7 @@ class _ProfilePage extends State<ProfilePage>
     );
   }
 
+  // use for going to Listen page and sending audio data to it
   Future<void> toListenPage(
       List<ListenDetails> listenList, int index, int audioType) async {
     String docID = "";
@@ -292,36 +304,34 @@ class _ProfilePage extends State<ProfilePage>
       docID = docIDDuo[index];
     }
 
-    var dataDoc = await FirebaseFirestore.instance
-        .collection('AudioInfo')
-        .doc(docID)
-        .get();
-
-    Map<String, dynamic>? detailList = dataDoc.data();
-
+    Map<String, dynamic> detailList =
+        await databaseQuery.getAudioDocumentbyID(docID);
+    // go to listen page
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ListenPage(detailList!, listenList[index]),
+        builder: (context) => ListenPage(detailList, listenList[index]),
       ),
     );
   }
 
+  // use for generate subtitle text
   Widget displaySubtitleText(
       int index, List<ListenDetails> listenList, int audioType) {
+    // if it is 2 character type audio
     if (audioType == 2) {
-      print(listenList[index].userName);
-      print(listenList[index].userNameBuddy);
       if (listenList[index].userNameBuddy ==
           FirebaseAuth.instance.currentUser?.displayName) {
         return Text("คู่กับ ${listenList[index].userName}");
       }
       return Text("คู่กับ ${listenList[index].userNameBuddy}");
     } else {
+      // if it is 1 character type audio
       return Text("ผลงานพากย์เดี่ยวของคุณ");
     }
   }
 
+  // use for return name of audio from list
   String setTextByAudioType(int index, int audioType) {
     if (audioType == 1) {
       return audioNameSolo[index];
@@ -330,13 +340,16 @@ class _ProfilePage extends State<ProfilePage>
     }
   }
 
+  // use for control data reading from database
   Future<List<ListenDetails>> getHistoryData(int type) async {
     List<ListenDetails> listenList = [];
+    // for 1 character type audio
     if (type == 1) {
       audioNameSolo = [];
       docIDSolo = [];
       listenList = await queryAudioList("user_1", "user_2");
     } else {
+      // for 2 character type audio
       audioNameDuo = [];
       docIDDuo = [];
       listenList = await queryAudioList("user_2", "user_1");
@@ -345,24 +358,30 @@ class _ProfilePage extends State<ProfilePage>
     return listenList;
   }
 
+  // use for read history data from database
   Future<List<ListenDetails>> queryAudioList(
       String userNumber, String userNumberBuddy) async {
     List<ListenDetails> listenList = [];
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('History')
         .where('status', isEqualTo: true)
-        .where(userNumber, isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where(userNumber, isEqualTo: userEmail)
         .get();
 
     String buddyName = "";
     await Future.forEach(querySnapshot.docs, (doc) async {
-      Map<String, dynamic> audioData = await getAudioInfo(doc["audioInfo"]);
-      Map<String, dynamic> userData = await getUserInfo(doc[userNumber]);
+      Map<String, dynamic> audioData =
+          await databaseQuery.getAudioDocumentbyID(doc["audioInfo"]);
+      Map<String, dynamic> userData =
+          await databaseQuery.getUserInfoDocumentbyID(doc[userNumber]);
+
+      // get buddy data if it is 2 character type audio
       if (audioData["voiceoverAmount"] == "2") {
         Map<String, dynamic> user2Data =
-            await getUserInfo(doc[userNumberBuddy]);
+            await databaseQuery.getUserInfoDocumentbyID(doc[userNumberBuddy]);
         buddyName = user2Data["username"];
       }
+      // collect name and id of each audio
       if (userNumber == "user_1") {
         docIDSolo.add(doc["audioInfo"]);
         audioNameSolo.add(audioData["name"]);
@@ -370,6 +389,8 @@ class _ProfilePage extends State<ProfilePage>
         docIDDuo.add(doc["audioInfo"]);
         audioNameDuo.add(audioData["name"]);
       }
+
+      // collect basic data in list
       listenList.add(ListenDetails(
         userData["username"],
         buddyName,
@@ -383,18 +404,7 @@ class _ProfilePage extends State<ProfilePage>
     return listenList;
   }
 
-  getUserInfo(String userID) async {
-    var collection = FirebaseFirestore.instance.collection('UserInfo');
-    var docSnapshot = await collection.doc(userID).get();
-    return docSnapshot.data();
-  }
-
-  getAudioInfo(String audioID) async {
-    var collection = FirebaseFirestore.instance.collection('AudioInfo');
-    var docSnapshot = await collection.doc(audioID).get();
-    return docSnapshot.data();
-  }
-
+  // use for generate user section UI
   Widget getUserSection(
       BuildContext context, double screenHeight, double screenWidth) {
     if (FirebaseAuth.instance.currentUser != null) {

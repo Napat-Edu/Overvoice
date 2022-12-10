@@ -45,45 +45,47 @@ class _RecordState extends State<Record> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
 
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
     super.initState();
 
     // Listen to states: playing, paused, stopped
-    audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+    audioPlayerAssist.onPlayerStateChanged.listen((PlayerState s) {
       //print('Current player state: $s');
       if (!mounted) return;
       setState(() => playerState = s);
     });
 
     // Listen to audio duration
-    audioPlayer.onDurationChanged.listen((Duration d) {
+    audioPlayerAssist.onDurationChanged.listen((Duration d) {
       //print('Max duration: $d');
       if (!mounted) return;
       setState(() => duration = d);
     });
 
     // Listen to audio position
-    audioPlayer.onPositionChanged.listen((Duration p) {
+    audioPlayerAssist.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
         pause();
-        audioPlayer.seek(Duration(
+        audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
-    audioPlayer.onPlayerComplete.listen((event) {
+    // Listen to audio when it completed
+    audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
       setState(() {
@@ -95,7 +97,8 @@ class _RecordState extends State<Record> {
   @override
   void dispose() {
     Record.converIndex = 0;
-    audioPlayer.dispose();
+    audioPlayerAssist.dispose();
+    audioPlayerBGM.dispose();
     super.dispose();
   }
 
@@ -191,7 +194,7 @@ class _RecordState extends State<Record> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
-                      child: displayConversation(),
+                      child: displayConversation(detailList),
                       //ConversationController(conversationList),
                     ))
               ],
@@ -238,13 +241,15 @@ class _RecordState extends State<Record> {
     );
   }
 
+  // play & resume audio
   Future play() async {
-    audioPlayer.resume();
+    audioPlayerAssist.resume();
     audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
-    await audioPlayer.pause();
+    await audioPlayerAssist.pause();
     await audioPlayerBGM.pause();
     isPlaying = false;
   }
@@ -261,14 +266,16 @@ class _RecordState extends State<Record> {
     }
   }
 
+    // use for check status of button
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
     } else {
       print("Status is checked");
-      await audioPlayer.seek(Duration(seconds: timeTotal));
+      await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
-      
+
+      //condition for avoid out of bound case
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -283,38 +290,59 @@ class _RecordState extends State<Record> {
     }
   }
 
+  // set up audio before user start
   Future setup(List times) async {
     this.currentConverDuration = times;
+
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
+
       final storageRef = await FirebaseStorage.instance.ref();
-      final soundRefAssist =
-          await storageRef.child(detailList["assistanceVoiceName"]); // <-- your file name
-      final soundRefBGM =
-          await storageRef.child(detailList["bgmName"]); // <-- your file name
-      final metaDataAssist = await soundRefAssist.getDownloadURL();
-      final metaDataBGM = await soundRefBGM.getDownloadURL();
-      log('data: ${metaDataAssist.toString()}');
-      log('data: ${metaDataBGM.toString()}');
-      String urlAssist = metaDataAssist.toString();
-      String urlBGM = metaDataBGM.toString();
-      // await audioPlayerA.setSourceUrl(urlA);
+      String urlAssist =
+          await getAudioURL(storageRef, detailList["assistanceVoiceName"]);
+      String urlBGM = await getAudioURL(storageRef, detailList["bgmName"]);
+
+      await audioPlayerAssist.setSourceUrl(urlAssist);
       await audioPlayerBGM.setSourceUrl(urlBGM);
-      await audioPlayer.setSourceUrl(urlAssist);
-      print("Already Set!");
+      print("Everything Set!");
     }
   }
 
-  Widget displayConversation() {
+  // get url of audio by name of it
+  getAudioURL(final storageRef, String audioName) async {
+    final soundRef = await storageRef.child(audioName);
+    final metaData = await soundRef.getDownloadURL();
+    String url = metaData.toString();
+    log('data: ${metaData.toString()}');
+    return url;
+  }
+
+  // use for generate display conversation
+  Widget displayConversation(Map<String, dynamic> detailList) {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
+      // replace a duration text for more information
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail;
+        if (detailList["voiceoverAmount"] == "1") {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\)'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที)';
+          });
+        } else {
+          conversationWithDetail =
+              conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+            return '(มีเวลาพากย์ ${m[1]} วินาที:';
+          });
+        }
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1} " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
+    // return a conversation text
     return ListView.builder(
         itemCount: 1,
         itemBuilder: (context, index) => ListTile(
@@ -329,7 +357,7 @@ class _RecordState extends State<Record> {
   // use for change conversation text
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

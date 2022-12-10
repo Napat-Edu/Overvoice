@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:overvoice_project/controller/database_query_controller.dart';
+import 'package:overvoice_project/controller/popup_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -28,8 +30,6 @@ class RecordButtonDuo extends StatefulWidget {
       converIndexSetter: converIndexSetter);
 }
 
-bool voiceStart = false;
-
 class _RecordButtonDuoState extends State<RecordButtonDuo> {
   int number = 0;
 
@@ -43,6 +43,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
 
   List conversationList;
   String character;
+  PopupControl popupControl = PopupControl();
 
   final ValueChanged<int> converIndexSetter;
 
@@ -117,7 +118,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
                 : () async {
                     if (StageVoice >= TimeCountDown.length) {
                       await recorder._stop(character);
-                      showAlertDialog4(context);
+                      popupControl.finishAlertDialog(context, 4);
                     } else if (TimeCountDown[StageVoice].isNotEmpty) {
                       if (StageVoice == 0) {
                         converIndexSetter(Record.converIndex);
@@ -160,11 +161,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
         FlutterBeep.beep(false);
         timer.cancel();
         onStatusChanged(false);
-        if (n >= m) {
-          recorder._stop(character);
-        } else {
-          recorder._pause();
-        }
+        recorder._pause();
 
         // go for next conversation index in record_page
         if (Record.converIndex < conversationList.length - 1) {
@@ -188,6 +185,8 @@ class SoundRecorder {
   bool get isPaused => _audioRecorder!.isPaused;
   bool get isStopped => _audioRecorder!.isStopped;
   get onProgress => _audioRecorder!.onProgress;
+
+  DatabaseQuery databaseQuery = DatabaseQuery();
 
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
@@ -214,7 +213,6 @@ class SoundRecorder {
 
   Future _record() async {
     if (!_isRecordingInitialised) return;
-    voiceStart = true;
     await _audioRecorder
         ?.setSubscriptionDuration(const Duration(milliseconds: 50));
     await _audioRecorder!.startRecorder(toFile: voiceName);
@@ -234,9 +232,8 @@ class SoundRecorder {
     if (!_isRecordingInitialised) return;
     final filepath = await _audioRecorder!.stopRecorder();
     final file = File(filepath!);
-    voiceStart = false;
     //print('Record : $file');
-    _uploadFile(file, character);
+    databaseQuery.uploadFile(file, voiceName, docID, character);
   }
 
   Future toggleRecording() async {
@@ -248,84 +245,4 @@ class SoundRecorder {
       await _pause();
     }
   }
-
-  Future _uploadFile(file, character) async {
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
-
-    // Create a storage reference from our app
-    final storageRef = FirebaseStorage.instance.ref();
-
-    final soundRef = storageRef.child(voiceName);
-    // String filePath = '${appDocDir.path}/audio.aac';
-    // File file = File(filePath);
-
-    await soundRef.putFile(file);
-
-    CollectionReference usersHistory =
-        FirebaseFirestore.instance.collection('History');
-    usersHistory
-        .doc()
-        .set({
-          'audioInfo': docID,
-          'sound_1': voiceName,
-          'sound_2': "",
-          'status': false,
-          'user_1': FirebaseAuth.instance.currentUser!.email,
-          'user_2': "",
-          'characterInit': character,
-        })
-        .then((value) => print("History Added"))
-        .catchError((error) => print("Failed to add user: $error"));
-
-    CollectionReference usersInfo =
-        FirebaseFirestore.instance.collection('UserInfo');
-    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-      "recordAmount": FieldValue.increment(1),
-    });
-  }
 }
-
-void showAlertDialog4(BuildContext context) => showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/image/CorrectIcon.png"),
-              SizedBox(height: 12),
-              Text(
-                'เสร็จสิ้น',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'ขอบคุณสำหรับการพากย์เสียงของคุณ',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
-              ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7200),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {
-                  int count = 0;
-                  Navigator.popUntil(context, ((route) {
-                    return count++ == 4;
-                  }));
-                },
-                child: Text('ตกลง'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
