@@ -89,7 +89,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: Color(0xFFFF7200),
+                          backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),
@@ -112,10 +112,10 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                       toSelectCharacterPage(isPairBuddyMode);
                     },
                     elevation: 2.0,
-                    fillColor: Color(0xFFFF7200),
+                    fillColor: const Color(0xFFFF7200),
                     child: Icon(Icons.people, size: 74.0, color: Colors.white),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
                   ),
                   SizedBox(
                     height: constantValue.getScreenHeight(context) / 48,
@@ -127,7 +127,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: Color(0xFFFF7200),
+                          backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),

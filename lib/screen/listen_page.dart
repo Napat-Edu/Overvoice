@@ -177,7 +177,7 @@ class _ListenPageState extends State<ListenPage> {
                       width: constantValue.getScreenWidth(context) / 1.17, // บท
                       child: Container(
                         height: 360,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             color: Color(0xFFFFD4B2),
                             borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(10),
@@ -241,7 +241,7 @@ class _ListenPageState extends State<ListenPage> {
                   ),
                   onPressed: () async {
                     if (isPlaying == false) {
-                      StartListening();
+                      startListening();
                     } else {
                       isPlaying = false;
                       pause();
@@ -258,7 +258,8 @@ class _ListenPageState extends State<ListenPage> {
     );
   }
 
-  Future StartListening() async {
+  // read audio from database and prepare to play
+  Future startListening() async {
     final storageRef = await FirebaseStorage.instance.ref();
     final soundRefA =
         await storageRef.child(listenList.audioFileName!); // <-- your file name
@@ -281,24 +282,27 @@ class _ListenPageState extends State<ListenPage> {
       await audioPlayerB.setSourceUrl(urlB);
 
       isPlaying = true;
-      play(urlA, urlB, urlBGM);
+      playDuoType(urlA, urlB, urlBGM);
     } else {
       isPlaying = true;
       playSingleType(urlA, urlBGM);
     }
   }
 
-  Future play(String urlA, String urlB, String urlBGM) async {
+  // play audio of user1, user 2 voice and bgm
+  Future playDuoType(String urlA, String urlB, String urlBGM) async {
     audioPlayerA.resume();
     audioPlayerB.resume();
     audioPlayerBGM.resume();
   }
 
+  // play audio of user voice and bgm
   Future playSingleType(String urlA, String urlBGM) async {
     audioPlayerA.resume();
     audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
     await audioPlayerA.pause();
     await audioPlayerBGM.pause();

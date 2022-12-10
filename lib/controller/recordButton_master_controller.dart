@@ -23,6 +23,7 @@ class SoundRecorder {
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
 
+  // checking for microphone of user
   Future init() async {
     _audioRecorder = FlutterSoundRecorder();
 
@@ -37,12 +38,12 @@ class SoundRecorder {
 
   void dispose() {
     if (!_isRecordingInitialised) return;
-
     _audioRecorder!.closeRecorder();
     _audioRecorder = null;
     _isRecordingInitialised = false;
   }
 
+  // start recording
   Future record() async {
     if (!_isRecordingInitialised) return;
     await _audioRecorder
@@ -50,16 +51,19 @@ class SoundRecorder {
     await _audioRecorder!.startRecorder(toFile: voiceName);
   }
 
+   // pause recording
   Future pause() async {
     if (!_isRecordingInitialised) return;
     await _audioRecorder!.pauseRecorder();
   }
 
+   // resume recording
   Future resume() async {
     if (!_isRecordingInitialised) return;
     await _audioRecorder!.resumeRecorder();
   }
 
+   // stop recording
   Future stop() async {
     if (!_isRecordingInitialised) return;
     final filepath = await _audioRecorder!.stopRecorder();
@@ -68,6 +72,7 @@ class SoundRecorder {
     databaseQuery.uploadFile(file, voiceName, docID, "singleDub");
   }
 
+  // stop recording duo type audio
   Future stopDuoType(character) async {
     if (!_isRecordingInitialised) return;
     final filepath = await _audioRecorder!.stopRecorder();
@@ -76,6 +81,7 @@ class SoundRecorder {
     databaseQuery.uploadFile(file, voiceName, docID, character);
   }
 
+  // toggle a record status by the state of audio record player
   Future toggleRecording() async {
     if (_audioRecorder!.isStopped) {
       await record();
