@@ -150,7 +150,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           radius: 26,
                           backgroundImage:
                               NetworkImage(listenList[index].imgURL!),
-                              child: Align(alignment: Alignment.topLeft,child: CircleAvatar(radius: 13,backgroundColor: Colors.black,),),
                         ),
                       ),
                     ),
