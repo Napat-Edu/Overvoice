@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/screen/record_page.dart';
 import 'package:overvoice_project/screen/record_select_type_page.dart';
 import '../controller/database_query_controller.dart';
+import '../model/constant_value.dart';
 import 'listen_select_list_page.dart';
 
 class MoreInfo extends StatefulWidget {
@@ -19,11 +20,10 @@ class _MoreInfoState extends State<MoreInfo> {
   _MoreInfoState(this.docID);
 
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -67,20 +67,17 @@ class _MoreInfoState extends State<MoreInfo> {
     Map<String, dynamic>? detailList =
         await databaseQuery.getAudioDocumentbyID(docID);
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     // return UI with data in list
     return Future.delayed(const Duration(seconds: 0), () {
       return Column(
         children: <Widget>[
           SizedBox(
-            height: screenHeight / 35.6,
+            height: constantValue.getScreenHeight(context) / 35.6,
           ),
           Container(
             child: Container(
               width: double.infinity,
-              height: screenHeight / 3.56,
+              height: constantValue.getScreenHeight(context) / 3.56,
               child: Image.network(detailList["coverimg"],
                   color: Colors.black.withOpacity(0.3),
                   fit: BoxFit.cover,
@@ -89,7 +86,7 @@ class _MoreInfoState extends State<MoreInfo> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 20, left: 40, right: 40),
-            height: screenHeight / 1.6,
+            height: constantValue.getScreenHeight(context) / 1.6,
             child: Column(
               children: <Widget>[
                 Container(
@@ -102,7 +99,7 @@ class _MoreInfoState extends State<MoreInfo> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeight / 100,
+                  height: constantValue.getScreenHeight(context) / 100,
                 ),
                 Container(
                   child: Text(
@@ -114,7 +111,7 @@ class _MoreInfoState extends State<MoreInfo> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeight / 99,
+                  height: constantValue.getScreenHeight(context) / 99,
                 ),
                 Container(
                   // character of audio
@@ -126,10 +123,10 @@ class _MoreInfoState extends State<MoreInfo> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeight / 50,
+                  height: constantValue.getScreenHeight(context) / 50,
                 ),
                 Container(
-                  height: screenHeight / 4.5,
+                  height: constantValue.getScreenHeight(context) / 4.5,
                   // description of audio
                   child: Text(
                     "${detailList['detail']}",
@@ -139,7 +136,7 @@ class _MoreInfoState extends State<MoreInfo> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeight / 100,
+                  height: constantValue.getScreenHeight(context) / 100,
                 ),
                 Container(
                   // duration time of audio
@@ -153,7 +150,7 @@ class _MoreInfoState extends State<MoreInfo> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeight / 7,
+                  height: constantValue.getScreenHeight(context) / 7,
                 ),
                 Row(
                   children: [
@@ -178,7 +175,7 @@ class _MoreInfoState extends State<MoreInfo> {
                       ),
                     ),
                     SizedBox(
-                      width: screenWidth / 41,
+                      width: constantValue.getScreenWidth(context) / 41,
                     ),
                     Expanded(
                       child: TextButton(

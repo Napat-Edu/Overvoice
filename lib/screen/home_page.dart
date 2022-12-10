@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/controller/titlecardlist.dart';
+import 'package:overvoice_project/controller/title_card_list_controller.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../model/title_detail.dart';
-import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -24,8 +24,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    ConstantValue constantValue = ConstantValue();
 
     // core UI
     return Scaffold(
@@ -53,12 +52,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 // Banner Image
                 label: "้ลองค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
                 child: SizedBox(
-                    width: screenWidth,
-                    height: screenHeight / 4.75,
+                    width: constantValue.getScreenWidth(context),
+                    height: constantValue.getScreenHeight(context) / 4.75,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                          "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg"),
+                      child: Image.asset("assets/image/overvoice_banner.png"),
                     )),
               ),
             ],
@@ -132,9 +130,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       mainTitleList = await getTopHitAudio();
     }
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     // return UI with data that already read
     return ListView.separated(
         padding: EdgeInsets.zero,
@@ -147,55 +142,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             titleName: mainTitleList[index].titleName!,
             episode: mainTitleList[index].episode!,
             docID: mainTitleList[index]
-                .docID!) /*ListTile(
-        leading: SizedBox(
-            width: 53,
-            height: 53,
-            child: Container(
-              decoration: const BoxDecoration(boxShadow: [
-                BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
-              ]),
-              child: Image.network(
-                mainTitleList[index].imgURL!,
-                fit: BoxFit.cover,
-              ),
-            )),
-        title: Text(
-          mainTitleList[index].titleName!,
-          style: GoogleFonts.prompt(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
-        ),
-        subtitle: Text(
-          mainTitleList[index].episode!,
-          style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 15),
-        ),
-        trailing: TextButton(
-          style: TextButton.styleFrom(
-              fixedSize: const Size(10, 10),
-              backgroundColor: const Color(0xFFFF7200),
-              foregroundColor: Colors.white,
-              textStyle: const TextStyle(
-                fontSize: 15,
-              )),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MoreInfo(mainTitleList[index].docID!),
-                  fullscreenDialog: true,
-                ));
-          },
-          child: Text('เข้าชม', style: GoogleFonts.prompt()),
-        ),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MoreInfo(mainTitleList[index].docID!),
-                fullscreenDialog: true,
-              ));
-        },
-      ),*/
+                .docID!)
         );
   }
 

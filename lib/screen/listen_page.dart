@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'dart:developer';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,6 +44,8 @@ class _ListenPageState extends State<ListenPage> {
 
   // for the BGM
   AudioPlayer audioPlayerBGM = AudioPlayer();
+
+  ConstantValue constantValue = ConstantValue();
 
   PlayerState playerState = PlayerState.stopped;
 
@@ -91,8 +94,6 @@ class _ListenPageState extends State<ListenPage> {
   @override
   Widget build(BuildContext context) {
     late List conversationList = detailList["conversation"].split(",");
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -111,7 +112,7 @@ class _ListenPageState extends State<ListenPage> {
         ),
       ),
       body: Container(
-          padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
+          padding: EdgeInsets.only(top: constantValue.getScreenHeight(context) / 30, left: 20, right: 20),
           width: double.infinity,
           height: double.infinity,
           color: Color(0xFFFF7200),
@@ -129,7 +130,7 @@ class _ListenPageState extends State<ListenPage> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 80,
+                height: constantValue.getScreenHeight(context) / 80,
               ),
               Text(
                 "พากย์เสียงโดย ${listenList.userName!}",
@@ -139,15 +140,15 @@ class _ListenPageState extends State<ListenPage> {
                     color: Colors.white),
               ),
               SizedBox(
-                height: screenHeight / 40,
+                height: constantValue.getScreenHeight(context) / 40,
               ),
               Stack(
                 children: <Widget>[
                   Container(
-                    height: screenHeight / 2.4, // กรอบบท
+                    height: constantValue.getScreenHeight(context) / 2.4, // กรอบบท
                     width: double.infinity,
                     padding: EdgeInsets.only(
-                        top: screenHeight / 44.5, left: 26, right: 26),
+                        top: constantValue.getScreenHeight(context) / 44.5, left: 26, right: 26),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -164,16 +165,16 @@ class _ListenPageState extends State<ListenPage> {
                           ),
                         ),
                         SizedBox(
-                          height: screenHeight / 49,
+                          height: constantValue.getScreenHeight(context) / 49,
                         ),
                       ],
                     ),
                   ),
                   Positioned(
-                      top: screenHeight / 15,
-                      left: screenWidth / 43,
-                      height: screenHeight / 3,
-                      width: screenWidth / 1.17, // บท
+                      top: constantValue.getScreenHeight(context) / 15,
+                      left: constantValue.getScreenWidth(context) / 43,
+                      height: constantValue.getScreenHeight(context) / 3,
+                      width: constantValue.getScreenWidth(context) / 1.17, // บท
                       child: Container(
                         height: 360,
                         decoration: BoxDecoration(
@@ -195,7 +196,7 @@ class _ListenPageState extends State<ListenPage> {
                 ],
               ),
               SizedBox(
-                height: screenHeight / 300,
+                height: constantValue.getScreenHeight(context) / 300,
               ),
               Slider(
                 min: 0,
@@ -231,10 +232,10 @@ class _ListenPageState extends State<ListenPage> {
               ),
               CircleAvatar(
                 backgroundColor: Colors.white,
-                radius: screenWidth / 16,
+                radius: constantValue.getScreenWidth(context) / 16,
                 child: IconButton(
                   icon: Icon(
-                    size: screenWidth / 13,
+                    size: constantValue.getScreenWidth(context) / 13,
                     isPlaying ? Icons.pause : Icons.play_arrow,
                     color: Colors.orange,
                   ),
@@ -250,7 +251,7 @@ class _ListenPageState extends State<ListenPage> {
               ),
 
               SizedBox(
-                height: screenHeight / 30,
+                height: constantValue.getScreenHeight(context) / 30,
               ),
             ],
           )),

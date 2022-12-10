@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import '../controller/database_query_controller.dart';
 import 'listen_page.dart';
@@ -23,11 +24,10 @@ class _ListenSelectListState extends State<ListenSelectList> {
 
   List<ListenDetails> listenList = [];
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -39,7 +39,7 @@ class _ListenSelectListState extends State<ListenSelectList> {
           style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFFFF7200),
+        backgroundColor: const Color(0xFFFF7200),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_rounded,
@@ -55,8 +55,8 @@ class _ListenSelectListState extends State<ListenSelectList> {
             Container(
               margin: EdgeInsets.all(5),
               child: SizedBox(
-                width: screenWidth,
-                height: screenHeight / 4,
+                width: constantValue.getScreenWidth(context),
+                height: constantValue.getScreenHeight(context) / 4,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Image border
                   child: Image.network(
@@ -93,7 +93,7 @@ class _ListenSelectListState extends State<ListenSelectList> {
                                     color: Colors.white),
                               )),
                           SizedBox(
-                            width: screenWidth / 3,
+                            width: constantValue.getScreenWidth(context) / 3,
                           ),
                         ],
                       ),
@@ -103,7 +103,7 @@ class _ListenSelectListState extends State<ListenSelectList> {
               ),
             ),
             SizedBox(
-              height: screenHeight / 200,
+              height: constantValue.getScreenHeight(context) / 200,
             ),
             Expanded(
               child: FutureBuilder<Widget>(

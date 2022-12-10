@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/controller/titlecardlist.dart';
+import 'package:overvoice_project/controller/title_card_list_controller.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 import '../controller/database_query_controller.dart';
-import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Search extends StatefulWidget {
@@ -16,6 +16,7 @@ class _SearchState extends State<Search> {
   static List<TitleDetails> mainTitleList = [];
   List<TitleDetails> displayList = [];
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   // use for update display list and set state of UI
   Future<void> updateList(String value) async {
@@ -51,8 +52,6 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -87,7 +86,7 @@ class _SearchState extends State<Search> {
             ),
           ),
           SizedBox(
-            height: screenHeight / 200,
+            height: constantValue.getScreenHeight(context) / 200,
           ),
           Expanded(
             child: displayList.isEmpty
@@ -109,58 +108,7 @@ class _SearchState extends State<Search> {
                         titleName: displayList[index].titleName!,
                         episode: displayList[index].episode!,
                         docID: displayList[index]
-                            .docID!) /*ListTile(
-                      leading: SizedBox(
-                          width: 53,
-                          height: 53,
-                          child: Container(
-                            decoration: const BoxDecoration(boxShadow: [
-                              BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
-                            ]),
-                            child: Image.network(
-                              displayList[index].imgURL!,
-                              fit: BoxFit.cover,
-                            ),
-                          )),
-                      title: Text(
-                        displayList[index].titleName!,
-                        style: GoogleFonts.prompt(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17),
-                      ),
-                      subtitle: Text(
-                        displayList[index].episode!,
-                        style: GoogleFonts.prompt(
-                            fontWeight: FontWeight.w500, fontSize: 15),
-                      ),
-                      trailing: TextButton(
-                        style: TextButton.styleFrom(
-                            fixedSize: const Size(10, 10),
-                            backgroundColor: const Color(0xFFFF7200),
-                            foregroundColor: Colors.white,
-                            textStyle: GoogleFonts.prompt(fontSize: 15)),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MoreInfo(displayList[index].docID!)));
-                        },
-                        child: const Text('เข้าชม'),
-                      ),
-                      onTap: () {
-                        // go to audio info page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MoreInfo(displayList[index].docID!),
-                            fullscreenDialog: true,
-                          ),
-                        );
-                      },
-                    ),*/
+                            .docID!)
                     ),
           ),
         ],

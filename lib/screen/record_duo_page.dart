@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,6 +47,7 @@ class _RecordDuoState extends State<RecordDuo> {
 
   AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
+  ConstantValue constantValue = ConstantValue();
 
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
@@ -104,8 +106,6 @@ class _RecordDuoState extends State<RecordDuo> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -126,7 +126,7 @@ class _RecordDuoState extends State<RecordDuo> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
+        padding: EdgeInsets.only(top: constantValue.getScreenHeight(context) / 30, left: 20, right: 20),
         width: double.infinity,
         height: double.infinity,
         color: Color(0xFFFF7200),
@@ -144,7 +144,7 @@ class _RecordDuoState extends State<RecordDuo> {
               ),
             ),
             SizedBox(
-              height: screenHeight / 80,
+              height: constantValue.getScreenHeight(context) / 80,
             ),
             Text(
               "คุณพากย์คู่กับ ${yourBuddy.userName}",
@@ -155,15 +155,15 @@ class _RecordDuoState extends State<RecordDuo> {
                   color: Colors.white),
             ),
             SizedBox(
-              height: screenHeight / 40,
+              height: constantValue.getScreenHeight(context) / 40,
             ),
             Stack(
               children: <Widget>[
                 Container(
-                  height: screenHeight / 2.1, // กรอบบท
+                  height: constantValue.getScreenHeight(context) / 2.1, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(
-                      top: screenHeight / 44.5, left: 26, right: 26),
+                      top: constantValue.getScreenHeight(context) / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -180,16 +180,16 @@ class _RecordDuoState extends State<RecordDuo> {
                         ),
                       ),
                       SizedBox(
-                        height: screenHeight / 49,
+                        height: constantValue.getScreenHeight(context) / 49,
                       ),
                     ],
                   ),
                 ),
                 Positioned(
-                    top: screenHeight / 15,
-                    left: screenWidth / 43,
-                    height: screenHeight / 2.52,
-                    width: screenWidth / 1.17, // บท
+                    top: constantValue.getScreenHeight(context) / 15,
+                    left: constantValue.getScreenWidth(context) / 43,
+                    height: constantValue.getScreenHeight(context) / 2.52,
+                    width: constantValue.getScreenWidth(context) / 1.17, // บท
                     child: Container(
                       decoration: const BoxDecoration(
                           color: Color(0xFFFFD4B2),
@@ -201,7 +201,7 @@ class _RecordDuoState extends State<RecordDuo> {
               ],
             ),
             SizedBox(
-              height: screenHeight / 30,
+              height: constantValue.getScreenHeight(context) / 30,
             ),
             // record button all-function here
             RecordButtonDuoCoop(
@@ -213,11 +213,11 @@ class _RecordDuoState extends State<RecordDuo> {
                 (status) => {checkStatus(status)},
                 converIndexSetter: _converIndexSetter),
             SizedBox(
-              height: screenHeight / 50,
+              height: constantValue.getScreenHeight(context) / 50,
             ),
             SizedBox(
-              width: screenWidth / 1.4,
-              height: screenHeight / 20,
+              width: constantValue.getScreenWidth(context) / 1.4,
+              height: constantValue.getScreenHeight(context) / 20,
               child: TextButton(
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
