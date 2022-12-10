@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:overvoice_project/controller/database_query_controller.dart';
+import 'package:overvoice_project/controller/popup_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -51,6 +53,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   List conversationList;
   String character;
   String soundOver;
+  PopupControl popupControl = PopupControl();
 
   final ValueChanged<int> converIndexSetter;
 
@@ -138,14 +141,14 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                     borderRadius: BorderRadius.circular(5)),
                 backgroundColor: Colors.white,
                 foregroundColor: Color(0xFFFF7200),
-                textStyle:
-                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600)),
+                textStyle: GoogleFonts.prompt(
+                    fontSize: 18, fontWeight: FontWeight.w600)),
             onPressed: status || isStopped && stageVoice != 0
                 ? null
                 : () async {
                     if (stageVoice >= TimeCountDown.length) {
                       await recorder._stop();
-                      showAlertDialog4(context);
+                      popupControl.finishAlertDialog(context, 5);
                     } else if (TimeCountDown[stageVoice].isNotEmpty) {
                       if (stageVoice == 0) {
                         converIndexSetter(Record.converIndex);
@@ -248,6 +251,8 @@ class SoundRecorder {
   get onProgress => _audioRecorder!.onProgress;
   AudioPlayer audioPlayer = AudioPlayer();
 
+  DatabaseQuery databaseQuery = DatabaseQuery();
+
   String voiceName =
       "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
 
@@ -293,7 +298,7 @@ class SoundRecorder {
     final filepath = await _audioRecorder!.stopRecorder();
     final file = File(filepath!);
     //print('Record : $file');
-    _uploadFile(file);
+    databaseQuery.uploadFile(file, voiceName, hisID, "pairDub");
   }
 
   Future toggleRecording() async {
@@ -305,80 +310,4 @@ class SoundRecorder {
       await _pause();
     }
   }
-
-  Future _uploadFile(file) async {
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
-
-    // Create a storage reference from our app
-    final storageRef = FirebaseStorage.instance.ref();
-
-    final soundRef = storageRef.child(voiceName);
-    // String filePath = '${appDocDir.path}/audio.aac';
-    // File file = File(filePath);
-
-    await soundRef.putFile(file);
-
-    CollectionReference usersHistory =
-        FirebaseFirestore.instance.collection('History');
-    usersHistory
-        .doc(hisID)
-        .update({
-          "sound_2": voiceName,
-          "status": true,
-          "user_2": FirebaseAuth.instance.currentUser!.email,
-        })
-        .then((value) => print("History Updated"))
-        .catchError((error) => print("Failed to update: $error"));
-
-    CollectionReference usersInfo =
-        FirebaseFirestore.instance.collection('UserInfo');
-    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-      "recordAmount": FieldValue.increment(1),
-    });
-  }
 }
-
-void showAlertDialog4(BuildContext context) => showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/image/CorrectIcon.png"),
-              SizedBox(height: 12),
-              Text(
-                'เสร็จสิ้น',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'ขอบคุณสำหรับการพากย์เสียงของคุณ',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
-              ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7200),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {
-                  int count = 0;
-                  Navigator.popUntil(context, ((route) {
-                    return count++ == 5;
-                  }));
-                },
-                child: Text('ตกลง'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
