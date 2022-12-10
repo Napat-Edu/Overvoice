@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,11 +19,10 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
   _SelectDuoRecordTypeState(this.detaillMap, this.docID);
 
   bool isPairBuddyMode = true;
+  ConstantValue constantValue = ConstantValue();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -44,12 +44,12 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
-        height: screenHeight / 1.6,
+        height: constantValue.getScreenHeight(context) / 1.6,
         width: double.infinity,
         child: Container(
             child: Column(children: <Widget>[
           SizedBox(
-            height: screenHeight / 8.9,
+            height: constantValue.getScreenHeight(context) / 8.9,
           ),
           Container(
             child: Text(
@@ -60,7 +60,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
             ),
           ),
           SizedBox(
-            height: screenHeight / 30,
+            height: constantValue.getScreenHeight(context) / 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -80,11 +80,11 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                     shape: const CircleBorder(),
                   ),
                   SizedBox(
-                    height: screenHeight / 48,
+                    height: constantValue.getScreenHeight(context) / 48,
                   ),
                   SizedBox(
-                    width: screenWidth / 3.4,
-                    height: screenHeight / 22,
+                    width: constantValue.getScreenWidth(context) / 3.4,
+                    height: constantValue.getScreenHeight(context) / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -102,7 +102,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                 ]),
               ),
               SizedBox(
-                width: screenWidth / 10,
+                width: constantValue.getScreenWidth(context) / 10,
               ),
               Container(
                 // pair buddy dubbing section type
@@ -118,11 +118,11 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                     shape: CircleBorder(),
                   ),
                   SizedBox(
-                    height: screenHeight / 48,
+                    height: constantValue.getScreenHeight(context) / 48,
                   ),
                   SizedBox(
-                    width: screenWidth / 3.4,
-                    height: screenHeight / 22,
+                    width: constantValue.getScreenWidth(context) / 3.4,
+                    height: constantValue.getScreenHeight(context) / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(

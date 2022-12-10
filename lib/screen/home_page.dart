@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../model/title_detail.dart';
 import 'moreInfo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,8 +24,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    ConstantValue constantValue = ConstantValue();
 
     // core UI
     return Scaffold(
@@ -52,8 +52,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 // Banner Image
                 label: "้ลองค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
                 child: SizedBox(
-                    width: screenWidth,
-                    height: screenHeight / 4.75,
+                    width: constantValue.getScreenWidth(context),
+                    height: constantValue.getScreenHeight(context) / 4.75,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(

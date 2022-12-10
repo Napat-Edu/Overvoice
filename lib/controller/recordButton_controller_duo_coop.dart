@@ -123,60 +123,60 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     print(characterList + TimeCountDown); // Debug
-    print(status);
     return Container(
-        child: Column(
-      children: <Widget>[
-        SizedBox(
-          width: screenWidth / 1.4,
-          height: screenHeight / 20,
-          child: TextButton(
-            style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFFFF7200),
-                textStyle: GoogleFonts.prompt(
-                    fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && stageVoice != 0
-                ? null
-                : () async {
-                    if (stageVoice >= TimeCountDown.length) {
-                      await recorder.stop();
-                      popupControl.finishAlertDialog(context, 5);
-                    } else if (TimeCountDown[stageVoice].isNotEmpty) {
-                      if (stageVoice == 0) {
-                        converIndexSetter(Record.converIndex);
-                        await play();
-                        await recorder.record();
-                        await audioPlayer.resume();
-                        playPartner();
-                      } else {
-                        await play();
-                        await recorder.resume();
-                        await null;
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: screenWidth / 1.4,
+            height: screenHeight / 20,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  backgroundColor: Colors.white,
+                  foregroundColor: Color(0xFFFF7200),
+                  textStyle: GoogleFonts.prompt(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
+              onPressed: status || isStopped && stageVoice != 0
+                  ? null
+                  : () async {
+                      if (stageVoice >= TimeCountDown.length) {
+                        await recorder.stop();
+                        popupControl.finishAlertDialog(context, 5);
+                      } else if (TimeCountDown[stageVoice].isNotEmpty) {
+                        if (stageVoice == 0) {
+                          converIndexSetter(Record.converIndex);
+                          await play();
+                          await recorder.record();
+                          await audioPlayer.resume();
+                          playPartner();
+                        } else {
+                          await play();
+                          await recorder.resume();
+                          await null;
+                        }
+                        countdown(
+                            int.parse(TimeCountDown[
+                                stageVoice < TimeCountDown.length
+                                    ? stageVoice++
+                                    : stageVoice]),
+                            TimeCountDown.length);
+                        //print(TimeCountDown[StageVoice++]);
                       }
-                      countdown(
-                          int.parse(TimeCountDown[
-                              stageVoice < TimeCountDown.length
-                                  ? stageVoice++
-                                  : stageVoice]),
-                          TimeCountDown.length);
-                      //print(TimeCountDown[StageVoice++]);
-                    }
-                    setState(() {});
-                  },
-            child: Text(
-              stageVoice >= TimeCountDown.length
-                  ? 'เสร็จสิ้น'
-                  : character == characterList[stageVoice]
-                      ? text
-                      : 'บทของคู่คุณ',
+                      setState(() {});
+                    },
+              child: Text(
+                stageVoice >= TimeCountDown.length
+                    ? 'เสร็จสิ้น'
+                    : character == characterList[stageVoice]
+                        ? text
+                        : 'บทของคู่คุณ',
+              ),
             ),
           ),
-        )
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   void countdown(int n, int m) {
@@ -215,22 +215,11 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   }
 
   Future playPartner() async {
-    final storageRef = await FirebaseStorage.instance.ref();
-    // final soundRefA =
-    //     await storageRef.child(listenList.audioFileName!); // <-- your file name
-    final soundRefBGM = await storageRef.child(soundOver); // <-- your file name
-    // final metaDataA = await soundRefA.getDownloadURL();
+    final storageRef = FirebaseStorage.instance.ref();
+    final soundRefBGM = storageRef.child(soundOver);
     final metaDataBGM = await soundRefBGM.getDownloadURL();
-    // // log('data: ${metaDataA.toString()}');
     log('data: ${metaDataBGM.toString()}');
-    // // String urlA = metaDataA.toString();
     String urlBGM = metaDataBGM.toString();
-    // await audioPlayerA.setSourceUrl(urlA);
     await audioPlayer.setSourceUrl(urlBGM);
-    // play(urlA, urlBGM);
-    // String url =
-    // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-    // await audioPlayer.setSourceUrl(url);
-    //play();
   }
 }

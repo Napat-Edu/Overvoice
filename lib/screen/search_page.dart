@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/model/title_detail.dart';
 import '../controller/database_query_controller.dart';
 import 'moreInfo_page.dart';
@@ -15,6 +16,7 @@ class _SearchState extends State<Search> {
   static List<TitleDetails> mainTitleList = [];
   List<TitleDetails> displayList = [];
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   // use for update display list and set state of UI
   Future<void> updateList(String value) async {
@@ -50,8 +52,6 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -86,7 +86,7 @@ class _SearchState extends State<Search> {
             ),
           ),
           SizedBox(
-            height: screenHeight / 200,
+            height: constantValue.getScreenHeight(context) / 200,
           ),
           Expanded(
             child: displayList.isEmpty

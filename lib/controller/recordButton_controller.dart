@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/controller/popup_controller.dart';
 import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:flutter_beep/flutter_beep.dart';
-
+import '../model/constant_value.dart';
 import '../screen/record_page.dart';
 
 class RecordButton extends StatefulWidget {
@@ -25,39 +25,32 @@ class RecordButton extends StatefulWidget {
 
 class _RecordButtonState extends State<RecordButton> {
   int number = 0;
-
   int stageVoice = 0;
   bool status = false;
+  String docID;
   late final Function(List) onCountChanged;
   late final Function(bool) onStatusChanged;
-  String docID;
-
   late final recorder = SoundRecorder(docID);
-
-  List conversationList;
-  PopupControl popupControl = PopupControl();
-
   final ValueChanged<int> converIndexSetter;
+  PopupControl popupControl = PopupControl();
+  ConstantValue constantValue = ConstantValue();
+  List conversationList;
+
+  Object? get timeCountDown => null;
 
   _RecordButtonState(this.conversationList, this.docID, this.onCountChanged,
       this.onStatusChanged,
       {required this.converIndexSetter});
 
-  Object? get timeCountDown => null;
-
   @override
   void initState() {
     super.initState();
-
-    print("this is Record button!");
-
     recorder.init();
   }
 
   @override
   void dispose() {
     recorder.dispose();
-
     super.dispose();
   }
 
@@ -68,7 +61,7 @@ class _RecordButtonState extends State<RecordButton> {
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
 
-    final text;
+    final String text;
     if (isPaused) {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
@@ -79,61 +72,61 @@ class _RecordButtonState extends State<RecordButton> {
       text = 'เริ่มพากย์';
     }
 
-    List<String> TimeCountDown = [];
+    List<String> timeCountDown = [];
     for (int i = 0; i < conversationList.length; i++) {
-      TimeCountDown.add(
+      timeCountDown.add(
           conversationList[i].toString().split('(')[1].split(')')[0]);
     }
-    onCountChanged(TimeCountDown); // push time number in () to record_page
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    onCountChanged(timeCountDown); // push time number in () to record_page
+    
     return Container(
-        child: Column(
-      children: <Widget>[
-        SizedBox(
-          width: screenWidth / 1.4,
-          height: screenHeight / 20,
-          child: TextButton(
-            style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFFFF7200),
-                textStyle: GoogleFonts.prompt(
-                    fontSize: 19, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && stageVoice != 0
-                ? null
-                : () async {
-                    if (stageVoice == TimeCountDown.length) {
-                      await recorder.stop();
-                      popupControl.finishAlertDialog(context, 2);
-                    } else if (TimeCountDown[stageVoice].isNotEmpty) {
-                      if (stageVoice == 0) {
-                        converIndexSetter(Record.converIndex);
-                        await recorder.record();
-                      } else {
-                        await recorder.resume();
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: constantValue.getScreenWidth(context) / 1.4,
+            height: constantValue.getScreenHeight(context) / 20,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFFFF7200),
+                  textStyle: GoogleFonts.prompt(
+                      fontSize: 19, fontWeight: FontWeight.w600)),
+              onPressed: status || isStopped && stageVoice != 0
+                  ? null
+                  : () async {
+                      if (stageVoice == timeCountDown.length) {
+                        await recorder.stop();
+                        popupControl.finishAlertDialog(context, 2);
+                      } else if (timeCountDown[stageVoice].isNotEmpty) {
+                        if (stageVoice == 0) {
+                          converIndexSetter(Record.converIndex);
+                          await recorder.record();
+                        } else {
+                          await recorder.resume();
 
-                        await null;
+                          await null;
+                        }
+                        countdown(
+                            int.parse(timeCountDown[
+                                stageVoice < timeCountDown.length
+                                    ? stageVoice++
+                                    : stageVoice]),
+                            timeCountDown.length);
+
+                        //print(TimeCountDown[StageVoice++]);
                       }
-                      countdown(
-                          int.parse(TimeCountDown[
-                              stageVoice < TimeCountDown.length
-                                  ? stageVoice++
-                                  : stageVoice]),
-                          TimeCountDown.length);
-
-                      //print(TimeCountDown[StageVoice++]);
-                    }
-                    setState(() {});
-                  },
-            child: Text(
-              stageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
+                      setState(() {});
+                    },
+              child: Text(
+                stageVoice >= timeCountDown.length ? 'เสร็จสิ้น' : text,
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   void countdown(int n, int m) {
@@ -145,7 +138,6 @@ class _RecordButtonState extends State<RecordButton> {
       n--;
       if (n == 0) {
         FlutterBeep.beep(false);
-        print('Cancel timer');
         timer.cancel();
         onStatusChanged(false);
         recorder.pause();

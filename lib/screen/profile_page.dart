@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../controller/database_query_controller.dart';
 import '../controller/login_controller.dart';
 import '../main.dart';
+import '../model/constant_value.dart';
 import '../model/listen_detail.dart';
 import 'listen_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +27,7 @@ class _ProfilePage extends State<ProfilePage>
   late TabController _tabController;
 
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
   @override
@@ -36,9 +38,6 @@ class _ProfilePage extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -53,7 +52,7 @@ class _ProfilePage extends State<ProfilePage>
       ),
       body: FutureBuilder<Widget>(
         // read data from database and waiting for data
-        future: getData(context, screenHeight, screenWidth),
+        future: getData(context),
         builder: ((BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!;
@@ -63,14 +62,14 @@ class _ProfilePage extends State<ProfilePage>
           return Column(
             children: [
               SizedBox(
-                height: screenHeight / 8,
+                height: constantValue.getScreenHeight(context) / 8,
               ),
-              getUserSection(context, screenHeight, screenWidth),
+              getUserSection(context),
               SizedBox(
-                height: screenHeight / 29,
+                height: constantValue.getScreenHeight(context) / 29,
               ),
               SizedBox(
-                height: screenHeight / 29,
+                height: constantValue.getScreenHeight(context) / 29,
               ),
               Text("กำลังโหลด...", style: GoogleFonts.prompt()),
             ],
@@ -81,8 +80,7 @@ class _ProfilePage extends State<ProfilePage>
   }
 
   // use for read data from database and waiting for data
-  Future<Widget> getData(
-      BuildContext context, double screenHeight, double screenWidth) async {
+  Future<Widget> getData(BuildContext context) async {
     List<ListenDetails> listenListSoloType = [];
     List<ListenDetails> listenListDuoType = [];
 
@@ -97,15 +95,14 @@ class _ProfilePage extends State<ProfilePage>
     return Column(
       children: [
         SizedBox(
-          height: screenHeight / 8,
+          height: constantValue.getScreenHeight(context) / 8,
         ),
-        getUserSection(context, screenHeight, screenWidth),
-        SizedBox(height: screenHeight / 29),
+        getUserSection(context),
+        SizedBox(height: constantValue.getScreenHeight(context) / 29),
         userStaticSection(context, userData),
-        SizedBox(height: screenHeight / 29),
+        SizedBox(height: constantValue.getScreenHeight(context) / 29),
         headerContent(),
-        contentSection(
-            listenListSoloType, listenListDuoType, screenHeight, screenWidth),
+        contentSection(listenListSoloType, listenListDuoType),
       ],
     );
   }
@@ -202,38 +199,35 @@ class _ProfilePage extends State<ProfilePage>
   //use for control content section (add or delete here)
   Widget contentSection(
           List<ListenDetails> listenListSoloType,
-          List<ListenDetails> listenListDuoType,
-          double screenHeight,
-          double screenWidth) =>
+          List<ListenDetails> listenListDuoType,) =>
       Expanded(
         child: TabBarView(
           controller: _tabController,
           children: <Widget>[
             // create content section UI
-            displayAudioList(listenListSoloType, 1, screenHeight, screenWidth),
-            displayAudioList(listenListDuoType, 2, screenHeight, screenWidth),
+            displayAudioList(listenListSoloType, 1),
+            displayAudioList(listenListDuoType, 2),
           ],
         ),
       );
 
   // use for generate content section UI with data
-  displayAudioList(List<ListenDetails> listenList, int audioType,
-      double screenHeight, double screenWidth) {
+  displayAudioList(List<ListenDetails> listenList, int audioType,) {
     return Center(
       // if there is no history data
       child: listenList.isEmpty
           ? Column(
               children: [
                 SizedBox(
-                  height: screenHeight / 12,
+                  height: constantValue.getScreenHeight(context) / 12,
                 ),
                 Image.asset("assets/image/Recordvoice.png"),
-                SizedBox(height: screenHeight / 74),
+                SizedBox(height: constantValue.getScreenHeight(context) / 74),
                 Text(
                   'พร้อมอัดเสียงครั้งเเรกของคุณหรือยัง?',
                   style: GoogleFonts.prompt(fontSize: 15),
                 ),
-                SizedBox(height: screenHeight / 74),
+                SizedBox(height: constantValue.getScreenHeight(context) / 74),
                 ElevatedButton(
                   style: TextButton.styleFrom(
                     backgroundColor: Color(0xFFFF7200),
@@ -405,8 +399,7 @@ class _ProfilePage extends State<ProfilePage>
   }
 
   // use for generate user section UI
-  Widget getUserSection(
-      BuildContext context, double screenHeight, double screenWidth) {
+  Widget getUserSection(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
       final user = FirebaseAuth.instance.currentUser;
       return Center(
@@ -429,7 +422,7 @@ class _ProfilePage extends State<ProfilePage>
               ),
             ),
             SizedBox(
-              height: screenHeight / 89,
+              height: constantValue.getScreenHeight(context) / 89,
             ),
             Text(
               user.displayName ?? "",
@@ -437,7 +430,7 @@ class _ProfilePage extends State<ProfilePage>
                   GoogleFonts.prompt(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             SizedBox(
-              height: screenHeight / 175,
+              height: constantValue.getScreenHeight(context) / 175,
             ),
             Text(
               user.email ?? "",

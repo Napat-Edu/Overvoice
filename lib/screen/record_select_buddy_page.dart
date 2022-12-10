@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/model/listen_detail.dart';
 import 'package:overvoice_project/screen/record_duo_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,11 +29,10 @@ class _SelectBuddyState extends State<SelectBuddy> {
   List<ListenDetails> listenList = [];
   List<String> hisID = [];
   DatabaseQuery databaseQuery = DatabaseQuery();
+  ConstantValue constantValue = ConstantValue();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     // core UI
     return Scaffold(
@@ -58,8 +58,8 @@ class _SelectBuddyState extends State<SelectBuddy> {
             Container(
               margin: const EdgeInsets.all(5),
               child: SizedBox(
-                width: screenWidth,
-                height: screenHeight / 4,
+                width: constantValue.getScreenWidth(context),
+                height: constantValue.getScreenHeight(context) / 4,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Image border
                   child: Image.network(
@@ -95,7 +95,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
                                     color: Colors.white),
                               )),
                           SizedBox(
-                            width: screenWidth / 3,
+                            width: constantValue.getScreenWidth(context) / 3,
                           )
                         ],
                       ),
@@ -105,7 +105,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
               ),
             ),
             SizedBox(
-              height: screenHeight / 200,
+              height: constantValue.getScreenHeight(context) / 200,
             ),
             Expanded(
               child: FutureBuilder<Widget>(
