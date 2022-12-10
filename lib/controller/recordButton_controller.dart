@@ -1,12 +1,8 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:overvoice_project/controller/database_query_controller.dart';
 import 'package:overvoice_project/controller/popup_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 
 import '../screen/record_page.dart';
@@ -30,7 +26,7 @@ class RecordButton extends StatefulWidget {
 class _RecordButtonState extends State<RecordButton> {
   int number = 0;
 
-  int StageVoice = 0;
+  int stageVoice = 0;
   bool status = false;
   late final Function(List) onCountChanged;
   late final Function(bool) onStatusChanged;
@@ -47,7 +43,7 @@ class _RecordButtonState extends State<RecordButton> {
       this.onStatusChanged,
       {required this.converIndexSetter});
 
-  Object? get TimeCountDown => null;
+  Object? get timeCountDown => null;
 
   @override
   void initState() {
@@ -77,7 +73,7 @@ class _RecordButtonState extends State<RecordButton> {
       text = 'อ่านบทแล้ว พร้อมพากย์ต่อ';
     } else if (isRecording) {
       text = 'กำลังพากย์อยู่';
-    } else if (isStopped && StageVoice != 0) {
+    } else if (isStopped && stageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
       text = 'เริ่มพากย์';
@@ -105,26 +101,26 @@ class _RecordButtonState extends State<RecordButton> {
                 foregroundColor: const Color(0xFFFF7200),
                 textStyle: GoogleFonts.prompt(
                     fontSize: 19, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
+            onPressed: status || isStopped && stageVoice != 0
                 ? null
                 : () async {
-                    if (StageVoice == TimeCountDown.length) {
-                      await recorder._stop();
+                    if (stageVoice == TimeCountDown.length) {
+                      await recorder.stop();
                       popupControl.finishAlertDialog(context, 2);
-                    } else if (TimeCountDown[StageVoice].isNotEmpty) {
-                      if (StageVoice == 0) {
+                    } else if (TimeCountDown[stageVoice].isNotEmpty) {
+                      if (stageVoice == 0) {
                         converIndexSetter(Record.converIndex);
-                        await recorder._record();
+                        await recorder.record();
                       } else {
-                        await recorder._resume();
+                        await recorder.resume();
 
                         await null;
                       }
                       countdown(
                           int.parse(TimeCountDown[
-                              StageVoice < TimeCountDown.length
-                                  ? StageVoice++
-                                  : StageVoice]),
+                              stageVoice < TimeCountDown.length
+                                  ? stageVoice++
+                                  : stageVoice]),
                           TimeCountDown.length);
 
                       //print(TimeCountDown[StageVoice++]);
@@ -132,7 +128,7 @@ class _RecordButtonState extends State<RecordButton> {
                     setState(() {});
                   },
             child: Text(
-              StageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
+              stageVoice >= TimeCountDown.length ? 'เสร็จสิ้น' : text,
             ),
           ),
         ),
@@ -152,7 +148,7 @@ class _RecordButtonState extends State<RecordButton> {
         print('Cancel timer');
         timer.cancel();
         onStatusChanged(false);
-        recorder._pause();
+        recorder.pause();
 
         // go for next conversation index in record_page
         if (Record.converIndex < conversationList.length - 1) {
@@ -164,76 +160,5 @@ class _RecordButtonState extends State<RecordButton> {
       }
     });
     status = true;
-  }
-}
-
-class SoundRecorder {
-  FlutterSoundRecorder? _audioRecorder;
-  bool _isRecordingInitialised = false;
-  String docID;
-  SoundRecorder(this.docID);
-  bool get isRecording => _audioRecorder!.isRecording;
-  bool get isPaused => _audioRecorder!.isPaused;
-  bool get isStopped => _audioRecorder!.isStopped;
-  get onProgress => _audioRecorder!.onProgress;
-
-  DatabaseQuery databaseQuery = DatabaseQuery();
-
-  String voiceName =
-      "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
-
-  Future init() async {
-    _audioRecorder = FlutterSoundRecorder();
-
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Microphone permission is denied');
-    }
-
-    await _audioRecorder!.openRecorder(); // Conflict
-    _isRecordingInitialised = true;
-  }
-
-  void dispose() {
-    if (!_isRecordingInitialised) return;
-
-    _audioRecorder!.closeRecorder();
-    _audioRecorder = null;
-    _isRecordingInitialised = false;
-  }
-
-  Future _record() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder
-        ?.setSubscriptionDuration(const Duration(milliseconds: 50));
-    await _audioRecorder!.startRecorder(toFile: voiceName);
-  }
-
-  Future _pause() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.pauseRecorder();
-  }
-
-  Future _resume() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.resumeRecorder();
-  }
-
-  Future _stop() async {
-    if (!_isRecordingInitialised) return;
-    final filepath = await _audioRecorder!.stopRecorder();
-    final file = File(filepath!);
-    //print('Record : $file');
-    databaseQuery.uploadFile(file, voiceName, docID, "singleDub");
-  }
-
-  Future toggleRecording() async {
-    if (_audioRecorder!.isStopped) {
-      await _record();
-    } else if (_audioRecorder!.isPaused) {
-      await _resume();
-    } else if (_audioRecorder!.isRecording) {
-      await _pause();
-    }
   }
 }

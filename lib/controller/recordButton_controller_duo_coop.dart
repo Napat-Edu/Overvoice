@@ -1,13 +1,8 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:overvoice_project/controller/database_query_controller.dart';
 import 'package:overvoice_project/controller/popup_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -147,18 +142,18 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                 ? null
                 : () async {
                     if (stageVoice >= TimeCountDown.length) {
-                      await recorder._stop();
+                      await recorder.stop();
                       popupControl.finishAlertDialog(context, 5);
                     } else if (TimeCountDown[stageVoice].isNotEmpty) {
                       if (stageVoice == 0) {
                         converIndexSetter(Record.converIndex);
                         await play();
-                        await recorder._record();
+                        await recorder.record();
                         await audioPlayer.resume();
                         playPartner();
                       } else {
                         await play();
-                        await recorder._resume();
+                        await recorder.resume();
                         await null;
                       }
                       countdown(
@@ -195,7 +190,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         FlutterBeep.beep(false);
         timer.cancel();
         onStatusChanged(false);
-        recorder._pause();
+        recorder.pause();
         pause();
 
         // go for next conversation index in record_page
@@ -237,77 +232,5 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
     // await audioPlayer.setSourceUrl(url);
     //play();
-  }
-}
-
-class SoundRecorder {
-  FlutterSoundRecorder? _audioRecorder;
-  bool _isRecordingInitialised = false;
-  String hisID;
-  SoundRecorder(this.hisID);
-  bool get isRecording => _audioRecorder!.isRecording;
-  bool get isPaused => _audioRecorder!.isPaused;
-  bool get isStopped => _audioRecorder!.isStopped;
-  get onProgress => _audioRecorder!.onProgress;
-  AudioPlayer audioPlayer = AudioPlayer();
-
-  DatabaseQuery databaseQuery = DatabaseQuery();
-
-  String voiceName =
-      "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
-
-  Future init() async {
-    _audioRecorder = FlutterSoundRecorder();
-
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Microphone permission is denied');
-    }
-
-    await _audioRecorder!.openRecorder(); // Conflict
-    _isRecordingInitialised = true;
-  }
-
-  void dispose() {
-    if (!_isRecordingInitialised) return;
-
-    _audioRecorder!.closeRecorder();
-    _audioRecorder = null;
-    _isRecordingInitialised = false;
-  }
-
-  Future _record() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder
-        ?.setSubscriptionDuration(const Duration(milliseconds: 50));
-    await _audioRecorder!.startRecorder(toFile: voiceName);
-  }
-
-  Future _pause() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.pauseRecorder();
-  }
-
-  Future _resume() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.resumeRecorder();
-  }
-
-  Future _stop() async {
-    if (!_isRecordingInitialised) return;
-    final filepath = await _audioRecorder!.stopRecorder();
-    final file = File(filepath!);
-    //print('Record : $file');
-    databaseQuery.uploadFile(file, voiceName, hisID, "pairDub");
-  }
-
-  Future toggleRecording() async {
-    if (_audioRecorder!.isStopped) {
-      await _record();
-    } else if (_audioRecorder!.isPaused) {
-      await _resume();
-    } else if (_audioRecorder!.isRecording) {
-      await _pause();
-    }
   }
 }
