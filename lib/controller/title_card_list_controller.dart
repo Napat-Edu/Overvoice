@@ -56,7 +56,7 @@ class TitleCardList extends StatelessWidget {
             fixedSize: const Size(10, 10),
             backgroundColor: const Color(0xFFFF7200),
             foregroundColor: Colors.white,
-            textStyle: const TextStyle(
+            textStyle: GoogleFonts.prompt(
               fontSize: 15,
             )),
         onPressed: () {
@@ -67,7 +67,7 @@ class TitleCardList extends StatelessWidget {
                 fullscreenDialog: true,
               ));
         },
-        child: Text('เข้าชม', style: GoogleFonts.prompt()),
+        child: const Text('เข้าชม'),
       ),
       onTap: () {
         Navigator.push(

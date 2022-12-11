@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PopupControl {
   void finishAlertDialog(context, int popCount) => showDialog(
@@ -16,15 +17,15 @@ class PopupControl {
               children: [
                 Image.asset("assets/image/CorrectIcon.png"),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'เสร็จสิ้น',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'ขอบคุณสำหรับการพากย์เสียงของคุณ',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15),
+                  style: GoogleFonts.prompt(fontSize: 15),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(
