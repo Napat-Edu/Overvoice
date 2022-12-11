@@ -22,8 +22,8 @@ class TitleCardList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: SizedBox(
-          width: 53,
-          height: 53,
+          width: 52,
+          height: 52,
           child: Container(
             decoration: const BoxDecoration(boxShadow: [
               BoxShadow(color: Color(0xFFFFAA66), blurRadius: 5)
@@ -33,31 +33,22 @@ class TitleCardList extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           )),
-      title: Row(
-        children: <Widget>[
+      title: 
           Text(
-            titleName,
+            voiceoverAmount == '1' ? "$titleName (เดี่ยว)":"$titleName (คู่)",
             style: GoogleFonts.prompt(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
           ),
-          Text(
-            voiceoverAmount == "1" ? " (เดี่ยว)" : " (คู่)",
-            style: GoogleFonts.prompt(
-                color: Color(0xFF505050), fontWeight: FontWeight.w600, fontSize: 16),
-          ),
-        ],
-      ),
       subtitle: Text(
         episode,
         style: GoogleFonts.prompt(fontWeight: FontWeight.w500, fontSize: 15),
       ),
       trailing: TextButton(
         style: TextButton.styleFrom(
-            fixedSize: const Size(10, 10),
             backgroundColor: const Color(0xFFFF7200),
             foregroundColor: Colors.white,
             textStyle: GoogleFonts.prompt(
-              fontSize: 15,
+              fontSize: 14,
             )),
         onPressed: () {
           Navigator.push(

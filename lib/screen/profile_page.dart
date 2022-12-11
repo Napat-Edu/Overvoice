@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/screen/home_page.dart';
 import 'package:provider/provider.dart';
 import '../controller/database_query_controller.dart';
 import '../controller/login_controller.dart';
@@ -198,8 +199,9 @@ class _ProfilePage extends State<ProfilePage>
 
   //use for control content section (add or delete here)
   Widget contentSection(
-          List<ListenDetails> listenListSoloType,
-          List<ListenDetails> listenListDuoType,) =>
+    List<ListenDetails> listenListSoloType,
+    List<ListenDetails> listenListDuoType,
+  ) =>
       Expanded(
         child: TabBarView(
           controller: _tabController,
@@ -212,7 +214,10 @@ class _ProfilePage extends State<ProfilePage>
       );
 
   // use for generate content section UI with data
-  displayAudioList(List<ListenDetails> listenList, int audioType,) {
+  displayAudioList(
+    List<ListenDetails> listenList,
+    int audioType,
+  ) {
     return Center(
       // if there is no history data
       child: listenList.isEmpty
@@ -316,12 +321,17 @@ class _ProfilePage extends State<ProfilePage>
     if (audioType == 2) {
       if (listenList[index].userNameBuddy ==
           FirebaseAuth.instance.currentUser?.displayName) {
-        return Text("คู่กับ ${listenList[index].userName}");
+        return Text("คู่กับ ${listenList[index].userName}",
+            style: GoogleFonts.prompt());
       }
-      return Text("คู่กับ ${listenList[index].userNameBuddy}");
+      return Text("คู่กับ ${listenList[index].userNameBuddy}",
+          style: GoogleFonts.prompt());
     } else {
       // if it is 1 character type audio
-      return Text("ผลงานพากย์เดี่ยวของคุณ");
+      return Text(
+        "ผลงานพากย์เดี่ยวของคุณ",
+        style: GoogleFonts.prompt(),
+      );
     }
   }
 

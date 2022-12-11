@@ -116,8 +116,8 @@ class _SelectBuddyState extends State<SelectBuddy> {
                     return snapshot.data!;
                   }
 
-                  return const Center(
-                    child: Text("กำลังโหลด..."),
+                  return Center(
+                    child: Text("กำลังโหลด...",style: GoogleFonts.prompt(),),
                   );
                 }),
               ),
