@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/controller/recordButton_controller.dart';
-import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,11 +47,13 @@ class _RecordDuoState extends State<RecordDuo> {
 
   AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
+  ConstantValue constantValue = ConstantValue();
 
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
 
   late String currentText = conversationList[0];
+  late List displayConversationText = [];
 
   @override
   void initState() {
@@ -84,6 +85,7 @@ class _RecordDuoState extends State<RecordDuo> {
       }
     });
 
+    // Listen to audio when it completed
     audioPlayerAssist.onPlayerComplete.listen((event) {
       isPlaying = false;
       if (!mounted) return;
@@ -104,8 +106,8 @@ class _RecordDuoState extends State<RecordDuo> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -124,7 +126,7 @@ class _RecordDuoState extends State<RecordDuo> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: screenHeight / 30, left: 20, right: 20),
+        padding: EdgeInsets.only(top: constantValue.getScreenHeight(context) / 30, left: 20, right: 20),
         width: double.infinity,
         height: double.infinity,
         color: Color(0xFFFF7200),
@@ -142,7 +144,7 @@ class _RecordDuoState extends State<RecordDuo> {
               ),
             ),
             SizedBox(
-              height: screenHeight / 80,
+              height: constantValue.getScreenHeight(context) / 80,
             ),
             Text(
               "คุณพากย์คู่กับ ${yourBuddy.userName}",
@@ -153,15 +155,15 @@ class _RecordDuoState extends State<RecordDuo> {
                   color: Colors.white),
             ),
             SizedBox(
-              height: screenHeight / 40,
+              height: constantValue.getScreenHeight(context) / 40,
             ),
             Stack(
               children: <Widget>[
                 Container(
-                  height: screenHeight / 2.1, // กรอบบท
+                  height: constantValue.getScreenHeight(context) / 2.1, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(
-                      top: screenHeight / 44.5, left: 26, right: 26),
+                      top: constantValue.getScreenHeight(context) / 44.5, left: 26, right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -178,29 +180,28 @@ class _RecordDuoState extends State<RecordDuo> {
                         ),
                       ),
                       SizedBox(
-                        height: screenHeight / 49,
+                        height: constantValue.getScreenHeight(context) / 49,
                       ),
                     ],
                   ),
                 ),
                 Positioned(
-                    top: screenHeight / 15,
-                    left: screenWidth / 43,
-                    height: screenHeight / 2.52,
-                    width: screenWidth / 1.17, // บท
+                    top: constantValue.getScreenHeight(context) / 15,
+                    left: constantValue.getScreenWidth(context) / 43,
+                    height: constantValue.getScreenHeight(context) / 2.52,
+                    width: constantValue.getScreenWidth(context) / 1.17, // บท
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xFFFFD4B2),
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10))),
                       child: displayConversation(),
-                      //ConversationController(conversationList),
                     ))
               ],
             ),
             SizedBox(
-              height: screenHeight / 30,
+              height: constantValue.getScreenHeight(context) / 30,
             ),
             // record button all-function here
             RecordButtonDuoCoop(
@@ -212,11 +213,11 @@ class _RecordDuoState extends State<RecordDuo> {
                 (status) => {checkStatus(status)},
                 converIndexSetter: _converIndexSetter),
             SizedBox(
-              height: screenHeight / 50,
+              height: constantValue.getScreenHeight(context) / 50,
             ),
             SizedBox(
-              width: screenWidth / 1.4,
-              height: screenHeight / 20,
+              width: constantValue.getScreenWidth(context) / 1.4,
+              height: constantValue.getScreenHeight(context) / 20,
               child: TextButton(
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -246,17 +247,20 @@ class _RecordDuoState extends State<RecordDuo> {
     );
   }
 
+  // play & resume audio
   Future play() async {
     audioPlayerAssist.resume();
     audioPlayerBGM.resume();
   }
 
+  // pause audio
   Future pause() async {
     await audioPlayerAssist.pause();
     await audioPlayerBGM.pause();
     isPlaying = false;
   }
 
+  // use for check status of button
   Future checkStatus(bool status) async {
     if (status == true) {
       checkButton = true;
@@ -265,6 +269,7 @@ class _RecordDuoState extends State<RecordDuo> {
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       position = Duration(seconds: timeTotal);
 
+      //condition for avoid out of bound case
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }
@@ -279,58 +284,67 @@ class _RecordDuoState extends State<RecordDuo> {
     }
   }
 
+  // set up audio before user start
   Future setup(List times) async {
     this.currentConverDuration = times;
+
     if (timeTotal == 0) {
       timeTotal = int.parse(this.currentConverDuration[0]);
-      final storageRef = await FirebaseStorage.instance.ref();
-      final soundRefAssist = await storageRef
-          .child(detailList["assistanceVoiceName"]); // <-- your file name
-      final soundRefBGM =
-          await storageRef.child(detailList["bgmName"]); // <-- your file name
-      // final metaDataA = await soundRefA.getDownloadURL();
-      final metaDataAssist = await soundRefAssist.getDownloadURL();
-      final metaDataBGM = await soundRefBGM.getDownloadURL();
-      // String urlA = metaDataA.toString();
-      String urlAssist = metaDataAssist.toString();
-      String urlBGM = metaDataBGM.toString();
 
-      // log('data: ${metaDataA.toString()}');
-      log('data: ${metaDataAssist.toString()}');
-      log('data: ${metaDataBGM.toString()}');
-      // await audioPlayerA.setSourceUrl(urlA);
+      final storageRef = await FirebaseStorage.instance.ref();
+      String urlAssist =
+          await getAudioURL(storageRef, detailList["assistanceVoiceName"]);
+      String urlBGM = await getAudioURL(storageRef, detailList["bgmName"]);
+
       await audioPlayerAssist.setSourceUrl(urlAssist);
       await audioPlayerBGM.setSourceUrl(urlBGM);
-
-      print("Already Set!");
+      print("Everything Set!");
     }
   }
 
+  // get url of audio by name of it
+  getAudioURL(final storageRef, String audioName) async {
+    final soundRef = await storageRef.child(audioName);
+    final metaData = await soundRef.getDownloadURL();
+    String url = metaData.toString();
+    log('data: ${metaData.toString()}');
+    return url;
+  }
+
+  // use for generate display conversation
   Widget displayConversation() {
     if (isStarted == false) {
       int i;
       String fullConversation = "";
+
+      // replace a duration text for more information
       for (i = 0; i < conversationList.length; i++) {
+        final conversationWithDetail =
+            conversationList[i].replaceAllMapped(RegExp(r'\((.*?)\:'), (m) {
+          return '(มีเวลาพากย์ ${m[1]} วินาที:';
+        });
+        displayConversationText.add(conversationWithDetail);
         fullConversation +=
-            "ประโยคที่ ${i + 1}: " + conversationList[i] + "\n\n";
+            "ประโยคที่ ${i + 1} " + conversationWithDetail + "\n\n";
       }
       currentText = fullConversation;
     }
+    // return a conversation text
     return ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) => ListTile(
-              title: Text(
-                currentText,
-                style: GoogleFonts.prompt(
-                    fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ));
+      itemCount: 1,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(
+          currentText,
+          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
   }
 
-  // use for change conversation text
+  // use for change conversation text by index change
   void _converIndexSetter(int converIndex) {
     isStarted = true;
-    currentText = conversationList[converIndex];
+    currentText = displayConversationText[converIndex];
     setState(() {});
   }
 }

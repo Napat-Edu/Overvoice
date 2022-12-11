@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:overvoice_project/screen/record_duo_page.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import 'package:overvoice_project/screen/record_select_character_page.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class SelectDuoRecordType extends StatefulWidget {
   Map<String, dynamic> detaillMap;
@@ -20,12 +19,12 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
   _SelectDuoRecordTypeState(this.detaillMap, this.docID);
 
   bool isPairBuddyMode = true;
+  ConstantValue constantValue = ConstantValue();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
+    // core UI
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,7 +34,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
@@ -44,63 +43,58 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 40, left: 40, right: 40),
-        height: screenHeight / 1.6,
+        padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
+        height: constantValue.getScreenHeight(context) / 1.6,
         width: double.infinity,
         child: Container(
             child: Column(children: <Widget>[
           SizedBox(
-            height: screenHeight / 8.9,
+            height: constantValue.getScreenHeight(context) / 8.9,
           ),
           Container(
             child: Text(
               "เลือกรูปแบบการพากย์ของคุณ",
               textAlign: TextAlign.center,
-              style: GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
+              style:
+                  GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
           SizedBox(
-            height: screenHeight / 30,
+            height: constantValue.getScreenHeight(context) / 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
+                // start new dubbing section type
                 child: Column(children: [
                   RawMaterialButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
+                      toSelectCharacterPage(!isPairBuddyMode);
                     },
                     elevation: 2.0,
-                    fillColor: Color(0xFFFF7200),
-                    child: Icon(Icons.person, size: 74.0, color: Colors.white),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
+                    fillColor: const Color(0xFFFF7200),
+                    child: const Icon(Icons.person,
+                        size: 74.0, color: Colors.white),
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
                   ),
                   SizedBox(
-                    height: screenHeight / 48,
+                    height: constantValue.getScreenHeight(context) / 48,
                   ),
                   SizedBox(
-                    width: screenWidth / 3.4,
-                    height: screenHeight / 22,
+                    width: constantValue.getScreenWidth(context) / 3.4,
+                    height: constantValue.getScreenHeight(context) / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: Color(0xFFFF7200),
+                          backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    (SelectCharacter(detaillMap, docID, !isPairBuddyMode))));
+                        toSelectCharacterPage(!isPairBuddyMode);
                       },
                       child: const Text('เริ่มพากย์ใหม่'),
                     ),
@@ -108,44 +102,37 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
                 ]),
               ),
               SizedBox(
-                width: screenWidth / 10,
+                width: constantValue.getScreenWidth(context) / 10,
               ),
               Container(
+                // pair buddy dubbing section type
                 child: Column(children: [
                   RawMaterialButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
+                      toSelectCharacterPage(isPairBuddyMode);
                     },
                     elevation: 2.0,
-                    fillColor: Color(0xFFFF7200),
+                    fillColor: const Color(0xFFFF7200),
                     child: Icon(Icons.people, size: 74.0, color: Colors.white),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
                   ),
                   SizedBox(
-                    height: screenHeight / 48,
+                    height: constantValue.getScreenHeight(context) / 48,
                   ),
                   SizedBox(
-                    width: screenWidth / 3.4,
-                    height: screenHeight / 22,
+                    width: constantValue.getScreenWidth(context) / 3.4,
+                    height: constantValue.getScreenHeight(context) / 22,
                     child: TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: Color(0xFFFF7200),
+                          backgroundColor: const Color(0xFFFF7200),
                           foregroundColor: Colors.white,
                           textStyle: GoogleFonts.prompt(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
+                        toSelectCharacterPage(isPairBuddyMode);
                       },
                       child: const Text('จับคู่พากย์'),
                     ),
@@ -157,5 +144,14 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
         ])),
       ),
     );
+  }
+
+  // go to select character page
+  toSelectCharacterPage(bool isPairBuddyMode) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                (SelectCharacter(detaillMap, docID, isPairBuddyMode))));
   }
 }

@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:overvoice_project/controller/popup_controller.dart';
+import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:overvoice_project/model/constant_value.dart';
 import '../screen/record_page.dart';
 import 'dart:developer';
 
@@ -35,12 +33,10 @@ class RecordButtonDuoCoop extends StatefulWidget {
       converIndexSetter: converIndexSetter);
 }
 
-bool voiceStart = false;
-
 class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   int number = 0;
 
-  int StageVoice = 0;
+  int stageVoice = 0;
   bool status = false;
   String hisID;
   Duration duration = Duration.zero;
@@ -53,6 +49,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
   List conversationList;
   String character;
   String soundOver;
+  PopupControl popupControl = PopupControl();
+  ConstantValue constantValue = ConstantValue();
 
   final ValueChanged<int> converIndexSetter;
 
@@ -60,7 +58,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       this.soundOver, this.onCountChanged, this.onStatusChanged,
       {required this.converIndexSetter});
 
-  Object? get TimeCountDown => null;
+  Object? get timeCountDown => null;
 
   @override
   void initState() {
@@ -98,9 +96,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     final onProgress = recorder.onProgress;
     final isPaused = recorder.isPaused;
     final isStopped = recorder.isStopped;
-    final text;
+    final String text;
 
-    if(isRecording) {
+    if (isRecording) {
       status = true;
     }
 
@@ -108,96 +106,92 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       text = 'อ่านบทแล้ว พร้อมพากย์';
     } else if (isRecording) {
       text = 'พากย์เลย';
-    } else if (isStopped && StageVoice != 0) {
+    } else if (isStopped && stageVoice != 0) {
       text = 'เสร็จสิ้น';
     } else {
       text = 'เริ่มพากย์';
     }
 
-    List<String> TimeCountDown = [];
+    List<String> timeCountDown = [];
     List<String> characterList = [];
     for (int i = 0; i < conversationList.length; i++) {
-      TimeCountDown.add(
+      timeCountDown.add(
           conversationList[i].toString().split('(')[1].split(':')[0]);
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
-    onCountChanged(TimeCountDown); // push time number in () to record_page
+    onCountChanged(timeCountDown); // push time number in () to record_page
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    print(characterList + TimeCountDown); // Debug
+    print(characterList + timeCountDown); // Debug
     return Container(
-        child: Column(
-      children: <Widget>[
-        SizedBox(
-          width: screenWidth / 1.4,
-          height: screenHeight / 20,
-          child: TextButton(
-            style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFFFF7200),
-                textStyle:
-                    GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
-                ? null
-                : () async {
-                    if (StageVoice >= TimeCountDown.length) {
-                      await recorder._stop();
-                      showAlertDialog4(context);
-                    } else if (TimeCountDown[StageVoice].isNotEmpty) {
-                      if (StageVoice == 0) {
-                        converIndexSetter(Record.converIndex);
-                        await play();
-                        await recorder._record();
-                        await audioPlayer.resume();
-                        playPartner();
-                      } else {
-                        await play();
-                        await recorder._resume();
-                        await null;
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: constantValue.getScreenWidth(context) / 1.4,
+            height: constantValue.getScreenHeight(context) / 20,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  backgroundColor: Colors.white,
+                  foregroundColor: Color(0xFFFF7200),
+                  textStyle: GoogleFonts.prompt(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
+              onPressed: status || isStopped && stageVoice != 0
+                  ? null
+                  : () async {
+                      if (stageVoice >= timeCountDown.length) {
+                        await recorder.stop();
+                        popupControl.finishAlertDialog(context, 5);
+                      } else if (timeCountDown[stageVoice].isNotEmpty) {
+                        if (stageVoice == 0) {
+                          converIndexSetter(Record.converIndex);
+                          await play();
+                          await recorder.record();
+                          await audioPlayer.resume();
+                          playPartner();
+                        } else {
+                          await play();
+                          await recorder.resume();
+                          await null;
+                        }
+                        countdown(
+                            int.parse(timeCountDown[
+                                stageVoice < timeCountDown.length
+                                    ? stageVoice++
+                                    : stageVoice]),
+                            timeCountDown.length);
+                        //print(TimeCountDown[StageVoice++]);
                       }
-                      countdown(
-                          int.parse(TimeCountDown[
-                              StageVoice < TimeCountDown.length
-                                  ? StageVoice++
-                                  : StageVoice]),
-                          TimeCountDown.length);
-                      //print(TimeCountDown[StageVoice++]);
-                    }
-                    setState(() {});
-                  },
-            child: Text(
-              StageVoice >= TimeCountDown.length
-                  ? 'เสร็จสิ้น'
-                  : character == characterList[StageVoice]
-                      ? text
-                      : 'บทของคู่คุณ',
+                      setState(() {});
+                    },
+              child: Text(
+                stageVoice >= timeCountDown.length
+                    ? 'เสร็จสิ้น'
+                    : character == characterList[stageVoice]
+                        ? text
+                        : 'บทของคู่คุณ',
+              ),
             ),
           ),
-        )
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
+  // countdown a time for dubbing
   void countdown(int n, int m) {
-    print(n);
+    FlutterBeep.beep(false);
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      status = false;
+      status = true;
       print(timer.tick);
       n--;
       if (n == 0) {
         FlutterBeep.beep(false);
         timer.cancel();
         onStatusChanged(false);
-        if (n >= m) {
-          recorder._stop();
-        } else {
-          recorder._pause();
-          pause();
-        }
+        recorder.pause();
+        pause();
 
         // go for next conversation index in record_page
         if (Record.converIndex < conversationList.length - 1) {
@@ -206,10 +200,9 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
         }
 
         setState(() {
-          status = true;
+          status = false;
         });
       }
-      status = false;
     });
   }
 
@@ -221,171 +214,13 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     await audioPlayer.pause();
   }
 
+  // play a voice from your buddy
   Future playPartner() async {
-    final storageRef = await FirebaseStorage.instance.ref();
-    // final soundRefA =
-    //     await storageRef.child(listenList.audioFileName!); // <-- your file name
-    final soundRefBGM = await storageRef.child(soundOver); // <-- your file name
-    // final metaDataA = await soundRefA.getDownloadURL();
-    final metaDataBGM = await soundRefBGM.getDownloadURL();
-    // // log('data: ${metaDataA.toString()}');
-    log('data: ${metaDataBGM.toString()}');
-    // // String urlA = metaDataA.toString();
-    String urlBGM = metaDataBGM.toString();
-    // await audioPlayerA.setSourceUrl(urlA);
-    await audioPlayer.setSourceUrl(urlBGM);
-    // play(urlA, urlBGM);
-    // String url =
-    // "https://firebasestorage.googleapis.com/v0/b/overvoice.appspot.com/o/2022-11-2023%3A18%3A09286200omegyzr.aac?alt=media&token=ad617cec-18da-4286-856b-36564cb0776d";
-    // await audioPlayer.setSourceUrl(url);
-    //play();
-  }
-}
-
-class SoundRecorder {
-  FlutterSoundRecorder? _audioRecorder;
-  bool _isRecordingInitialised = false;
-  String hisID;
-  SoundRecorder(this.hisID);
-  bool get isRecording => _audioRecorder!.isRecording;
-  bool get isPaused => _audioRecorder!.isPaused;
-  bool get isStopped => _audioRecorder!.isStopped;
-  get onProgress => _audioRecorder!.onProgress;
-  AudioPlayer audioPlayer = AudioPlayer();
-
-  String voiceName =
-      "${DateTime.now().toString().replaceAll(' ', '').replaceAll('.', '')}${FirebaseAuth.instance.currentUser!.email?.split('@')[0]}.aac";
-
-  Future init() async {
-    _audioRecorder = FlutterSoundRecorder();
-
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Microphone permission is denied');
-    }
-
-    await _audioRecorder!.openRecorder(); // Conflict
-    _isRecordingInitialised = true;
-  }
-
-  void dispose() {
-    if (!_isRecordingInitialised) return;
-
-    _audioRecorder!.closeRecorder();
-    _audioRecorder = null;
-    _isRecordingInitialised = false;
-  }
-
-  Future _record() async {
-    if (!_isRecordingInitialised) return;
-    voiceStart = true;
-    await _audioRecorder
-        ?.setSubscriptionDuration(const Duration(milliseconds: 50));
-    await _audioRecorder!.startRecorder(toFile: voiceName);
-  }
-
-  Future _pause() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.pauseRecorder();
-  }
-
-  Future _resume() async {
-    if (!_isRecordingInitialised) return;
-    await _audioRecorder!.resumeRecorder();
-  }
-
-  Future _stop() async {
-    if (!_isRecordingInitialised) return;
-    final filepath = await _audioRecorder!.stopRecorder();
-    final file = File(filepath!);
-    voiceStart = false;
-    //print('Record : $file');
-    _uploadFile(file);
-  }
-
-  Future toggleRecording() async {
-    if (_audioRecorder!.isStopped) {
-      await _record();
-    } else if (_audioRecorder!.isPaused) {
-      await _resume();
-    } else if (_audioRecorder!.isRecording) {
-      await _pause();
-    }
-  }
-
-  Future _uploadFile(file) async {
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
-
-    // Create a storage reference from our app
     final storageRef = FirebaseStorage.instance.ref();
-
-    final soundRef = storageRef.child(voiceName);
-    // String filePath = '${appDocDir.path}/audio.aac';
-    // File file = File(filePath);
-
-    await soundRef.putFile(file);
-
-    CollectionReference usersHistory =
-        FirebaseFirestore.instance.collection('History');
-    usersHistory
-        .doc(hisID)
-        .update({
-          "sound_2": voiceName,
-          "status": true,
-          "user_2": FirebaseAuth.instance.currentUser!.email,
-        })
-        .then((value) => print("History Updated"))
-        .catchError((error) => print("Failed to update: $error"));
-
-    CollectionReference usersInfo =
-        FirebaseFirestore.instance.collection('UserInfo');
-    usersInfo.doc(FirebaseAuth.instance.currentUser!.email).update({
-      "recordAmount": FieldValue.increment(1),
-    });
+    final soundRefBGM = storageRef.child(soundOver);
+    final metaDataBGM = await soundRefBGM.getDownloadURL();
+    log('data: ${metaDataBGM.toString()}');
+    String urlBGM = metaDataBGM.toString();
+    await audioPlayer.setSourceUrl(urlBGM);
   }
 }
-
-void showAlertDialog4(BuildContext context) => showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/image/CorrectIcon.png"),
-              SizedBox(height: 12),
-              Text(
-                'เสร็จสิ้น',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'ขอบคุณสำหรับการพากย์เสียงของคุณ',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
-              ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7200),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {
-                  int count = 0;
-                  Navigator.popUntil(context, ((route) {
-                    return count++ == 5;
-                  }));
-                },
-                child: Text('ตกลง'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );

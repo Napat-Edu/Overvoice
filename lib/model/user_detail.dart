@@ -7,14 +7,14 @@ class UserDetails
   //constructor
   UserDetails({this.displayName, this.email, this.photoURL});
 
-  //create map
+  //create map from json
   UserDetails.fromJson(Map<String, dynamic> json)
   {
     displayName = json["displayName"];
     email = json["email"];
     photoURL = json["photoURL"];
   }
-
+  
   Map<String, dynamic> toJson()
   {
     //object to data
