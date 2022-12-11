@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:overvoice_project/model/constant_value.dart';
+import '../controller/popup_controller.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,6 +49,7 @@ class _RecordDuoState extends State<RecordDuo> {
   AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
   ConstantValue constantValue = ConstantValue();
+  PopupControl popupControl = PopupControl();
 
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
@@ -124,6 +126,19 @@ class _RecordDuoState extends State<RecordDuo> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Semantics(
+            label: "ขั้นตอนการพากย์",
+            child: IconButton(
+              icon: const Icon(
+                Icons.help_outline_rounded,
+              ),
+              onPressed: () {
+                popupControl.howToDubDialog(context);
+              },
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.only(top: constantValue.getScreenHeight(context) / 30, left: 20, right: 20),
@@ -238,7 +253,7 @@ class _RecordDuoState extends State<RecordDuo> {
                     pause();
                   }
                 },
-                child: const Text('ตัวช่วยสำหรับการพากย์'),
+                child: const Text('ตัวอย่างการพากย์'),
               ),
             ),
           ],

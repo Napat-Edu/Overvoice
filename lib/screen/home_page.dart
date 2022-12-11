@@ -30,21 +30,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       // Header
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFFFF7200),
         elevation: 0,
         title: Text(
           'ยินดีต้อนรับ',
           style: GoogleFonts.prompt(
-              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: Column(children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            left: 15,
-            right: 15,
-            bottom: 15,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -52,8 +48,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 // Banner Image
                 label: "้ลองค้นหาคลิปเสียง แล้วไปพากย์หรือฟังกันเถอะ",
                 child: SizedBox(
-                    width: constantValue.getScreenWidth(context),
-                    height: constantValue.getScreenHeight(context) / 4.75,
+                    height: constantValue.getScreenHeight(context) / 4.5,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.asset("assets/image/overvoice_banner.png"),
@@ -139,6 +134,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         itemCount: mainTitleList.length,
         itemBuilder: (context, index) => TitleCardList(
             imgURL: mainTitleList[index].imgURL!,
+            voiceoverAmount: mainTitleList[index].voiceoverAmount!,
             titleName: mainTitleList[index].titleName!,
             episode: mainTitleList[index].episode!,
             docID: mainTitleList[index].docID!));
@@ -157,7 +153,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       querySnapshot.docs.forEach((doc) {
         // collect in list (TitleDetails Model Type)
         list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
-            doc["duration"], doc["img"], doc.id));
+            doc["duration"], doc["img"], doc.id, doc["voiceoverAmount"]));
       });
     });
 
@@ -212,7 +208,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               documentSnapshot["episode"],
               documentSnapshot["duration"],
               documentSnapshot["img"],
-              documentSnapshot.id));
+              documentSnapshot.id,
+              documentSnapshot["voiceoverAmount"],));
         }
       });
 

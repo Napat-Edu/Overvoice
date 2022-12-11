@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overvoice_project/controller/popup_controller.dart';
 import 'package:overvoice_project/controller/recordButton_controller.dart';
 import 'package:overvoice_project/controller/recordButton_controller_duo.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -50,6 +51,7 @@ class _RecordState extends State<Record> {
   AudioPlayer audioPlayerAssist = AudioPlayer();
   AudioPlayer audioPlayerBGM = AudioPlayer();
   ConstantValue constantValue = ConstantValue();
+  PopupControl popupControl = PopupControl();
 
   PlayerState playerState = PlayerState.stopped;
   bool isStarted = false;
@@ -114,15 +116,28 @@ class _RecordState extends State<Record> {
           style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFFFF7200),
+        backgroundColor: const Color(0xFFFF7200),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
             popCancelRecord(context);
           },
         ),
+        actions: [
+          Semantics(
+            label: "ขั้นตอนการพากย์",
+            child: IconButton(
+              icon: const Icon(
+                Icons.help_outline_rounded,
+              ),
+              onPressed: () {
+                popupControl.howToDubDialog(context);
+              },
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.only(
@@ -239,7 +254,7 @@ class _RecordState extends State<Record> {
                     pause();
                   }
                 },
-                child: const Text('ตัวช่วยสำหรับการพากย์'),
+                child: const Text('ตัวอย่างการพากย์'),
               ),
             ),
           ],
