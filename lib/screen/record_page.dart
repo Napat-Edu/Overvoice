@@ -419,7 +419,7 @@ void popCancelRecord(BuildContext context) => showDialog(
             onPressed: () {
               int count = 0;
               Navigator.popUntil(context, ((route) {
-                return count++ == 3;
+                return count++ == 2;
               }));
             },
             child: Text('ยกเลิกการพากย์เสียง'),
