@@ -7,12 +7,14 @@ class TitleCardList extends StatelessWidget {
     super.key,
     required this.imgURL,
     required this.titleName,
+    required this.voiceoverAmount,
     required this.episode,
     required this.docID,
   });
 
   String imgURL;
   String titleName;
+  String voiceoverAmount;
   String episode;
   String docID;
 
@@ -31,10 +33,19 @@ class TitleCardList extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           )),
-      title: Text(
-        titleName,
-        style: GoogleFonts.prompt(
-            color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
+      title: Row(
+        children: <Widget>[
+          Text(
+            titleName,
+            style: GoogleFonts.prompt(
+                color: Colors.black, fontWeight: FontWeight.w600, fontSize: 17),
+          ),
+          Text(
+            voiceoverAmount == "1" ? " (เดี่ยว)" : " (คู่)",
+            style: GoogleFonts.prompt(
+                color: Color(0xFF505050), fontWeight: FontWeight.w600, fontSize: 16),
+          ),
+        ],
       ),
       subtitle: Text(
         episode,

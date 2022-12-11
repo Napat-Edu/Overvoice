@@ -168,9 +168,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           fontSize: 17),
                     ),
                     // change like count under title to buddy acount name
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                    ),
                     trailing: TextButton(
                       style: TextButton.styleFrom(
                           fixedSize: const Size(10, 10),

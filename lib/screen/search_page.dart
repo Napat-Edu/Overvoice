@@ -44,7 +44,7 @@ class _SearchState extends State<Search> {
     // add detail for each audio to list
     audioCollection.docs.forEach((doc) {
       list.add(TitleDetails(doc["name"], doc["enName"], doc["episode"],
-          doc["duration"], doc["img"], doc.id));
+            doc["duration"], doc["img"], doc.id, doc["voiceoverAmount"]));
     });
 
     return list;
@@ -106,6 +106,7 @@ class _SearchState extends State<Search> {
                     itemBuilder: (context, index) => TitleCardList(
                         imgURL: displayList[index].imgURL!,
                         titleName: displayList[index].titleName!,
+                        voiceoverAmount: mainTitleList[index].voiceoverAmount!,
                         episode: displayList[index].episode!,
                         docID: displayList[index]
                             .docID!)
