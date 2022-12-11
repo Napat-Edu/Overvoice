@@ -94,30 +94,7 @@ class _RecordButtonState extends State<RecordButton> {
                 textStyle: GoogleFonts.prompt(
                     fontSize: 19, fontWeight: FontWeight.w600),
               ),
-              onPressed: status || isStopped && stageVoice != 0
-                  ? null
-                  : () async {
-                      if (stageVoice == timeCountDown.length) {
-                        await recorder.stop();
-                        popupControl.finishAlertDialog(context, 2);
-                      } else if (timeCountDown[stageVoice].isNotEmpty) {
-                        if (stageVoice == 0) {
-                          converIndexSetter(Record.converIndex);
-                          await recorder.record();
-                        } else {
-                          await recorder.resume();
-
-                          await null;
-                        }
-                        countdown(
-                            int.parse(timeCountDown[
-                                stageVoice < timeCountDown.length
-                                    ? stageVoice++
-                                    : stageVoice]),
-                            timeCountDown.length);
-                      }
-                      setState(() {});
-                    },
+              onPressed: recordButton(isStopped, timeCountDown),
               child: Text(
                 stageVoice >= timeCountDown.length ? 'เสร็จสิ้น' : text,
               ),
@@ -152,5 +129,32 @@ class _RecordButtonState extends State<RecordButton> {
       }
     });
     status = true;
+  }
+
+  // start the process of dubbing when hit the button
+  recordButton(bool isStopped, List<String> timeCountDown) {
+    return status || isStopped && stageVoice != 0
+        ? null
+        : () async {
+            if (stageVoice >= timeCountDown.length) {
+              await recorder.stop();
+              popupControl.finishAlertDialog(context, 2);
+            } else if (timeCountDown[stageVoice].isNotEmpty) {
+              if (stageVoice == 0) {
+                converIndexSetter(Record.converIndex);
+                await recorder.record();
+              } else {
+                await recorder.resume();
+
+                await null;
+              }
+              countdown(
+                  int.parse(timeCountDown[stageVoice < timeCountDown.length
+                      ? stageVoice++
+                      : stageVoice]),
+                  timeCountDown.length);
+            }
+            setState(() {});
+          };
   }
 }

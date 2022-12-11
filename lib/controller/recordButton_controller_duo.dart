@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/controller/popup_controller.dart';
+import 'package:overvoice_project/controller/recordButton_controller.dart';
 import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import '../model/constant_value.dart';
@@ -98,30 +99,7 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
                 foregroundColor: const Color(0xFFFF7200),
                 textStyle: GoogleFonts.prompt(
                     fontSize: 19, fontWeight: FontWeight.w600)),
-            onPressed: status || isStopped && StageVoice != 0
-                ? null
-                : () async {
-                    if (StageVoice >= timeCountDown.length) {
-                      await recorder.stopDuoType(character);
-                      popupControl.finishAlertDialog(context, 4);
-                    } else if (timeCountDown[StageVoice].isNotEmpty) {
-                      if (StageVoice == 0) {
-                        converIndexSetter(Record.converIndex);
-                        await recorder.record();
-                      } else {
-                        await recorder.resume();
-                        await null;
-                      }
-                      countdown(
-                          int.parse(timeCountDown[
-                              StageVoice < timeCountDown.length
-                                  ? StageVoice++
-                                  : StageVoice]),
-                          timeCountDown.length);
-                      //print(TimeCountDown[StageVoice++]);
-                    }
-                    setState(() {});
-                  },
+            onPressed: recordButton(isStopped, timeCountDown),
             child: Text(
               StageVoice >= timeCountDown.length
                   ? 'เสร็จสิ้น'
@@ -153,10 +131,36 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
           Record.converIndex++;
           converIndexSetter(Record.converIndex);
         }
-        
+
         setState(() {});
       }
     });
     status = true;
+  }
+
+  // start the process of dubbing when hit the button
+  recordButton(bool isStopped, List<String> timeCountDown) {
+    return status || isStopped && StageVoice != 0
+        ? null
+        : () async {
+            if (StageVoice >= timeCountDown.length) {
+              await recorder.stopDuoType(character);
+              popupControl.finishAlertDialog(context, 4);
+            } else if (timeCountDown[StageVoice].isNotEmpty) {
+              if (StageVoice == 0) {
+                converIndexSetter(Record.converIndex);
+                await recorder.record();
+              } else {
+                await recorder.resume();
+                await null;
+              }
+              countdown(
+                  int.parse(timeCountDown[StageVoice < timeCountDown.length
+                      ? StageVoice++
+                      : StageVoice]),
+                  timeCountDown.length);
+            }
+            setState(() {});
+          };
   }
 }

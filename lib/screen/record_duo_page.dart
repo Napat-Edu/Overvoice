@@ -238,7 +238,7 @@ class _RecordDuoState extends State<RecordDuo> {
                     pause();
                   }
                 },
-                child: const Text('ตัวช่วยสำหรับการพากย์'),
+                child: const Text('ตัวอย่างการพากย์'),
               ),
             ),
           ],

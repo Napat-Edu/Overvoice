@@ -234,7 +234,7 @@ class _RecordState extends State<Record> {
                     pause();
                   }
                 },
-                child: const Text('ตัวช่วยสำหรับการพากย์'),
+                child: const Text('ตัวอย่างการพากย์'),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overvoice_project/controller/popup_controller.dart';
+import 'package:overvoice_project/controller/recordButton_controller.dart';
 import 'package:overvoice_project/controller/recordButton_master_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -115,8 +116,8 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     List<String> timeCountDown = [];
     List<String> characterList = [];
     for (int i = 0; i < conversationList.length; i++) {
-      timeCountDown.add(
-          conversationList[i].toString().split('(')[1].split(':')[0]);
+      timeCountDown
+          .add(conversationList[i].toString().split('(')[1].split(':')[0]);
       characterList
           .add(conversationList[i].toString().split(':')[1].split(')')[0]);
     }
@@ -137,34 +138,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
                   foregroundColor: Color(0xFFFF7200),
                   textStyle: GoogleFonts.prompt(
                       fontSize: 18, fontWeight: FontWeight.w600)),
-              onPressed: status || isStopped && stageVoice != 0
-                  ? null
-                  : () async {
-                      if (stageVoice >= timeCountDown.length) {
-                        await recorder.stop();
-                        popupControl.finishAlertDialog(context, 5);
-                      } else if (timeCountDown[stageVoice].isNotEmpty) {
-                        if (stageVoice == 0) {
-                          converIndexSetter(Record.converIndex);
-                          await play();
-                          await recorder.record();
-                          await audioPlayer.resume();
-                          playPartner();
-                        } else {
-                          await play();
-                          await recorder.resume();
-                          await null;
-                        }
-                        countdown(
-                            int.parse(timeCountDown[
-                                stageVoice < timeCountDown.length
-                                    ? stageVoice++
-                                    : stageVoice]),
-                            timeCountDown.length);
-                        //print(TimeCountDown[StageVoice++]);
-                      }
-                      setState(() {});
-                    },
+              onPressed: recordButton(isStopped, timeCountDown),
               child: Text(
                 stageVoice >= timeCountDown.length
                     ? 'เสร็จสิ้น'
@@ -222,5 +196,35 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
     log('data: ${metaDataBGM.toString()}');
     String urlBGM = metaDataBGM.toString();
     await audioPlayer.setSourceUrl(urlBGM);
+  }
+
+  // start the process of dubbing when hit the button
+  recordButton(bool isStopped, List<String> timeCountDown) {
+    return status || isStopped && stageVoice != 0
+        ? null
+        : () async {
+            if (stageVoice >= timeCountDown.length) {
+              await recorder.stop();
+              popupControl.finishAlertDialog(context, 5);
+            } else if (timeCountDown[stageVoice].isNotEmpty) {
+              if (stageVoice == 0) {
+                converIndexSetter(Record.converIndex);
+                await play();
+                await recorder.record();
+                await audioPlayer.resume();
+                playPartner();
+              } else {
+                await play();
+                await recorder.resume();
+                await null;
+              }
+              countdown(
+                  int.parse(timeCountDown[stageVoice < timeCountDown.length
+                      ? stageVoice++
+                      : stageVoice]),
+                  timeCountDown.length);
+            }
+            setState(() {});
+          };
   }
 }
