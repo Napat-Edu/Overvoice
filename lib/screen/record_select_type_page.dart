@@ -29,7 +29,7 @@ class _SelectDuoRecordTypeState extends State<SelectDuoRecordType> {
       appBar: AppBar(
         title: Text(
           detaillMap["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFFFF7200),
