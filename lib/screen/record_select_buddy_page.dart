@@ -167,7 +167,6 @@ class _SelectBuddyState extends State<SelectBuddy> {
                           fontWeight: FontWeight.w600,
                           fontSize: 17),
                     ),
-                    // change like count under title to buddy acount name
                     trailing: TextButton(
                       style: TextButton.styleFrom(
                           fixedSize: const Size(10, 10),
