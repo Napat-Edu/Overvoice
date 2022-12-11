@@ -86,6 +86,9 @@ class _RecordState extends State<Record> {
         audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
+        audioPlayerBGM.seek(Duration(
+            seconds:
+                timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
@@ -295,6 +298,8 @@ class _RecordState extends State<Record> {
     } else {
       print("Status is checked");
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
+      await audioPlayerBGM.seek(Duration(seconds: timeTotal));
+
       position = Duration(seconds: timeTotal);
 
       //condition for avoid out of bound case
