@@ -122,7 +122,7 @@ class _RecordState extends State<Record> {
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
-            popCancelRecord(context);
+            popupControl.popCancelRecord(context);
           },
         ),
         actions: [
@@ -384,46 +384,3 @@ class _RecordState extends State<Record> {
     setState(() {});
   }
 }
-
-//popCancelRecord(context);
-void popCancelRecord(BuildContext context) => showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Text(
-          'ยกเลิกการพากย์เสียง',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-        content: Text(
-          'คุณต้องการยกเลิกการพากย์เสียงสำหรับคุณหรือไม่',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15),
-        ),
-        actions: [
-          OutlinedButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Color(0xFFFF7200),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(' ทำการพากย์ต่อไป '),
-          ),
-          ElevatedButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Color(0xFFFF7200),
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              int count = 0;
-              Navigator.popUntil(context, ((route) {
-                return count++ == 2;
-              }));
-            },
-            child: Text('ยกเลิกการพากย์เสียง'),
-          ),
-        ],
-      ),
-    );

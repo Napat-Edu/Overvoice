@@ -108,7 +108,6 @@ class _RecordDuoState extends State<RecordDuo> {
 
   @override
   Widget build(BuildContext context) {
-
     // core UI
     return Scaffold(
       appBar: AppBar(
@@ -123,7 +122,7 @@ class _RecordDuoState extends State<RecordDuo> {
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            popupControl.popCancelRecord(context);
           },
         ),
         actions: [
@@ -141,7 +140,10 @@ class _RecordDuoState extends State<RecordDuo> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(top: constantValue.getScreenHeight(context) / 30, left: 20, right: 20),
+        padding: EdgeInsets.only(
+            top: constantValue.getScreenHeight(context) / 30,
+            left: 20,
+            right: 20),
         width: double.infinity,
         height: double.infinity,
         color: Color(0xFFFF7200),
@@ -175,10 +177,13 @@ class _RecordDuoState extends State<RecordDuo> {
             Stack(
               children: <Widget>[
                 Container(
-                  height: constantValue.getScreenHeight(context) / 2.1, // กรอบบท
+                  height:
+                      constantValue.getScreenHeight(context) / 2.1, // กรอบบท
                   width: double.infinity,
                   padding: EdgeInsets.only(
-                      top: constantValue.getScreenHeight(context) / 44.5, left: 26, right: 26),
+                      top: constantValue.getScreenHeight(context) / 44.5,
+                      left: 26,
+                      right: 26),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),

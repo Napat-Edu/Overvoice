@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PopupControl {
+  // popup when finish dubbing
   Future<dynamic> finishAlertDialog(context, int popCount) {
     return showDialog(
       context: context,
@@ -52,6 +53,7 @@ class PopupControl {
     );
   }
 
+  // popup for how to dubbing
   Future<dynamic> howToDubDialog(context) {
     return showDialog(
       context: context,
@@ -103,4 +105,47 @@ class PopupControl {
       ),
     ); 
   }
+
+  // popup for cancel current record
+void popCancelRecord(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'ยกเลิกการพากย์เสียง',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        content: Text(
+          'คุณต้องการยกเลิกการพากย์เสียงสำหรับคุณหรือไม่',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.prompt(fontSize: 15),
+        ),
+        actions: [
+          OutlinedButton(
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFFFF7200),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(' ทำการพากย์ต่อไป '),
+          ),
+          ElevatedButton(
+            style: TextButton.styleFrom(
+              backgroundColor: const Color(0xFFFF7200),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              int count = 0;
+              Navigator.popUntil(context, ((route) {
+                return count++ == 2;
+              }));
+            },
+            child: const Text('ยกเลิกการพากย์เสียง'),
+          ),
+        ],
+      ),
+    );
 }
