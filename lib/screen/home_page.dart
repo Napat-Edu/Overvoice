@@ -52,8 +52,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     height: screenHeight / 4.75,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                          "https://cdn6.aptoide.com/imgs/7/9/c/79ca6f8c8f874e89cf269e6f65deb456_fgraphic.jpg"),
+                      child: Image.asset("assets/image/pokHome.png"),
                     )),
               ),
             ],
