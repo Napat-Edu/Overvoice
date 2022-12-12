@@ -115,13 +115,13 @@ class _RecordButtonDuoState extends State<RecordButtonDuo> {
 
   // countdown a time for dubbing
   void countdown(int n, int m) {
-    FlutterBeep.beep(false);
+    FlutterBeep.playSysSound(28);
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
       print(timer.tick);
       n--;
       if (n == 0) {
-        FlutterBeep.beep(false);
+        FlutterBeep.playSysSound(32);
         timer.cancel();
         onStatusChanged(false);
         recorder.pause();

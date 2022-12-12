@@ -107,14 +107,14 @@ class _RecordButtonState extends State<RecordButton> {
 
   // countdown a time for dubbing
   countdown(int n, int m) async {
-    FlutterBeep.beep(false);
+    FlutterBeep.playSysSound(28);
     onStatusChanged(true); // check status of buttons
     Timer.periodic(const Duration(seconds: 1), (timer) {
       status = false;
       print(timer.tick);
       n--;
       if (n == 0) {
-        FlutterBeep.beep(false);
+        FlutterBeep.playSysSound(32);
         timer.cancel();
         onStatusChanged(false);
         recorder.pause();
