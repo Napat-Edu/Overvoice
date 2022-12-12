@@ -114,6 +114,7 @@ class _RecordButtonState extends State<RecordButton> {
       print(timer.tick);
       n--;
       if (n == 0) {
+        Record.readyToNextVoiceAssist = true;
         FlutterBeep.playSysSound(32);
         timer.cancel();
         onStatusChanged(false);
