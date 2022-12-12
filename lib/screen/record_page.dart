@@ -19,6 +19,7 @@ class Record extends StatefulWidget {
       {super.key});
 
   static int converIndex = 0;
+  static bool readyToNextVoiceAssist = false;
 
   @override
   State<Record> createState() =>
@@ -80,8 +81,8 @@ class _RecordState extends State<Record> {
     // Listen to audio position
     audioPlayerAssist.onPositionChanged.listen((Duration p) {
       if (!mounted) return;
-      setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
+        toNextConverAssist(Record.readyToNextVoiceAssist);
         pause();
         audioPlayerAssist.seek(Duration(
             seconds:
@@ -90,6 +91,7 @@ class _RecordState extends State<Record> {
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
+      setState(() => position = p);
     });
 
     // Listen to audio when it completed
@@ -107,11 +109,16 @@ class _RecordState extends State<Record> {
     Record.converIndex = 0;
     audioPlayerAssist.dispose();
     audioPlayerBGM.dispose();
+    Record.readyToNextVoiceAssist = false;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    RecordButton recordButton = RecordButton(conversationList, docID,
+        (a) => {setup(a)}, (status) => {checkStatus(status)},
+        converIndexSetter: _converIndexSetter);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -229,7 +236,7 @@ class _RecordState extends State<Record> {
             ),
             // record button all-function here
 
-            checkAudioType(),
+            checkAudioType(recordButton),
 
             SizedBox(
               height: constantValue.getScreenHeight(context) / 50,
@@ -279,11 +286,9 @@ class _RecordState extends State<Record> {
     isPlaying = false;
   }
 
-  Widget checkAudioType() {
+  Widget checkAudioType(RecordButton recordButton) {
     if (detailList["voiceoverAmount"] == "1") {
-      return RecordButton(conversationList, docID, (a) => {setup(a)},
-          (status) => {checkStatus(status)},
-          converIndexSetter: _converIndexSetter);
+      return recordButton;
     } else {
       return RecordButtonDuo(conversationList, docID, character,
           (a) => {setup(a)}, (status) => {checkStatus(status)},
@@ -297,24 +302,27 @@ class _RecordState extends State<Record> {
       checkButton = true;
     } else {
       print("Status is checked");
+      print("before: $timeTotal");
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       await audioPlayerBGM.seek(Duration(seconds: timeTotal));
 
       position = Duration(seconds: timeTotal);
 
-      //condition for avoid out of bound case
-
-      if (checkTime < this.currentConverDuration.length - 1) {
-        checkTime++;
-      }
-
-      if (checkTime < this.currentConverDuration.length) {
-        timeTotal += int.parse(this.currentConverDuration[checkTime]);
-        print(
-            "checktime: ${this.checkTime}, timetotal: ${this.timeTotal}, timelength: ${this.currentConverDuration.length}, position: ${this.position}");
-      }
+      print("after: $timeTotal");
+      print(
+          "checktime: ${this.checkTime}, timetotal: ${this.timeTotal}, timelength: ${this.currentConverDuration.length}, position: ${this.position}");
 
       checkButton = false;
+    }
+  }
+
+  // use for switch to next assist voice conversation
+  toNextConverAssist(bool readyToNextVoiceAssist) {
+    //condition for avoid out of bound case
+    if ((checkTime < this.currentConverDuration.length - 1) && readyToNextVoiceAssist == true) {
+      checkTime++;
+      timeTotal += int.parse(this.currentConverDuration[checkTime]);
+      Record.readyToNextVoiceAssist = false;
     }
   }
 

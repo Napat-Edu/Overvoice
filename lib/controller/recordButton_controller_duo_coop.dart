@@ -161,6 +161,7 @@ class _RecordButtonDuoCoopState extends State<RecordButtonDuoCoop> {
       print(timer.tick);
       n--;
       if (n == 0) {
+        Record.readyToNextVoiceAssist = true;
         FlutterBeep.playSysSound(32);
         timer.cancel();
         onStatusChanged(false);

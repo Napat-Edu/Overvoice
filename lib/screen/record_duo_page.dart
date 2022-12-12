@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dart:developer';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:overvoice_project/model/constant_value.dart';
+import 'package:overvoice_project/screen/record_page.dart';
 import '../controller/popup_controller.dart';
 import '../controller/recordButton_controller_duo_coop.dart';
 import '../model/listen_detail.dart';
@@ -80,6 +81,7 @@ class _RecordDuoState extends State<RecordDuo> {
       if (!mounted) return;
       setState(() => position = p);
       if (p.inSeconds >= this.timeTotal) {
+        toNextConverAssist(Record.readyToNextVoiceAssist);
         pause();
         audioPlayerAssist.seek(Duration(
             seconds:
@@ -105,6 +107,7 @@ class _RecordDuoState extends State<RecordDuo> {
     RecordDuo.converIndex = 0;
     audioPlayerAssist.dispose();
     audioPlayerBGM.dispose();
+    Record.readyToNextVoiceAssist = false;
 
     super.dispose();
   }
@@ -289,23 +292,27 @@ class _RecordDuoState extends State<RecordDuo> {
       checkButton = true;
     } else {
       print("Status is checked");
+      print("before: $timeTotal");
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
       await audioPlayerBGM.seek(Duration(seconds: timeTotal));
 
       position = Duration(seconds: timeTotal);
 
-      //condition for avoid out of bound case
-      if (checkTime < this.currentConverDuration.length - 1) {
-        checkTime++;
-      }
-
-      if (checkTime < this.currentConverDuration.length) {
-        timeTotal += int.parse(this.currentConverDuration[checkTime]);
-        print(
-            "checktime: ${this.checkTime}, timetotal: ${this.timeTotal}, timelength: ${this.currentConverDuration.length}, position: ${this.position}");
-      }
+      print("after: $timeTotal");
+      print(
+          "checktime: ${this.checkTime}, timetotal: ${this.timeTotal}, timelength: ${this.currentConverDuration.length}, position: ${this.position}");
 
       checkButton = false;
+    }
+  }
+
+  // use for switch to next assist voice conversation
+  toNextConverAssist(bool readyToNextVoiceAssist) {
+    //condition for avoid out of bound case
+    if ((checkTime < this.currentConverDuration.length - 1) && readyToNextVoiceAssist == true) {
+      checkTime++;
+      timeTotal += int.parse(this.currentConverDuration[checkTime]);
+      Record.readyToNextVoiceAssist = false;
     }
   }
 
