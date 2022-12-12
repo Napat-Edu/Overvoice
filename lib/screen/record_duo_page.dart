@@ -107,6 +107,7 @@ class _RecordDuoState extends State<RecordDuo> {
     RecordDuo.converIndex = 0;
     audioPlayerAssist.dispose();
     audioPlayerBGM.dispose();
+    Record.readyToNextVoiceAssist = false;
 
     super.dispose();
   }
