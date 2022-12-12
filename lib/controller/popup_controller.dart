@@ -130,7 +130,7 @@ void popCancelRecord(BuildContext context) => showDialog(
               foregroundColor: const Color(0xFFFF7200),
             ),
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(' ทำการพากย์ต่อไป '),
+            child: Text(' ทำการพากย์ต่อไป ', style: GoogleFonts.prompt()),
           ),
           ElevatedButton(
             style: TextButton.styleFrom(
@@ -143,7 +143,7 @@ void popCancelRecord(BuildContext context) => showDialog(
                 return count++ == 2;
               }));
             },
-            child: const Text('ยกเลิกการพากย์เสียง'),
+            child: Text('ยกเลิกการพากย์เสียง', style: GoogleFonts.prompt(),),
           ),
         ],
       ),
