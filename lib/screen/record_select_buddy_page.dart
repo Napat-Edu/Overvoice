@@ -39,7 +39,7 @@ class _SelectBuddyState extends State<SelectBuddy> {
       appBar: AppBar(
         title: Text(
           detailList["name"],
-          style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFFFF7200),
