@@ -86,6 +86,9 @@ class _RecordState extends State<Record> {
         audioPlayerAssist.seek(Duration(
             seconds:
                 timeTotal - int.parse(this.currentConverDuration[checkTime])));
+        audioPlayerBGM.seek(Duration(
+            seconds:
+                timeTotal - int.parse(this.currentConverDuration[checkTime])));
       }
     });
 
@@ -122,7 +125,7 @@ class _RecordState extends State<Record> {
             Icons.arrow_back_ios_rounded,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            popupControl.popCancelRecord(context);
           },
         ),
         actions: [
@@ -295,9 +298,12 @@ class _RecordState extends State<Record> {
     } else {
       print("Status is checked");
       await audioPlayerAssist.seek(Duration(seconds: timeTotal));
+      await audioPlayerBGM.seek(Duration(seconds: timeTotal));
+
       position = Duration(seconds: timeTotal);
 
       //condition for avoid out of bound case
+
       if (checkTime < this.currentConverDuration.length - 1) {
         checkTime++;
       }

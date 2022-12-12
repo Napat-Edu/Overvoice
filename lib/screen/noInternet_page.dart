@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../main.dart';
 import '../model/constant_value.dart';
 
 class NoInternet extends StatefulWidget {
@@ -67,8 +68,8 @@ class _NoInternetState extends State<NoInternet> {
                           textStyle: GoogleFonts.prompt(
                               fontSize: 18, fontWeight: FontWeight.w600)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const NoInternet()));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => const MyApp()));
                       },
                       child: const Text("ลองอีกครั้ง"),
                     ),

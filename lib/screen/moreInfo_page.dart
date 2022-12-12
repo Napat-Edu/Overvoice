@@ -24,7 +24,6 @@ class _MoreInfoState extends State<MoreInfo> {
 
   @override
   Widget build(BuildContext context) {
-
     // core UI
     return Scaffold(
       extendBodyBehindAppBar: true,
